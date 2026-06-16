@@ -1,0 +1,13 @@
+{{- include "ffc-helm-library.azure-ingress" (list . "ffc-pds-web.ingress") -}}
+{{- define "ffc-pds-web.ingress" -}}
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "20M"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/large-client-header-buffers: "4 128k"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+{{- end -}}

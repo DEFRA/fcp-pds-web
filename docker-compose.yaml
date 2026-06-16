@@ -1,0 +1,10 @@
+services:
+  fcp-pds-web:
+    build:
+      context: .
+      target: production
+    image: fcp-pds-web
+    container_name: fcp-pds-web
+    environment:
+      APPINSIGHTS_CLOUDROLE: fcp-pds-web-local
+      APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}

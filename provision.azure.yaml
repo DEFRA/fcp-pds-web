@@ -1,0 +1,10 @@
+resources:
+  identity: fcp-pds-web
+  # postgreSql:
+  #   name: fcp-pds-web
+  #   extensions:
+  #     - name: uuid-ossp
+  # queues:
+  #   - name: fcp-pds-web
+  #     role: receiver
+

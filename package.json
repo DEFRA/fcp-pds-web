@@ -1,0 +1,50 @@
+{
+  "name": "fcp-pds-web",
+  "version": "0.1.0",
+  "description": "Frontend for Payments and Documents Services",
+  "homepage": "https://github.com/DEFRA/fcp-pds-web",
+  "main": "app/index.js",
+  "type": "module",
+  "scripts": {
+    "pretest": "npm run test:lint",
+    "test": "jest --runInBand --forceExit",
+    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
+    "test:lint": "eslint",
+    "test:lint:fix": "eslint --fix",
+    "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache",
+    "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
+    "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
+  },
+  "author": "Defra",
+  "contributors": [],
+  "license": "OGL-UK-3.0",
+  "dependencies": {
+    "@hapi/hapi": "21.3.2",
+    "applicationinsights": "2.9.8",
+    "convict": "6.2.5",
+    "convict-format-with-validator": "6.2.0",
+    "hapi-pino": "12.1.0",
+    "husky": "9.1.7",
+    "joi": "18.2.1",
+    "log-timestamp": "0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "jest": "29.7.0",
+    "jest-junit": "16.0.0",
+    "neostandard": "0.13.0",
+    "nodemon": "3.0.1"
+  },
+  "overrides": {
+    "protobufjs": "8.6.3",
+    "uuid": "11.1.1",
+    "joi": "18.2.1",
+    "js-yaml": "4.2.0",
+    "@opentelemetry/core": "2.8.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/test-output/**"
+    ]
+  }
+}

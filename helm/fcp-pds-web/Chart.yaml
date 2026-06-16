@@ -1,0 +1,9 @@
+apiVersion: v2
+description: Frontend for Payments and Documents Services
+name: fcp-pds-web
+# this version is automatically updated in the build pipeline
+version: 1.0.0
+dependencies:
+- name: ffc-helm-library
+  version: 5.1.4
+  repository: https://raw.githubusercontent.com/defra/ffc-helm-repository/master/

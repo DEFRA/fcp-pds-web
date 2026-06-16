@@ -1,0 +1,7 @@
+{{- include "ffc-helm-library.container-config-map" (list . "fcp-pds-web.config-map") -}}
+{{- define "fcp-pds-web.config-map" -}}
+data:
+  NODE_ENV: {{ .Values.environment | quote }}
+  PORT: {{ .Values.container.port | quote }}
+  APPINSIGHTS_CLOUDROLE: {{ .Chart.Name | quote }}
+{{- end -}}

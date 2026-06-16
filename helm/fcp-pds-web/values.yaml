@@ -1,0 +1,58 @@
+# Required values to support CI pipeline
+environment: production
+environmentCode:
+name: fcp-pds-web
+namespace: fcp-pds
+workstream: fcp-pds
+image: fcp-pds-web
+
+labels:
+  component: pds-web
+
+appInsights:
+  connectionString:
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID
+
+containerConfigMap:
+  name: ffc-pay-web-config-map
+
+containerSecret: 
+  name: ffc-pds-web
+  type: Opaque
+
+service:
+  port: 80
+  type: ClusterIP
+
+deployment: {}
+
+container:
+  resourceTier: M
+  port: 3023
+
+ingress:
+  class: nginx
+  endpoint: ffc-pds-web
+  server: example.com
+
+livenessProbe:
+  path: /healthz
+  port: *port
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+readinessProbe:
+  path: /healthy
+  port: *port
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+workloadIdentity: true
+

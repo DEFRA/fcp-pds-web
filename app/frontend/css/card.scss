@@ -1,0 +1,54 @@
+$govuk-suppressed-warnings: "legacy-organisation-colours";
+$govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
+@import '~govuk-frontend/dist/govuk/index';
+
+.govuk-service-navigation__container { 
+  display: flex; 
+  align-items: center; 
+  gap: 1rem; 
+  width: 100%; 
+}
+
+.govuk-cards::after,
+.govuk-cards--2::after,
+.govuk-cards--3::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.govuk-cards--2__item {
+  box-sizing: border-box;
+  border: 1px solid #b1b4b6;
+  background-color: #f3f2f1;
+  padding: 20px;
+  margin-bottom: 20px;
+  float: left;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  @include govuk-media-query($from: desktop) {
+    width: calc(50% - 10px);
+    min-height: 220px;
+
+    &:not(:nth-child(2n+2)) {
+      margin-right: 20px;
+    }
+  }
+
+  @include govuk-media-query($from: tablet, $until: desktop) {
+    width: calc(50% - 8px);
+    min-height: 220px;
+
+    &:not(:nth-child(2n+2)) {
+      margin-right: 15px;
+    }
+  }
+
+  @include govuk-media-query($until: tablet) {
+    width: 100%;
+  }
+}
+

@@ -1,6 +1,6 @@
-import { setup } from './insights.js'
-import 'log-timestamp'
-import { createServer } from './server.js'
+require('log-timestamp')
+const { setup } = require('./insights')
+const { createServer } = require('./server')
 
 const init = async () => {
   const server = await createServer()

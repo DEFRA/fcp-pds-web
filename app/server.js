@@ -1,7 +1,7 @@
-const Hapi = require('@hapi/hapi')
-const Joi = require('joi')
-const { registerPlugins } = require('./plugins/index.js')
-const config = require('./config.js')
+import Hapi from '@hapi/hapi'
+import Joi from 'joi'
+import { registerPlugins } from './plugins/index.js'
+import config from './config.js'
 
 async function createServer () {
   const server = Hapi.server({
@@ -25,4 +25,4 @@ async function createServer () {
   return server
 }
 
-module.exports = { createServer }
+export { createServer }

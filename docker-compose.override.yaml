@@ -8,7 +8,7 @@ services:
     image: fcp-pds-web-development
     container_name: fcp-pds-web-development
     ports:
-      - "3023:3023"
+      - "3000:3000"
       - "9229:9229"
     volumes:
       - ./app:/home/node/app

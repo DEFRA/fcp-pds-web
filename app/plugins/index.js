@@ -1,21 +1,13 @@
-const logging = require('./logging')
-const inert = require('./inert')
-const auth = require('./auth')
-const vision = require('./vision')
-const viewContext = require('./view-context')
-const router = require('./router')
+import logging from './logging.js'
+import router from './router.js'
 
 async function registerPlugins (server) {
   const plugins = [
     logging,
-    inert,
-    auth,
-    vision,
-    viewContext,
     router
   ]
 
   await server.register(plugins)
 }
 
-module.exports = { registerPlugins }
+export { registerPlugins }

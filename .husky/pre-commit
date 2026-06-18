@@ -19,12 +19,16 @@ fi
 
 # Always fetch latest shared gitleaks config
 echo "Fetching shared gitleaks config..."
-mkdir -p .gitleaks-shared
+REPO_ROOT=$(git rev-parse --show-toplevel)
+mkdir -p "$REPO_ROOT/.gitleaks-shared"
 if ! curl -sSfL https://raw.githubusercontent.com/DEFRA/ffc-shared-actions/main/.gitleaks.toml \
-  -o .gitleaks-shared/.gitleaks.toml; then
+  -o "$REPO_ROOT/.gitleaks-shared/.gitleaks.toml"; then
   echo "❌ Failed to fetch shared gitleaks config from ffc-shared-actions." >&2
   exit 1
 fi
 
+# Get repo root for absolute paths
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
 echo "🔍 Running gitleaks scan..."
-"$GITLEAKS_BIN" protect --staged --config .gitleaks.toml --verbose --exit-code=2
+"$GITLEAKS_BIN" protect --staged --config "$REPO_ROOT/.gitleaks.toml" --verbose --exit-code=2

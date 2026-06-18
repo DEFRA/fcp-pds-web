@@ -37,7 +37,7 @@ deployment: {}
 
 container:
   resourceTier: M
-  port: 3023
+  port: &port 3023
 
 ingress:
   class: nginx

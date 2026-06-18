@@ -40,6 +40,18 @@ const config = convict({
     format: Number,
     default: 604800000,
     env: 'STATIC_CACHE_TIMEOUT_MILLIS'
+  },
+  paymentManagementServiceUrl: {
+    doc: 'The payment management service URL.',
+    format: String,
+    default: 'http://localhost:3007',
+    env: 'PAYMENT_MANAGEMENT_SERVICE_URL'
+  },
+  requestEditorServiceUrl: {
+    doc: 'The request editor service URL.',
+    format: String,
+    default: 'http://localhost:3001',
+    env: 'REQUEST_EDITOR_SERVICE_URL'
   }
 })
 

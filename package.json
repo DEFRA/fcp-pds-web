@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Frontend for Payments and Documents Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",

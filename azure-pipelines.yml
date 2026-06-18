@@ -1,0 +1,60 @@
+# Pipeline name convention
+name: '$(Build.SourceBranchName)$(System.PullRequest.SourceBranch)$(Rev:.r)'
+
+# Trigger configuration
+trigger:
+  - main
+  - feature/*
+  - release/*
+
+pr:
+  - main
+  - releases/*
+
+# Parameters
+parameters:
+  - name: prDeployment
+    type: boolean
+    default: true
+  - name: branchDeployment
+    type: boolean
+    default: true
+  - name: sndDeployment
+    type: boolean
+    default: true
+
+# Resources
+resources:
+  repositories:
+    - repository: templates
+      endpoint: DEFRA
+      type: github
+      name: defra/fcp-pipeline-common
+      # ref: pl-709   # Optional: build specific pipeline branch
+
+# Pipeline template
+extends:
+  template: fcp-common-pipeline.yaml@templates
+  parameters:
+    appFrameworkType: nodejs
+    Type: kubernetes
+    dockerFilePath: Dockerfile
+    variableGroupName: fcp-pds-web-env-var  # Your ADO library group
+    pr_params:
+      container.paymentManagementServiceUrl: $(pr_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(pr_requestEditorServiceUrl)
+    snd2_params:
+      container.paymentManagementServiceUrl: $(snd2_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(snd2_requestEditorServiceUrl)
+    dev_params:
+      container.paymentManagementServiceUrl: $(dev_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(dev_requestEditorServiceUrl)
+    test_params:
+      container.paymentManagementServiceUrl: $(test_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(test_requestEditorServiceUrl)
+    pre_params:
+      container.paymentManagementServiceUrl: $(pre_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(pre_requestEditorServiceUrl)
+    prd_params:
+      container.paymentManagementServiceUrl: $(prd_paymentManagementServiceUrl)
+      container.requestEditorServiceUrl: $(prd_requestEditorServiceUrl)

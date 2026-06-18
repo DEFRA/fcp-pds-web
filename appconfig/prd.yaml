@@ -5,6 +5,6 @@ ingress:
   endpoint: ffc-pds-web-prd
   server: azure.defra.cloud
 paymentManagementService:
-  url: https://ffc-pay-web-prd.azure.defra.cloud
+  url: #{container.paymentManagementServiceUrl}#
 requestEditorService:
-  url: https://ffc-request-editor-prd.azure.defra.cloud
+  url: #{container.requestEditorServiceUrl}#

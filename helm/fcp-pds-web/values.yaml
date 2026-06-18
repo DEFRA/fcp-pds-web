@@ -37,7 +37,7 @@ deployment: {}
 
 container:
   resourceTier: M
-  port: &port 3023
+  port: 3023
 
 ingress:
   class: nginx
@@ -46,7 +46,7 @@ ingress:
 
 livenessProbe:
   path: /healthz
-  port: *port
+  port: 3023
   initialDelaySeconds: 20
   periodSeconds: 10
   failureThreshold: 3
@@ -54,7 +54,7 @@ livenessProbe:
 
 readinessProbe:
   path: /healthy
-  port: *port
+  port: 3023
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3

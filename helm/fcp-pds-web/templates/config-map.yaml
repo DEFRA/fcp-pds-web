@@ -4,4 +4,6 @@ data:
   NODE_ENV: {{ .Values.environment | quote }}
   PORT: {{ .Values.container.port | quote }}
   APPINSIGHTS_CLOUDROLE: {{ .Chart.Name | quote }}
+  PAYMENT_MANAGEMENT_SERVICE_URL: {{ .Values.paymentManagementService.url | quote }}
+  REQUEST_EDITOR_SERVICE_URL: {{ .Values.requestEditorService.url | quote }}
 {{- end -}}

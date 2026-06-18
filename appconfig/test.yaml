@@ -4,3 +4,7 @@ ingress:
   class: nginx
   endpoint: ffc-pds-web-test
   server: azure.defra.cloud
+paymentManagementService:
+  url: https://ffc-pay-web-test.azure.defra.cloud
+requestEditorService:
+  url: https://ffc-request-editor-test.azure.defra.cloud

@@ -1,3 +1,8 @@
 {{- include "ffc-helm-library.deployment" (list . "fcp-pds-web.deployment") -}}
 {{- define "fcp-pds-web.deployment" -}}
+spec:
+  template:
+    spec:
+      containers:
+      - {{ include "ffc-helm-library.container" (list . "ffc-pds-web.container") }}
 {{- end -}}

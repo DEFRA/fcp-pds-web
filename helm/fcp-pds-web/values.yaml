@@ -9,6 +9,12 @@ image: fcp-pds-web
 labels:
   component: pds-web
 
+paymentManagementService:
+  url: ""
+
+requestEditorService:
+  url: ""
+
 appInsights:
   connectionString:
 

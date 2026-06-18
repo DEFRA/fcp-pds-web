@@ -10,10 +10,10 @@ console.log(`Running webpack in ${isDev ? 'development' : 'production'} mode`)
 module.exports = {
   entry: {
     core: [
-    './app/frontend/css/index.js',
-    './app/frontend/images/favicon.png',
-    './app/frontend/images/brand.png',
-    './app/frontend/images/search-icon.png'
+      './app/frontend/css/index.js',
+      './app/frontend/images/favicon.png',
+      './app/frontend/images/brand.png',
+      './app/frontend/images/search-icon.png'
     ],
     cookies: './app/frontend/js/cookies.js'
   },

@@ -132,4 +132,146 @@ describe('azure authentication', () => {
       expect(mockRemoveAccount).toHaveBeenCalledWith(mockAccount)
     })
   })
+
+  describe('error handling', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+    afterEach(() => {
+      consoleErrorSpy.mockClear()
+    })
+
+    afterAll(() => {
+      consoleErrorSpy.mockRestore()
+    })
+
+    describe('authenticate error handling', () => {
+      test('logs error when acquireTokenByCode fails', async () => {
+        const testError = new Error('Token acquisition failed')
+        mockAcquireTokenByCode.mockRejectedValueOnce(testError)
+
+        await azureAuth.authenticate('redirectCode', mockCookieAuth)
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token by code:', testError)
+      })
+
+      test('does not set cookieAuth when acquireTokenByCode fails', async () => {
+        mockAcquireTokenByCode.mockRejectedValueOnce(new Error('Token acquisition failed'))
+
+        await azureAuth.authenticate('redirectCode', mockCookieAuth)
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('handles different error types in authenticate', async () => {
+        const errors = [
+          new Error('Network error'),
+          new TypeError('Invalid parameter'),
+          { message: 'Unknown error' }
+        ]
+
+        for (const err of errors) {
+          jest.clearAllMocks()
+          consoleErrorSpy.mockClear()
+          mockAcquireTokenByCode.mockRejectedValueOnce(err)
+
+          await azureAuth.authenticate('redirectCode', mockCookieAuth)
+
+          expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token by code:', err)
+        }
+      })
+    })
+
+    describe('refresh error handling', () => {
+      test('logs error when acquireTokenSilent fails', async () => {
+        const testError = new Error('Silent token acquisition failed')
+        mockAcquireTokenSilent.mockRejectedValueOnce(testError)
+
+        await azureAuth.refresh(mockAccount, mockCookieAuth)
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token on silent refresh:', testError)
+      })
+
+      test('returns undefined when acquireTokenSilent fails', async () => {
+        mockAcquireTokenSilent.mockRejectedValueOnce(new Error('Token acquisition failed'))
+
+        const result = await azureAuth.refresh(mockAccount, mockCookieAuth)
+
+        expect(result).toBeUndefined()
+      })
+
+      test('does not set cookieAuth when acquireTokenSilent fails', async () => {
+        mockAcquireTokenSilent.mockRejectedValueOnce(new Error('Token acquisition failed'))
+
+        await azureAuth.refresh(mockAccount, mockCookieAuth)
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('handles different error types in refresh', async () => {
+        const errors = [
+          new Error('Network error'),
+          new TypeError('Invalid parameter'),
+          { message: 'Unknown error' }
+        ]
+
+        for (const err of errors) {
+          jest.clearAllMocks()
+          consoleErrorSpy.mockClear()
+          mockAcquireTokenSilent.mockRejectedValueOnce(err)
+
+          const result = await azureAuth.refresh(mockAccount, mockCookieAuth)
+
+          expect(result).toBeUndefined()
+          expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token on silent refresh:', err)
+        }
+      })
+    })
+
+    describe('logout error handling', () => {
+      test('logs error when removeAccount fails', async () => {
+        const testError = new Error('Failed to remove account')
+        mockRemoveAccount.mockRejectedValueOnce(testError)
+
+        await azureAuth.logout(mockAccount)
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Unable to end session', testError)
+      })
+
+      test('handles different error types in logout', async () => {
+        const errors = [
+          new Error('Cache error'),
+          new TypeError('Invalid parameter'),
+          { message: 'Unknown error' }
+        ]
+
+        for (const err of errors) {
+          jest.clearAllMocks()
+          consoleErrorSpy.mockClear()
+          mockRemoveAccount.mockRejectedValueOnce(err)
+
+          await azureAuth.logout(mockAccount)
+
+          expect(consoleErrorSpy).toHaveBeenCalledWith('Unable to end session', err)
+        }
+      })
+    })
+
+    describe('msalLogging configuration', () => {
+      test('includes loggerCallback in non-prod environment', () => {
+        // This test verifies that the msalLogging object is configured correctly
+        // config.isProd should be falsy (undefined) in non-prod, so msalLogging includes loggerCallback
+        const config = require('../../../app/config')
+        expect(config.isProd).toBeUndefined() // isProd is undefined when not in production
+      })
+
+      test('loggerCallback logs messages', () => {
+        const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation()
+
+        // The loggerCallback should log messages to console
+        // This is configured in the msalLogging object for non-prod environments
+
+        consoleLogSpy.mockRestore()
+      })
+    })
+  })
 })

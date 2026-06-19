@@ -11,7 +11,8 @@ const routes = [].concat(
   require('../routes/dev-auth'),
   require('../routes/accessibility'),
   require('../routes/privacy'),
-  require('../routes/sitemap')
+  require('../routes/sitemap'),
+  require('../routes/cookies')
 )
 
 module.exports = {

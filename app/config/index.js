@@ -1,6 +1,6 @@
 const convict = require('convict')
 const convictFormatWithValidator = require('convict-format-with-validator')
-const authConfig = require('./config/auth')
+const authConfig = require('./auth')
 
 convict.addFormats(convictFormatWithValidator)
 const Millseconds = 1000

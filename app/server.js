@@ -1,7 +1,7 @@
 const Hapi = require('@hapi/hapi')
 const Joi = require('joi')
 const { registerPlugins } = require('./plugins/index.js')
-const config = require('./config.js')
+const config = require('./config')
 
 async function createServer () {
   const server = Hapi.server({

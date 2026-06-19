@@ -8,7 +8,7 @@ module.exports = {
   options: {
     auth: AUTH_SCOPE
   },
-  handler: (request, h) => {
+  handler: (_request, h) => {
     const serviceUrl = config.get('requestEditorServiceUrl')
     return h.redirect(serviceUrl)
   }

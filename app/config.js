@@ -3,6 +3,11 @@ const convictFormatWithValidator = require('convict-format-with-validator')
 const authConfig = require('./config/auth')
 
 convict.addFormats(convictFormatWithValidator)
+const Millseconds = 1000
+const seconds = 60
+const minutes = 60
+const hours = 24
+const daysPerYear = 365
 
 const config = convict({
   env: {
@@ -69,7 +74,7 @@ module.exports = {
   isDev: config.get('isDev'),
   authConfig,
   cookieOptions: {
-    ttl: 1000 * 60 * 60 * 24 * 365,
+    ttl: Millseconds * seconds * minutes * hours * daysPerYear,
     isSameSite: 'Lax',
     encoding: 'base64json',
     isSecure: process.env.NODE_ENV === 'production',

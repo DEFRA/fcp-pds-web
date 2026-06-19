@@ -1,4 +1,4 @@
-const getUser = require('../../../../app/auth/get-user')
+const getUser = require('../../../app/auth/get-user')
 
 describe('getUser', () => {
   test('returns userId and username from credentials', () => {

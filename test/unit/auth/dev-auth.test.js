@@ -1,4 +1,4 @@
-const devAuth = require('../../../../app/auth/dev-auth')
+const devAuth = require('../../../app/auth/dev-auth')
 
 describe('dev-auth', () => {
   test('getAuthenticationUrl returns /dev-auth', () => {
@@ -24,7 +24,7 @@ describe('dev-auth', () => {
   })
 
   test('logout updates homeAccountId', async () => {
-    const devAccount = require('../../../../app/auth/dev-account')
+    const devAccount = require('../../../app/auth/dev-account')
     const originalId = devAccount.homeAccountId
     await devAuth.logout(devAccount)
     expect(devAccount.homeAccountId).not.toBe(originalId)

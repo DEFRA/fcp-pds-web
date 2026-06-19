@@ -67,5 +67,14 @@ module.exports = {
   has: config.has.bind(config),
   validate: config.validate.bind(config),
   isDev: config.get('isDev'),
-  authConfig
+  authConfig,
+  cookieOptions: {
+    ttl: 1000 * 60 * 60 * 24 * 365,
+    isSameSite: 'Lax',
+    encoding: 'base64json',
+    isSecure: process.env.NODE_ENV === 'production',
+    isHttpOnly: true,
+    clearInvalid: false,
+    strictHeader: true
+  }
 }

@@ -7,6 +7,7 @@ module.exports = [
     method: 'GET',
     path: '/cookies',
     options: {
+      auth: false,
       handler: (request, h) => {
         return h.view('cookies', new ViewModel(request.state.cookies_policy, request.query.updated))
       }
@@ -15,6 +16,7 @@ module.exports = [
     method: 'POST',
     path: '/cookies',
     options: {
+      auth: false,
       plugins: {
         crumb: false
       },

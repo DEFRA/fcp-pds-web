@@ -1,4 +1,4 @@
-const isInRole = require('../../../../app/auth/is-in-role')
+const isInRole = require('../../../app/auth/is-in-role')
 
 describe('isInRole', () => {
   test('returns true when role is in credentials scope', () => {

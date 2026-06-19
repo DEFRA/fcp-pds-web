@@ -2,7 +2,7 @@ jest.mock('../../../app/config', () => ({
   cookieOptions: { path: '/', ttl: 365 * 24 * 60 * 60 * 1000 }
 }))
 
-const { getCurrentPolicy, updatePolicy } = require('../../../cookies/index')
+const { getCurrentPolicy, updatePolicy } = require('../../../app/cookies/index')
 
 describe('cookies policy', () => {
   const mockConfig = { path: '/', ttl: 365 * 24 * 60 * 60 * 1000 }

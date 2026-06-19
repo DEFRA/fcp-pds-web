@@ -1,4 +1,4 @@
-const mapAuth = require('../../../../app/auth/map-auth')
+const mapAuth = require('../../../app/auth/map-auth')
 
 const buildRequest = (isAuthenticated, scope = []) => ({
   auth: {

@@ -1,3 +1,10 @@
+jest.mock('../../../../app/auth', () => ({
+  getAuthenticationUrl: jest.fn().mockResolvedValue('/login'),
+  authenticate: jest.fn().mockRejectedValue(new Error('No code provided')),
+  mapAuth: jest.fn(),
+  getUser: jest.fn()
+}))
+
 const { createServer } = require('../../../../app/server')
 
 describe('authenticate route', () => {

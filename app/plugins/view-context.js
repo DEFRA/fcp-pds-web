@@ -15,7 +15,7 @@ module.exports = {
           request.response.source.context
         ) {
           request.response.source.context.auth = mapAuth(request)
-          request.response.source.context.user = getUser(request)
+          request.response.source.context.user = request.auth.isAuthenticated ? getUser(request) : null
         }
         return h.continue
       })

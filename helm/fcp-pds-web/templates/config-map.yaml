@@ -4,7 +4,6 @@ data:
   NODE_ENV: {{ .Values.environment | quote }}
   PORT: {{ .Values.container.port | quote }}
   APPINSIGHTS_CLOUDROLE: {{ .Chart.Name | quote }}
-  APPINSIGHTS_CONNECTIONSTRING: {{ quote .Values.appInsights.connectionString }}
   AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
   PAYMENT_MANAGEMENT_SERVICE_URL: {{ .Values.paymentManagementService.url | quote }}
   REQUEST_EDITOR_SERVICE_URL: {{ .Values.requestEditorService.url | quote }}

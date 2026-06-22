@@ -15,9 +15,6 @@ paymentManagementService:
 requestEditorService:
   url: "localhost:3001"
 
-appInsights:
-  connectionString: ""
-
 azureIdentity:
   clientID: not-a-real-clientID
   resourceID: not-a-real-resourceID

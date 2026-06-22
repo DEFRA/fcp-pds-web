@@ -25,10 +25,11 @@ module.exports = {
             watch: config.isDev
           })
 
+          const SLASH_LENGTH = 1
           env.addGlobal('getAssetPath', function (assetPath) {
             const base = options?.context?.assetPath || '/static'
-            const normalizedBase = String(base).replace(/\/+$/, '')
-            const normalizedAsset = String(assetPath || '').replace(/^\/+/, '')
+            const normalizedBase = String(base).endsWith('/') ? String(base).slice(0, -SLASH_LENGTH) : String(base)
+            const normalizedAsset = String(assetPath || '').startsWith('/') ? String(assetPath || '').slice(SLASH_LENGTH) : String(assetPath || '')
             return normalizedBase + (normalizedAsset ? '/' + normalizedAsset : '')
           })
 

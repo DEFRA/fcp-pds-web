@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('node:path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -10,10 +10,10 @@ console.log(`Running webpack in ${isDev ? 'development' : 'production'} mode`)
 module.exports = {
   entry: {
     core: [
-    './app/frontend/css/index.js',
-    './app/frontend/images/favicon.png',
-    './app/frontend/images/brand.png',
-    './app/frontend/images/search-icon.png'
+      './app/frontend/css/index.js',
+      './app/frontend/images/favicon.png',
+      './app/frontend/images/brand.png',
+      './app/frontend/images/search-icon.png'
     ],
     cookies: './app/frontend/js/cookies.js'
   },

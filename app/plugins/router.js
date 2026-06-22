@@ -1,6 +1,4 @@
-const config = require('../config')
-
-let routes = [].concat(
+const routes = [].concat(
   require('../routes/healthy'),
   require('../routes/healthz'),
   require('../routes/static'),
@@ -13,7 +11,8 @@ let routes = [].concat(
   require('../routes/dev-auth'),
   require('../routes/accessibility'),
   require('../routes/privacy'),
-  require('../routes/sitemap')
+  require('../routes/sitemap'),
+  require('../routes/cookies')
 )
 
 module.exports = {

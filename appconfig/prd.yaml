@@ -2,8 +2,21 @@ environment: production
 environmentCode: prd
 ingress:
   class: nginx
-  endpoint: ffc-pds-web-prd
+  endpoint: fcp-pds-web-prd
   server: azure.defra.cloud
+secretProviderClass:
+  azure:
+    keyvaultName: PRDFFCINFKV1001
+    objects:
+      - objectName: prd-ffcahwr-appInsights-connectionString
+        objectType: secret
+
+  secretObjects:
+    - secretName: fcp-pds-web
+      type: Opaque
+      data:
+        - objectName: prd-ffcahwr-appInsights-connectionString
+          key: APPLICATIONINSIGHTS_CONNECTION_STRING
 paymentManagementService:
   url: #{container.paymentManagementServiceUrl}#
 requestEditorService:

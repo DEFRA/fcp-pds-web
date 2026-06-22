@@ -7,14 +7,20 @@ const config = {
   coverageDirectory: 'test-output',
   coverageReporters: [
     'text-summary',
-    'lcov'
+    'lcov',
+    'cobertura'
   ],
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/test-output/',
     '<rootDir>/test/',
-    '<rootDir>/rename.js',
-    '<rootDir>/jest.config.js'
+    '<rootDir>/jest.config.js',
+    '<rootDir>/webpack.config.js',
+    '<rootDir>/app/frontend/',
+    '<rootDir>/app/frontend/js/',
+    '<rootDir>/app/dist/',
+    '<rootDir>/app/config',
+    '<rootDir>/eslint.config.js',
   ],
   modulePathIgnorePatterns: [
     'node_modules'

@@ -10,23 +10,20 @@ labels:
   component: pds-web
 
 paymentManagementService:
-  url: ""
+  url: "localhost:3008"
 
 requestEditorService:
-  url: ""
-
-appInsights:
-  connectionString:
+  url: "localhost:3001"
 
 azureIdentity:
   clientID: not-a-real-clientID
   resourceID: not-a-real-resourceID
 
 containerConfigMap:
-  name: ffc-pay-web-config-map
+  name: fcp-pds-web-config-map
 
 containerSecret: 
-  name: ffc-pds-web
+  name: fcp-pds-web
   type: Opaque
 
 service:
@@ -36,17 +33,19 @@ service:
 deployment: {}
 
 container:
-  resourceTier: M
+  requestMemory: 500Mi
+  requestCpu: 500m
+  limitMemory: 800Mi
   port: 3023
 
 ingress:
   class: nginx
-  endpoint: ffc-pds-web
+  endpoint: fcp-pds-web
   server: example.com
 
 livenessProbe:
   path: /healthz
-  port: *port
+  port: 3023
   initialDelaySeconds: 20
   periodSeconds: 10
   failureThreshold: 3
@@ -54,11 +53,25 @@ livenessProbe:
 
 readinessProbe:
   path: /healthy
-  port: *port
+  port: 3023
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3
   timeoutSeconds: 5
 
 workloadIdentity: true
+
+secretProviderClass:
+  azure:
+    keyvaultName: SNDFFCINFKV2001
+    objects: # reading the secret from Azure Key Vault
+      - objectName: appInsights-connectionString # secret name in Azure Key Vault
+        objectType: secret
+
+  secretObjects: # creating a Kubernetes secret from the Azure Key Vault secrets
+    - secretName: fcp-pds-web
+      type: Opaque
+      data:
+        - objectName: appInsights-connectionString # secret name in Azure Key Vault
+          key: APPLICATIONINSIGHTS_CONNECTION_STRING # the secret key in the Kubernetes secret and use in the applicatio
 

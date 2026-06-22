@@ -16,9 +16,9 @@ const authPlugin = {
           isSecure: false,
           ttl: config.authConfig.cookie.ttl
         },
-        validateFunc: async (request, session) => {
+        validateFunc: async (_request, session) => {
           // Validate the session
-          if (session && session.account) {
+          if (session?.account) {
             return { valid: true, credentials: session }
           }
           return { valid: false }

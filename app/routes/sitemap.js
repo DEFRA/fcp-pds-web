@@ -5,6 +5,7 @@ module.exports = {
   method: 'GET',
   path: '/sitemap',
   options: {
+    auth: false,
     handler: (_request, h) => {
       return h.view('sitemap', new ViewModel(sitemap))
     }

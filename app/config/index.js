@@ -1,8 +1,13 @@
 const convict = require('convict')
 const convictFormatWithValidator = require('convict-format-with-validator')
-const authConfig = require('./config/auth')
+const authConfig = require('./auth')
 
 convict.addFormats(convictFormatWithValidator)
+const Millseconds = 1000
+const seconds = 60
+const minutes = 60
+const hours = 24
+const daysPerYear = 365
 
 const config = convict({
   env: {
@@ -40,6 +45,18 @@ const config = convict({
     format: Number,
     default: 604800000,
     env: 'STATIC_CACHE_TIMEOUT_MILLIS'
+  },
+  paymentManagementServiceUrl: {
+    doc: 'The payment management service URL.',
+    format: String,
+    default: 'http://localhost:3007',
+    env: 'PAYMENT_MANAGEMENT_SERVICE_URL'
+  },
+  requestEditorServiceUrl: {
+    doc: 'The request editor service URL.',
+    format: String,
+    default: 'http://localhost:3001',
+    env: 'REQUEST_EDITOR_SERVICE_URL'
   }
 })
 
@@ -55,5 +72,14 @@ module.exports = {
   has: config.has.bind(config),
   validate: config.validate.bind(config),
   isDev: config.get('isDev'),
-  authConfig
+  authConfig,
+  cookieOptions: {
+    ttl: Millseconds * seconds * minutes * hours * daysPerYear,
+    isSameSite: 'Lax',
+    encoding: 'base64json',
+    isSecure: process.env.NODE_ENV === 'production',
+    isHttpOnly: true,
+    clearInvalid: false,
+    strictHeader: true
+  }
 }

@@ -1,5 +1,5 @@
-{{- include "ffc-helm-library.azure-ingress" (list . "ffc-pds-web.ingress") -}}
-{{- define "ffc-pds-web.ingress" -}}
+{{- include "ffc-helm-library.azure-ingress" (list . "fcp-pds-web.ingress") -}}
+{{- define "fcp-pds-web.ingress" -}}
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "20M"

@@ -1,14 +1,15 @@
 const { applicationAdmin } = require('../auth/permissions')
+const AUTH_SCOPE = { scope: [applicationAdmin] }
+const config = require('../config')
 
 module.exports = {
   method: 'GET',
   path: '/request-editor',
   options: {
-    auth: {
-      scope: [applicationAdmin]
-    }
+    auth: AUTH_SCOPE
   },
-  handler: (request, h) => {
-    return h.redirect('http://localhost:3001')
+  handler: (_request, h) => {
+    const serviceUrl = config.get('requestEditorServiceUrl')
+    return h.redirect(serviceUrl)
   }
 }

@@ -1,4 +1,5 @@
 const authPlugin = require('../../../app/plugins/auth')
+const { validateSession } = require('../../../app/plugins/auth')
 const { createServer } = require('../../../app/server')
 
 describe('auth plugin', () => {
@@ -96,49 +97,41 @@ describe('auth plugin', () => {
   })
 
   describe('validateFunc behavior', () => {
-    // Unit test the validation logic
-    const validateFunc = async (_request, session) => {
-      if (session?.account) {
-        return { valid: true, credentials: session }
-      }
-      return { valid: false }
-    }
-
     test('accepts valid session with account', async () => {
       const session = {
         account: { homeAccountId: 'id1', name: 'User1' },
         scope: ['admin']
       }
-      const result = await validateFunc(null, session)
+      const result = await validateSession(null, session)
       expect(result.valid).toBe(true)
       expect(result.credentials).toBe(session)
     })
 
     test('rejects session without account', async () => {
       const session = { scope: ['admin'] }
-      const result = await validateFunc(null, session)
+      const result = await validateSession(null, session)
       expect(result.valid).toBe(false)
     })
 
     test('rejects null session', async () => {
-      const result = await validateFunc(null, null)
+      const result = await validateSession(null, null)
       expect(result.valid).toBe(false)
     })
 
     test('rejects undefined session', async () => {
-      const result = await validateFunc(null, undefined)
+      const result = await validateSession(null, undefined)
       expect(result.valid).toBe(false)
     })
 
     test('rejects session with null account', async () => {
       const session = { account: null, scope: ['admin'] }
-      const result = await validateFunc(null, session)
+      const result = await validateSession(null, session)
       expect(result.valid).toBe(false)
     })
 
     test('accepts session with empty account (any truthy account object)', async () => {
       const session = { account: {}, scope: ['admin'] }
-      const result = await validateFunc(null, session)
+      const result = await validateSession(null, session)
       expect(result.valid).toBe(true)
       expect(result.credentials).toBe(session)
     })
@@ -151,7 +144,7 @@ describe('auth plugin', () => {
       ]
 
       for (const session of testCases) {
-        const result = await validateFunc(null, session)
+        const result = await validateSession(null, session)
         expect(result.valid).toBe(true)
         expect(result.credentials).toBe(session)
       }

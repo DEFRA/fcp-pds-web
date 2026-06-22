@@ -16,7 +16,7 @@ requestEditorService:
   url: "localhost:3001"
 
 appInsights:
-  connectionString:
+  connectionString: ""
 
 azureIdentity:
   clientID: not-a-real-clientID

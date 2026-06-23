@@ -9,12 +9,6 @@ image: fcp-pds-web
 labels:
   component: pds-web
 
-paymentManagementService:
-  url: "localhost:3008"
-
-requestEditorService:
-  url: "localhost:3001"
-
 azureIdentity:
   clientID: not-a-real-clientID
   resourceID: not-a-real-resourceID
@@ -37,6 +31,8 @@ container:
   requestCpu: 500m
   limitMemory: 800Mi
   port: 3023
+  paymentManagementServiceUrl: http://localhost:3007
+  requestEditorServiceUrl: http://localhost:3001
 
 ingress:
   class: nginx

@@ -5,6 +5,6 @@ data:
   PORT: {{ .Values.container.port | quote }}
   APPINSIGHTS_CLOUDROLE: {{ .Chart.Name | quote }}
   AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
-  PAYMENT_MANAGEMENT_SERVICE_URL: {{ .Values.paymentManagementService.url | quote }}
-  REQUEST_EDITOR_SERVICE_URL: {{ .Values.requestEditorService.url | quote }}
+  PAYMENT_MANAGEMENT_SERVICE_URL: {{ .Values.container.paymentManagementServiceUrl | quote }}
+  REQUEST_EDITOR_SERVICE_URL: {{ .Values.container.requestEditorServiceUrl | quote }}
 {{- end -}}

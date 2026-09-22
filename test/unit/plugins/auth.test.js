@@ -56,7 +56,7 @@ describe('auth plugin', () => {
       expect(JSON.parse(response.payload).success).toBe(true)
     })
 
-    test('denies access without credentials', async () => {
+    test('redirects unauthenticated users to login', async () => {
       server.route({
         method: 'GET',
         path: '/protected-test',
@@ -73,7 +73,8 @@ describe('auth plugin', () => {
         url: '/protected-test'
       })
 
-      expect(response.statusCode).toBe(401)
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/login')
     })
 
     test('allows routes with auth: false', async () => {

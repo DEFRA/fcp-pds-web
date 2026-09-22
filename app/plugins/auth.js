@@ -24,7 +24,8 @@ const authPlugin = {
           isSecure: false,
           ttl: config.authConfig.cookie.ttl
         },
-        validateFunc: validateSession
+        validateFunc: validateSession,
+        redirectTo: '/login'
       })
 
       // Set cookieAuth as the default strategy

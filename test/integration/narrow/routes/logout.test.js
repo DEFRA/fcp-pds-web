@@ -19,7 +19,7 @@ describe('logout route', () => {
       auth: {
         strategy: 'cookieAuth',
         credentials: {
-          scope: ['Payment.Application.Admin'],
+          scope: ['Web.Pds.Admin'],
           account: { homeAccountId: 'test-id', name: 'Test User' }
         }
       }

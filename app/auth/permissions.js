@@ -1,13 +1,27 @@
-const permissions = {
-  applicationAdmin: 'Payment.Application.Admin',
-  schemeAdmin: 'Payment.Scheme.Admin',
-  holdAdmin: 'Payment.Hold.Admin',
-  dataView: 'Payment.Data.View',
-  closureAdmin: 'Payment.Closure.Admin',
-  statusReportSfi23: 'Statements.Status-Reports.SFI-23',
-  statusReportsDelinked: 'Statements.Status-Reports.Delinked',
-  manualPaymentsAdmin: 'Payment.Manual-Payments.Admin',
-  alertAdmin: 'Payment.Alert.Admin'
+const adminPermissions = {
+  applicationAdmin: 'Web.Pds.Admin'
 }
 
-module.exports = permissions
+const mgmtPermissions = {
+  reportViewer: 'Management.Pay.Report',
+  eventViewer: 'Management.Pay.Event',
+  holdViewer: 'Management.Pay.Hold',
+  injectionViewer: 'Management.Pay.Injection',
+  closureViewer: 'Management.Pay.Closure',
+  alertViewer: 'Management.Pay.Alert',
+  statementViewer: 'Management.Doc.Statement',
+  metricsViewer: 'Management.Pds.Metrics',
+  resetViewer: 'Management.Pay.Reset',
+  sequenceViewer: 'Management.Pay.Sequence'
+}
+
+const rePermissions = {
+  debtDataViewer: 'Request.Editor.Debt',
+  ledgerViewer: 'Request.Editor.Ledger'
+}
+
+module.exports = {
+  ...adminPermissions,
+  ...mgmtPermissions,
+  ...rePermissions
+}

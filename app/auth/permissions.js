@@ -12,7 +12,8 @@ const mgmtPermissions = {
   statementViewer: 'Management.Doc.Statement',
   metricsViewer: 'Management.Pds.Metrics',
   resetViewer: 'Management.Pay.Reset',
-  sequenceViewer: 'Management.Pay.Sequence'
+  sequenceViewer: 'Management.Pay.Sequence',
+  batchViewer: 'Management.Pay.Batch'
 }
 
 const rePermissions = {

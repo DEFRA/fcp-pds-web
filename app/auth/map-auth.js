@@ -11,6 +11,7 @@ const {
   metricsViewer,
   resetViewer,
   sequenceViewer,
+  batchViewer,
   debtDataViewer,
   ledgerViewer
 } = require('./permissions')
@@ -33,6 +34,7 @@ const mapAuth = (request) => {
     isMetricsViewerUser: hasRole(metricsViewer),
     isResetViewerUser: hasRole(resetViewer),
     isSequenceViewerUser: hasRole(sequenceViewer),
+    isBatchViewerUser: hasRole(batchViewer),
     isDebtDataViewerUser: hasRole(debtDataViewer),
     isLedgerViewerUser: hasRole(ledgerViewer)
   }

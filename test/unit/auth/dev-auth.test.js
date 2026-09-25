@@ -10,7 +10,7 @@ describe('dev-auth', () => {
     await devAuth.authenticate(undefined, cookieAuth)
     expect(cookieAuth.set).toHaveBeenCalledWith(
       expect.objectContaining({
-        scope: expect.arrayContaining(['Payment.Application.Admin']),
+        scope: expect.arrayContaining(['Web.Pds.Admin']),
         account: expect.objectContaining({ name: 'Developer' })
       })
     )
@@ -20,7 +20,7 @@ describe('dev-auth', () => {
     const cookieAuth = { set: jest.fn() }
     const result = await devAuth.refresh(undefined, cookieAuth)
     expect(cookieAuth.set).toHaveBeenCalled()
-    expect(result).toContain('Payment.Application.Admin')
+    expect(result).toContain('Web.Pds.Admin')
   })
 
   test('logout updates homeAccountId', async () => {

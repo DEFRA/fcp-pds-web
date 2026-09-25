@@ -1,18 +1,42 @@
 const isInRole = require('./is-in-role')
-const { applicationAdmin, schemeAdmin, holdAdmin, dataView, closureAdmin, statusReportSfi23, statusReportsDelinked, manualPaymentsAdmin, alertAdmin } = require('./permissions')
+const {
+  applicationAdmin,
+  reportViewer,
+  eventViewer,
+  holdViewer,
+  injectionViewer,
+  closureViewer,
+  alertViewer,
+  statementViewer,
+  metricsViewer,
+  resetViewer,
+  sequenceViewer,
+  batchViewer,
+  debtDataViewer,
+  ledgerViewer
+} = require('./permissions')
 
 const mapAuth = (request) => {
+  const { isAuthenticated, credentials } = request.auth
+  const hasRole = role => isAuthenticated && isInRole(credentials, role)
+
   return {
-    isAuthenticated: request.auth.isAuthenticated,
-    isAnonymous: !request.auth.isAuthenticated,
-    isApplicationAdmin: request.auth.isAuthenticated && isInRole(request.auth.credentials, applicationAdmin),
-    isSchemeAdminUser: request.auth.isAuthenticated && isInRole(request.auth.credentials, schemeAdmin),
-    isHoldAdminUser: request.auth.isAuthenticated && isInRole(request.auth.credentials, holdAdmin),
-    isDataViewUser: request.auth.isAuthenticated && isInRole(request.auth.credentials, dataView),
-    isClosureAdminUser: request.auth.isAuthenticated && isInRole(request.auth.credentials, closureAdmin),
-    isStatusReportUser: request.auth.isAuthenticated && (isInRole(request.auth.credentials, statusReportSfi23) || isInRole(request.auth.credentials, statusReportsDelinked)),
-    isManualPaymentsUser: request.auth.isAuthenticated && (isInRole(request.auth.credentials, manualPaymentsAdmin)),
-    isAlertAdminUser: request.auth.isAuthenticated && isInRole(request.auth.credentials, alertAdmin)
+    isAuthenticated,
+    isAnonymous: !isAuthenticated,
+    isApplicationAdmin: hasRole(applicationAdmin),
+    isReportViewerUser: hasRole(reportViewer),
+    isEventViewerUser: hasRole(eventViewer),
+    isHoldViewerUser: hasRole(holdViewer),
+    isInjectionViewerUser: hasRole(injectionViewer),
+    isClosureViewerUser: hasRole(closureViewer),
+    isAlertViewerUser: hasRole(alertViewer),
+    isStatementViewerUser: hasRole(statementViewer),
+    isMetricsViewerUser: hasRole(metricsViewer),
+    isResetViewerUser: hasRole(resetViewer),
+    isSequenceViewerUser: hasRole(sequenceViewer),
+    isBatchViewerUser: hasRole(batchViewer),
+    isDebtDataViewerUser: hasRole(debtDataViewer),
+    isLedgerViewerUser: hasRole(ledgerViewer)
   }
 }
 

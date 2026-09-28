@@ -19,7 +19,7 @@ describe('home route', () => {
       auth: {
         strategy: 'cookieAuth',
         credentials: {
-          scope: ['Payment.Application.Admin'],
+          scope: ['Web.Pds.Admin'],
           account: { homeAccountId: 'test-id', name: 'Test User' }
         }
       }
@@ -35,7 +35,7 @@ describe('home route', () => {
         strategy: 'cookieAuth',
         credentials: {
           scope: [
-            'Payment.Application.Admin',
+            'Web.Pds.Admin',
             'Payment.Scheme.Admin',
             'Payment.Hold.Admin',
             'Payment.Data.View'

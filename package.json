@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Frontend for Payments and Documents Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -21,7 +21,8 @@
   "author": "Defra",
   "contributors": [
     "Leigh Godson <leigh.godson@atos.ai>",
-    "Alistair Wishart <alistair.wishart@atos.ai>"
+    "Alistair Wishart <alistair.wishart@atos.ai>",
+    "Sam Plackett <samuel.plackett@atos.ai>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

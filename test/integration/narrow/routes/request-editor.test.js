@@ -15,7 +15,7 @@ describe('request editor test', () => {
       auth: {
         strategy: 'cookieAuth',
         credentials: {
-          scope: ['Payment.Application.Admin'],
+          scope: ['Web.Pds.Admin'],
           account: { localAccountId: 'test-user' }
         }
       }

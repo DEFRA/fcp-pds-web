@@ -21,7 +21,8 @@
   "author": "Defra",
   "contributors": [
     "Leigh Godson <leigh.godson@atos.ai>",
-    "Alistair Wishart <alistair.wishart@atos.ai>"
+    "Alistair Wishart <alistair.wishart@atos.ai>",
+    "Sam Plackett <samuel.plackett@atos.ai>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

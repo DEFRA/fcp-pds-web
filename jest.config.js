@@ -20,6 +20,7 @@ const config = {
     '<rootDir>/app/frontend/js/',
     '<rootDir>/app/dist/',
     '<rootDir>/app/config',
+    '<rootDir>/app/data/models/',
     '<rootDir>/eslint.config.js',
   ],
   modulePathIgnorePatterns: [

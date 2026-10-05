@@ -5,6 +5,21 @@ services:
       target: production
     image: fcp-pds-web
     container_name: fcp-pds-web
+    depends_on:
+      - fcp-pds-web-postgres
     environment:
       APPINSIGHTS_CLOUDROLE: fcp-pds-web-local
       APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING}
+      POSTGRES_DB: fcp_pds_web
+      POSTGRES_HOST: ${POSTGRES_HOST:-fcp-pds-web-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
+      POSTGRES_PORT: 5432
+      POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
+      POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
+
+  fcp-pds-web-postgres:
+    image: postgres:11.4-alpine
+    environment:
+      POSTGRES_DB: fcp_pds_web
+      POSTGRES_PASSWORD: ppp
+      POSTGRES_USERNAME: postgres

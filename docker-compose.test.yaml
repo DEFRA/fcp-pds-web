@@ -7,6 +7,8 @@ services:
       target: development
     image: fcp-pds-web-development
     container_name: fcp-pds-web-test
+    depends_on:
+      - fcp-pds-web-postgres
     command: npm run test
     volumes:
       - ./app:/home/node/app
@@ -16,7 +18,15 @@ services:
       - ./package.json:/home/node/package.json
     environment:
       NODE_OPTIONS: "$NODE_OPTIONS --experimental-vm-modules"
+
+  fcp-pds-web-postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 networks:
   docs:
     name: docs
     external: false
+
+volumes:
+  postgres_data:

@@ -16,7 +16,16 @@ services:
     networks:
       - fcp-pds-web
 
+  fcp-pds-web-postgres:
+    ports:
+      - "5495:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 networks:
   fcp-pds-web:
     name: fcp-pds-web
     driver: bridge
+
+volumes:
+  postgres_data:

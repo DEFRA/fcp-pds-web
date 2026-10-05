@@ -95,7 +95,7 @@ describe('login route', () => {
       const response = await server.inject({ method: 'GET', url: '/login' })
 
       expect(response.statusCode).toBe(500)
-      expect(response.payload).toContain('Internal Server Error')
+      expect(response.payload).toContain('Sorry, there is a problem with the service')
       consoleSpy.mockRestore()
     })
 

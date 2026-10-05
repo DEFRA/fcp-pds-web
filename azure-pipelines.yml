@@ -45,21 +45,3 @@ extends:
     branchDeployment: ${{ parameters.branchDeployment }}
     sndDeployment: ${{ parameters.sndDeployment }}
     variableGroupName: fcp-pds-web-env-var
-    pr_params:
-      container.paymentManagementServiceUrl: $(pr_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(pr_requestEditorServiceUrl)
-    snd2_params:
-      container.paymentManagementServiceUrl: $(snd2_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(snd2_requestEditorServiceUrl)
-    dev_params:
-      container.paymentManagementServiceUrl: $(dev_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(dev_requestEditorServiceUrl)
-    test_params:
-      container.paymentManagementServiceUrl: $(test_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(test_requestEditorServiceUrl)
-    pre_params:
-      container.paymentManagementServiceUrl: $(pre_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(pre_requestEditorServiceUrl)
-    prd_params:
-      container.paymentManagementServiceUrl: $(prd_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(prd_requestEditorServiceUrl)

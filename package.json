@@ -38,9 +38,9 @@
     "@hapi/vision": "6.1.0",
     "@hapi/wreck": "18.1.2",
     "@joi/date": "2.1.0",
-    "applicationinsights": "2.9.8",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
+    "ffc-database": "1.0.27",
     "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
@@ -67,8 +67,7 @@
     "webpack-cli": "4.10.0"
   },
   "overrides": {
-    "@opentelemetry/core": "2.8.0",
-    "moment": "2.31.0"
+    "uuid": "11.1.1"
   },
   "nodemonConfig": {
     "ignore": [

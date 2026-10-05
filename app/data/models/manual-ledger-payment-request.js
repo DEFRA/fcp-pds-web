@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const createManualLedgerPaymentRequestTable = (sequelize, DataTypes) => {
   const manualLedgerPaymentRequest = sequelize.define('manualLedgerPaymentRequest', {
     manualLedgerPaymentRequestId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   manualLedgerPaymentRequest.associate = (models) => {
     manualLedgerPaymentRequest.hasOne(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
@@ -29,3 +30,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return manualLedgerPaymentRequest
 }
+
+module.exports = createManualLedgerPaymentRequestTable

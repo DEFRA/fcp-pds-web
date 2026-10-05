@@ -2,7 +2,7 @@ const { convertDebtIdToText } = require('../../processing/conversion')
 const toCurrencyString = require('../../utils/to-currency-string')
 const { convertToPounds } = require('../../processing/conversion')
 
-module.exports = (sequelize, DataTypes) => {
+const createDebtDataTable = (sequelize, DataTypes) => {
   const debtData = sequelize.define('debtData', {
     debtDataId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   debtData.associate = (models) => {
     debtData.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
@@ -46,3 +47,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return debtData
 }
+
+module.exports = createDebtDataTable

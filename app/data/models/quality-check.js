@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const createQualityCheckTable = (sequelize, DataTypes) => {
   const qualityCheck = sequelize.define('qualityCheck', {
     qualityCheckId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   qualityCheck.associate = (models) => {
     qualityCheck.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
@@ -20,3 +21,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return qualityCheck
 }
+
+module.exports = createQualityCheckTable

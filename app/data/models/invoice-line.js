@@ -1,6 +1,6 @@
 const { convertValueToStringFormat } = require('../../processing/conversion')
 
-module.exports = (sequelize, DataTypes) => {
+const createInvoiceLineTable = (sequelize, DataTypes) => {
   const invoiceLine = sequelize.define('invoiceLine', {
     invoiceLineId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   invoiceLine.associate = (models) => {
     invoiceLine.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
@@ -34,3 +35,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return invoiceLine
 }
+
+module.exports = createInvoiceLineTable

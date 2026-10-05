@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const createScheduleTable = (sequelize, DataTypes) => {
   const schedule = sequelize.define('category', {
     categoryId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: DataTypes.STRING
@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   schedule.associate = (models) => {
     schedule.belongsTo(models.paymentRequest, {
       foreignKey: 'categoryId',
@@ -16,3 +17,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return schedule
 }
+
+module.exports = createScheduleTable

@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const createSchemeTable = (sequelize, DataTypes) => {
   const scheme = sequelize.define('scheme', {
     schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: DataTypes.STRING
@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
   scheme.associate = (models) => {
     scheme.hasMany(models.paymentRequest, {
       foreignKey: 'schemeId',
@@ -20,3 +21,5 @@ module.exports = (sequelize, DataTypes) => {
   }
   return scheme
 }
+
+module.exports = createSchemeTable

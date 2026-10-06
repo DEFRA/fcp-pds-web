@@ -11,12 +11,17 @@ container:
   pdsAzureStorageConnectionString: dummy
   payAzureStorageAccountName: preffcpayst1001
   docAzureStorageAccountName: preffcdocst1001
+  azureAppRegistrationRedirectUrl: authenticate
 
 secretProviderClass:
   azure:
     keyvaultName: PREFFCINFKV1001
     objects:
       - objectName: pre-ffcahwr-appInsights-connectionString
+        objectType: secret
+      - objectName: pre-fcp-pds-web-client-secret
+        objectType: secret
+      - objectName: pre-ffc-pay-cookie-password
         objectType: secret
 
   secretObjects:
@@ -25,3 +30,7 @@ secretProviderClass:
       data:
         - objectName: pre-ffcahwr-appInsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: pre-fcp-pds-web-client-secret
+          key: AZUREID_CLIENT_SECRET
+        - objectName: pre-ffc-pay-cookie-password
+          key: COOKIE_PASSWORD

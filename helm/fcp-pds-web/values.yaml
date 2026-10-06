@@ -31,8 +31,21 @@ container:
   requestCpu: 500m
   limitMemory: 800Mi
   port: 3023
-  paymentManagementServiceUrl: http://localhost:3007
-  requestEditorServiceUrl: http://localhost:3001
+  payEventStoreAzureStorageConnectionString: dummy
+  payInjectionAzureStorageConnectionString: dummy
+  docAzureStorageConnectionString: dummy
+  pdsAzureStorageConnectionString: dummy
+  payAzureStorageAccountName: ffcpay
+  docAzureStorageAccountName: ffcdoc
+  azureStorageUseConnectionString: false
+  azureStorageCreateContainers: false
+
+postgresService:
+  postgresDb: fcp_pds_web
+  postgresqlHost: fcp-pds-web-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
 
 ingress:
   class: nginx

@@ -4,6 +4,14 @@ ingress:
   class: nginx
   endpoint: fcp-pds-web-pre
   server: azure.defra.cloud
+container:
+  payEventStoreAzureStorageConnectionString: dummy
+  payInjectionAzureStorageConnectionString: dummy
+  docAzureStorageConnectionString: dummy
+  pdsAzureStorageConnectionString: dummy
+  payAzureStorageAccountName: preffcpayst1001
+  docAzureStorageAccountName: preffcdocst1001
+
 secretProviderClass:
   azure:
     keyvaultName: PREFFCINFKV1001
@@ -17,7 +25,3 @@ secretProviderClass:
       data:
         - objectName: pre-ffcahwr-appInsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
-paymentManagementService:
-  url: #{container.paymentManagementServiceUrl}#
-requestEditorService:
-  url: #{container.requestEditorServiceUrl}#

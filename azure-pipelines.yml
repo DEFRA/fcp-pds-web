@@ -40,26 +40,26 @@ extends:
     Type: kubernetes           # Optional: kubernetes (default), npm, functions, nuget
     npmLegacyPeerDeps: false   # Optional: default is false
     dockerFilePath: Dockerfile # Optional default is Dockerfile
-    failOnThreshold: moderate  # Optional: moderate (default), low, high, critical
+    failOnThreshold: critical  # Optional: moderate (default), low, high, critical
     prDeployment: ${{ parameters.prDeployment }}
     branchDeployment: ${{ parameters.branchDeployment }}
     sndDeployment: ${{ parameters.sndDeployment }}
     variableGroupName: fcp-pds-web-env-var
     pr_params:
-      container.paymentManagementServiceUrl: $(pr_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(pr_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(pr_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(pr_azureStorageUseConnectionString)
     snd2_params:
-      container.paymentManagementServiceUrl: $(snd2_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(snd2_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(snd2_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(snd2_azureStorageUseConnectionString)
     dev_params:
-      container.paymentManagementServiceUrl: $(dev_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(dev_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(dev_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(dev_azureStorageUseConnectionString)
     test_params:
-      container.paymentManagementServiceUrl: $(test_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(test_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(test_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(test_azureStorageUseConnectionString)
     pre_params:
-      container.paymentManagementServiceUrl: $(pre_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(pre_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(pre_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(pre_azureStorageUseConnectionString)
     prd_params:
-      container.paymentManagementServiceUrl: $(prd_paymentManagementServiceUrl)
-      container.requestEditorServiceUrl: $(prd_requestEditorServiceUrl)
+      container.azureStorageCreateContainers: $(prd_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(prd_azureStorageUseConnectionString)

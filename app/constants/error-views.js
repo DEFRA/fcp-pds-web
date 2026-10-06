@@ -1,5 +1,5 @@
 module.exports = {
-  INTERNAL_SERVER_ERROR: 'internal-server-error',
-  NOT_AUTHORIZED: 'not-authorized',
-  NOT_FOUND: 'not-found'
+  INTERNAL_SERVER_ERROR: 'error/internal-server-error',
+  NOT_AUTHORIZED: 'error/not-authorized',
+  NOT_FOUND: 'error/not-found'
 }

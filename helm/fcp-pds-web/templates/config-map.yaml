@@ -5,6 +5,15 @@ data:
   PORT: {{ .Values.container.port | quote }}
   APPINSIGHTS_CLOUDROLE: {{ .Chart.Name | quote }}
   AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
-  PAYMENT_MANAGEMENT_SERVICE_URL: {{ .Values.container.paymentManagementServiceUrl | quote }}
-  REQUEST_EDITOR_SERVICE_URL: {{ .Values.container.requestEditorServiceUrl | quote }}
+  POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}
+  POSTGRES_HOST: {{ quote .Values.postgresService.postgresqlHost }}
+  POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}
+  POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
+  POSTGRES_USERNAME: {{ .Values.postgresService.postgresUser | quote }}
+  PAY_EVENT_STORE_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.payEventStoreAzureStorageConnectionString }}
+  PAY_INJECTION_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.payInjectionAzureStorageConnectionString }}
+  DOC_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.docAzureStorageConnectionString }}
+  PDS_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.pdsAzureStorageConnectionString }}
+  PAY_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.payAzureStorageAccountName }}
+  DOC_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.docAzureStorageAccountName }}  
 {{- end -}}

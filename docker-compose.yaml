@@ -7,6 +7,7 @@ services:
     container_name: fcp-pds-web
     depends_on:
       - fcp-pds-web-postgres
+      - ffc-pay-event-store-azurite
     environment:
       APPINSIGHTS_CLOUDROLE: fcp-pds-web-local
       APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING}
@@ -16,6 +17,8 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
+      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
+      AZURE_STORAGE_CREATE_CONTAINERS: "true"
 
   fcp-pds-web-postgres:
     image: postgres:11.4-alpine
@@ -23,3 +26,9 @@ services:
       POSTGRES_DB: fcp_pds_web
       POSTGRES_PASSWORD: ppp
       POSTGRES_USERNAME: postgres
+
+  ffc-pay-event-store-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.35.0
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --skipApiVersionCheck"
+    labels:
+      com.docker.compose.pay.role: ffc-pay-event-store-azurite

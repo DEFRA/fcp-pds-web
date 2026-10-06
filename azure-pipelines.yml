@@ -45,3 +45,21 @@ extends:
     branchDeployment: ${{ parameters.branchDeployment }}
     sndDeployment: ${{ parameters.sndDeployment }}
     variableGroupName: fcp-pds-web-env-var
+    pr_params:
+      container.azureStorageCreateContainers: $(pr_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(pr_azureStorageUseConnectionString)
+    snd2_params:
+      container.azureStorageCreateContainers: $(snd2_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(snd2_azureStorageUseConnectionString)
+    dev_params:
+      container.azureStorageCreateContainers: $(dev_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(dev_azureStorageUseConnectionString)
+    test_params:
+      container.azureStorageCreateContainers: $(test_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(test_azureStorageUseConnectionString)
+    pre_params:
+      container.azureStorageCreateContainers: $(pre_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(pre_azureStorageUseConnectionString)
+    prd_params:
+      container.azureStorageCreateContainers: $(prd_azureStorageCreateContainers)
+      container.azureStorageUseConnectionString: $(prd_azureStorageUseConnectionString)

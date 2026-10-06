@@ -4,3 +4,10 @@ ingress:
   class: nginx
   endpoint: fcp-pds-web-snd2
   server: azure.defra.cloud
+container:
+  payEventStoreAzureStorageConnectionString: dummy
+  payInjectionAzureStorageConnectionString: dummy
+  docAzureStorageConnectionString: dummy
+  pdsAzureStorageConnectionString: dummy
+  payAzureStorageAccountName: snd2ffcpayst2001
+  docAzureStorageAccountName: snd2ffcdocst2001

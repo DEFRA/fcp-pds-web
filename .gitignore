@@ -16,3 +16,4 @@ dist/
 .vscode
 .env
 .gitleaks-shared
+cookies.txt

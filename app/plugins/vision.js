@@ -45,7 +45,7 @@ module.exports = {
       appVersion: version,
       assetPath: '/static',
       govukAssetPath: '/assets',
-      serviceName: 'Payments and Documents Services'
+      serviceName: 'Payment and Document Services'
     }
   }
 }

@@ -1,6 +1,6 @@
-# FCP Payments and Documents Services (PDS) Web
+# FCP Payment and Document Services (PDS) Web
 
-Frontend service for the Payments and Documents Services (PDS) platform. Provides a secure, GOV.UK Design System-compliant home page with authenticated access to payment management and document request services.
+Frontend service for the Payment and Document Services (PDS) platform. Provides a secure, GOV.UK Design System-compliant home page with authenticated access to payment management and document request services.
 
 ## What This Service Does
 

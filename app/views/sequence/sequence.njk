@@ -1,0 +1,51 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = "Sequence numbers" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+        <p class="govuk-body">
+          This section allows users view the current sequence number for each scheme and amend them. The current sequence numbers are listed below
+        </p>
+
+        {{
+          govukTable({
+            head: [
+              { text: "Scheme ID" },
+              { text: "Scheme" },
+              { text: "Current sequence number" }
+          ],
+            rows: tableRows
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Amend a scheme sequence number",
+            href: "/edit-sequence"
+          })
+        }}
+
+{% endblock %}

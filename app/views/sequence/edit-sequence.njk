@@ -1,0 +1,169 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageTitle = "Edit scheme sequence numbers" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [
+        {
+          text: "Home",
+          href: "/"
+        },
+        {
+          text: "Sequence numbers",
+          href: "/sequence"
+        },
+        {
+          text: pageTitle
+        }
+      ]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      {% if errorMessage %}
+        {{
+          govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+              {
+                text: errorMessage,
+                href: "#sequenceNumber"
+              }
+            ]
+          })
+        }}
+      {% endif %}
+
+      <p class="govuk-body">
+        To edit an existing sequence number for a specific scheme, select the
+        scheme from the dropdown.
+      </p>
+
+      <form
+        method="post"
+        action="/edit-sequence">
+        {{
+          govukSelect({
+            id: "schemeId",
+            name: "schemeId",
+            label: {
+              text: "Scheme"
+            },
+            items: schemeItems
+          })
+        }}
+
+        <div
+          id="sequence-container"
+          style="display: none;">
+          {% if errorMessage %}
+            {{
+              govukInput({
+                id: "sequenceNumber",
+                name: "sequenceNumber",
+                value: sequenceNumber,
+                classes: "govuk-input--width-5 govuk-input--error",
+                errorMessage: {
+                  text: errorMessage
+                },
+                label: {
+                  text: "Edit sequence number"
+                },
+                hint: {
+                  text: "The existing sequence number is displayed below. To edit the sequence number, replace the existing number with a new one."
+                }
+              })
+            }}
+          {% else %}
+            {{
+              govukInput({
+                id: "sequenceNumber",
+                name: "sequenceNumber",
+                value: sequenceNumber,
+                classes: "govuk-input--width-5",
+                label: {
+                  text: "Edit sequence number"
+                },
+                hint: {
+                  text: "The existing sequence number is displayed below. To edit the sequence number, replace the existing number with a new one."
+                }
+              })
+            }}
+          {% endif %}
+
+          {{
+            govukButton({
+              text: "Save and continue",
+              type: "submit"
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  const sequences = {{ sequences | dump | safe }}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdown = document.getElementById('schemeId')
+  const container = document.getElementById('sequence-container')
+  const sequenceInput = document.getElementById('sequenceNumber')
+
+  const updateSequenceValue = () => {
+    const selectedSchemeId = Number(dropdown.value)
+
+    if (!selectedSchemeId) {
+      sequenceInput.value = ''
+      container.style.display = 'none'
+      return
+    }
+
+    const selectedSequence = sequences.find(
+      sequence => sequence.schemeId === selectedSchemeId
+    )
+
+    // Only populate from batch-processor if the field is currently empty
+    if (!sequenceInput.value) {
+      sequenceInput.value = String(selectedSequence?.next ?? '').padStart(4, '0')
+    }
+
+    container.style.display = 'block'
+  }
+
+    dropdown.addEventListener('change', () => {
+    const selectedSchemeId = Number(dropdown.value)
+
+    if (!selectedSchemeId) {
+      sequenceInput.value = ''
+      container.style.display = 'none'
+      return
+    }
+
+    const selectedSequence = sequences.find(
+      sequence => sequence.schemeId === selectedSchemeId
+    )
+
+    sequenceInput.value = String(selectedSequence?.next ?? '').padStart(4, '0')
+    container.style.display = 'block'
+  })
+
+  updateSequenceValue()
+})
+  </script>
+{% endblock %}

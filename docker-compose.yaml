@@ -19,6 +19,13 @@ services:
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CREATE_CONTAINERS: "true"
+      PAYMENTS_SERVICE_ENDPOINT: http://ffc-pay-processing:3008
+      TRACKING_SERVICE_ENDPOINT: http://ffc-pay-tracking:3002
+      INJECTION_SERVICE_ENDPOINT: http://ffc-pay-injection:3014
+      ALERTING_SERVICE_ENDPOINT: http://ffc-pay-alerting:3025
+      STATEMENT_PUBLISHER_ENDPOINT: http://ffc-doc-statement-publisher:3010
+      RETENTION_ENDPOINT: http://fcp-pds-data-retention:3076
+      BATCH_PROCESSOR_ENDPOINT: http://ffc-pay-batch-processor:3017
 
   fcp-pds-web-postgres:
     image: postgres:11.4-alpine

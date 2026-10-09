@@ -1,8 +1,10 @@
-const cookie = require('@hapi/cookie')
+const authCookie = require('@hapi/cookie')
 const config = require('../config')
+const auth = require('../auth')
+
+const SESSION_AUTH = 'session-auth'
 
 const validateSession = async (_request, session) => {
-  // Validate the session
   if (session?.account) {
     return { valid: true, credentials: session }
   }
@@ -13,23 +15,33 @@ const authPlugin = {
   plugin: {
     name: 'auth',
     register: async (server) => {
-      // Register cookie plugin
-      await server.register(cookie)
+      await server.register(authCookie)
 
-      // Register the cookie auth strategy
-      server.auth.strategy('cookieAuth', 'cookie', {
+      server.auth.strategy(SESSION_AUTH, 'cookie', {
         cookie: {
-          name: 'session',
+          name: SESSION_AUTH,
           password: config.authConfig.cookie.password,
-          isSecure: false,
+          path: '/',
+          isSecure: config.isProd,
+          isSameSite: 'Lax', // Needed for the post authentication redirect
           ttl: config.authConfig.cookie.ttl
         },
+        keepAlive: true, // Resets the cookie ttl after each route
         validateFunc: validateSession,
         redirectTo: '/login'
       })
 
-      // Set cookieAuth as the default strategy
-      server.auth.default('cookieAuth')
+      server.auth.default(SESSION_AUTH)
+
+      server.ext('onPreAuth', async (request, h) => {
+        if (request.auth.credentials) {
+          await auth.refresh(
+            request.auth.credentials.account,
+            request.cookieAuth
+          )
+        }
+        return h.continue
+      })
     }
   }
 }

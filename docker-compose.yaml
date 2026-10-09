@@ -19,6 +19,7 @@ services:
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CREATE_CONTAINERS: "true"
+      COOKIE_PASSWORD: cookiecookiecookiecookiecookiecookie
 
   fcp-pds-web-postgres:
     image: postgres:11.4-alpine

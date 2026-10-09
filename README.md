@@ -1,6 +1,6 @@
 # FCP Payments and Documents Services (PDS) Web
 
-Frontend service for the Payments and Documents Services (PDS) platform. Provides a secure, GOV.UK Design System-compliant home page with authenticated access to payment management and document request services.
+Frontend service for the Payments and Documents Services (PDS) platform. Provides a secure, GOV.UK Design System-compliant home page with authenticated access to Payment and Document Services and document request services.
 
 ## What This Service Does
 
@@ -60,7 +60,7 @@ This creates a dev user with `applicationAdmin` scope and redirects to the home 
 ### 3. Access the Home Page
 
 Visit `http://localhost:3023/` to see the home page with service cards:
-- **Payment Management**: Links to pay-web (port 3007)
+- **Payment and Document Services**: Links to pay-web (port 3007)
 - **Request Editor**: Links to request-editor (port 3008)
 
 ## Local Development

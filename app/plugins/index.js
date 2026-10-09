@@ -5,6 +5,8 @@ const error = require('./error')
 const vision = require('./vision')
 const viewContext = require('./view-context')
 const router = require('./router')
+const cookies = require('./cookies')
+const crumb = require('./crumb')
 
 async function registerPlugins (server) {
   const plugins = [
@@ -14,7 +16,9 @@ async function registerPlugins (server) {
     error,
     vision,
     viewContext,
-    router
+    router,
+    cookies,
+    crumb
   ]
 
   await server.register(plugins)

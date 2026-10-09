@@ -18,6 +18,8 @@ secretProviderClass:
     objects:
       - objectName: pre-ffcahwr-appInsights-connectionString
         objectType: secret
+      - objectName: pre-ffc-pay-cookie-password
+        objectType: secret
 
   secretObjects:
     - secretName: fcp-pds-web
@@ -25,3 +27,5 @@ secretProviderClass:
       data:
         - objectName: pre-ffcahwr-appInsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: pre-ffc-pay-cookie-password
+          key: COOKIE_PASSWORD

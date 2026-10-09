@@ -1,0 +1,84 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set pageTitle = "Edit scheme sequence numbers" %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [
+        {
+          text: "Home",
+          href: "/"
+        },
+        {
+          text: "Sequence numbers",
+          href: "/sequence"
+        },
+        {
+          text: pageTitle
+        }
+      ]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <section class="sequence-confirmation-panel">
+    <h1 class="govuk-heading-l">
+      Are you sure you want to edit the sequence number for {{ schemeName }}?
+    </h1>
+
+    <p class="govuk-body">
+      Amending the sequence number from
+      {{ currentSequence }}
+      to
+      {{ newSequence }}
+      will impact all subsequent payment requests for this scheme.
+    </p>
+
+    <p class="govuk-body">
+      If a payment file for the provided scheme is received with a lower
+      sequence number than entered, it will be quarantined and not processed.
+    </p>
+
+    <p class="govuk-body">
+      If a payment file for the provided scheme is received with a higher
+      sequence number than entered, it will not be processed until that sequence
+      number is reached.
+    </p>
+
+    <form
+      method="POST"
+      action="/edit-sequence/confirm">
+      <input
+        type="hidden"
+        name="schemeId"
+        value="{{ schemeId }}"
+      />
+
+      <input
+        type="hidden"
+        name="sequenceNumber"
+        value="{{ newSequence }}"
+      />
+
+      <div class="sequence-actions">
+        {{
+          govukButton({
+            text: "Yes, edit",
+            classes: "govuk-button--secondary"
+          })
+        }}
+
+        <a
+          class="govuk-link govuk-link--no-visited-state"
+          href="/edit-sequence">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

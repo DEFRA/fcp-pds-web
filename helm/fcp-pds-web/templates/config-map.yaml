@@ -16,4 +16,31 @@ data:
   PDS_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.pdsAzureStorageConnectionString }}
   PAY_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.payAzureStorageAccountName }}
   DOC_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.docAzureStorageAccountName }}  
+  {{- if (.Values.environmentCode) }}
+    {{- if ne .Values.environmentCode "snd" }}
+  PAYMENTS_SERVICE_ENDPOINT: {{ .Values.container.paymentsEndpoint }}-{{ .Values.environmentCode }}
+  TRACKING_SERVICE_ENDPOINT: {{ .Values.container.trackingEndpoint }}-{{ .Values.environmentCode }}
+  INJECTION_SERVICE_ENDPOINT: {{ .Values.container.injectionEndpoint }}-{{ .Values.environmentCode }}
+  ALERTING_SERVICE_ENDPOINT: {{ .Values.container.alertingEndpoint }}-{{ .Values.environmentCode }}
+  STATEMENT_PUBLISHER_ENDPOINT: {{ .Values.container.statementPublisherEndpoint }}-{{ .Values.environmentCode }}
+  RETENTION_ENDPOINT: {{ .Values.container.retentionEndpoint }}-{{ .Values.environmentCode }}
+  BATCH_PROCESSOR_ENDPOINT: {{ .Values.container.batchProcessorEndpoint }}-{{ .Values.environmentCode }}
+    {{ else }}
+  PAYMENTS_SERVICE_ENDPOINT: {{ quote .Values.container.paymentsEndpoint }}
+  TRACKING_SERVICE_ENDPOINT: {{ quote .Values.container.trackingEndpoint }}
+  INJECTION_SERVICE_ENDPOINT: {{ quote .Values.container.injectionEndpoint }}
+  ALERTING_SERVICE_ENDPOINT: {{ quote .Values.container.alertingEndpoint }}
+  STATEMENT_PUBLISHER_ENDPOINT: {{ quote .Values.container.statementPublisherEndpoint }}
+  RETENTION_ENDPOINT: {{ .Values.container.retentionEndpoint }}
+  BATCH_PROCESSOR_ENDPOINT: {{ .Values.container.batchProcessorEndpoint }}
+    {{- end }}
+  {{ else }}
+  PAYMENTS_SERVICE_ENDPOINT: {{ quote .Values.container.paymentsEndpoint }}
+  TRACKING_SERVICE_ENDPOINT: {{ quote .Values.container.trackingEndpoint }}
+  INJECTION_SERVICE_ENDPOINT: {{ quote .Values.container.injectionEndpoint }}
+  ALERTING_SERVICE_ENDPOINT: {{ quote .Values.container.alertingEndpoint }}
+  STATEMENT_PUBLISHER_ENDPOINT: {{ quote .Values.container.statementPublisherEndpoint }}
+  RETENTION_ENDPOINT: {{ quote .Values.container.retentionEndpoint }}  
+  BATCH_PROCESSOR_ENDPOINT: {{ quote .Values.container.batchProcessorEndpoint }}
+  {{- end }}
 {{- end -}}

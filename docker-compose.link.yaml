@@ -1,7 +1,19 @@
+services:
+  fcp-pds-web:
+    networks:
+      - default
+      - pds
+      - docs
+
 networks:
   default:
     name: ffc-pay
     external: true
+
   docs:
     name: ffc-doc
+    external: true
+
+  pds:
+    name: fcp-pds
     external: true

@@ -48,18 +48,36 @@ extends:
     pr_params:
       container.azureStorageCreateContainers: $(pr_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(pr_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(pr_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(pr_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(pr_azureAppRegistrationTenantId)
     snd2_params:
       container.azureStorageCreateContainers: $(snd2_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(snd2_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(snd2_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(snd2_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(snd2_azureAppRegistrationTenantId)
     dev_params:
       container.azureStorageCreateContainers: $(dev_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(dev_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(dev_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(dev_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(dev_azureAppRegistrationTenantId)
     test_params:
       container.azureStorageCreateContainers: $(test_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(test_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(test_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(test_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(test_azureAppRegistrationTenantId)
     pre_params:
       container.azureStorageCreateContainers: $(pre_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(pre_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(pre_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(pre_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(pre_azureAppRegistrationTenantId)
     prd_params:
       container.azureStorageCreateContainers: $(prd_azureStorageCreateContainers)
       container.azureStorageUseConnectionString: $(prd_azureStorageUseConnectionString)
+      container.azureAppRegistrationEnabled: $(prd_azureAppRegistrationEnabled)
+      container.azureAppRegistrationClientId: $(prd_azureAppRegistrationClientId)
+      container.azureAppRegistrationTenantId: $(prd_azureAppRegistrationTenantId)

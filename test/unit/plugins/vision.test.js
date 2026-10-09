@@ -39,7 +39,7 @@ describe('vision plugin', () => {
       expect(visionPlugin.options.context.appVersion).toBe(version)
       expect(visionPlugin.options.context.assetPath).toBe('/static')
       expect(visionPlugin.options.context.govukAssetPath).toBe('/assets')
-      expect(visionPlugin.options.context.serviceName).toBe('Payments and Documents Services')
+      expect(visionPlugin.options.context.serviceName).toBe('Payment and Document Services')
     })
 
     test('relativeTo is set to __dirname', () => {

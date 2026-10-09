@@ -3,6 +3,9 @@ const {
   postBatchProcessor
 } = require('../api')
 
+const minSequenceNumber = 1
+const maxSequenceNumber = 9999
+
 const formatSequence = value =>
   String(value).padStart(4, '0')
 
@@ -68,8 +71,8 @@ module.exports = [{
 
       if (
         !Number.isInteger(Number(sequenceNumber)) ||
-                Number(sequenceNumber) < 1 ||
-                Number(sequenceNumber) > 9999
+        Number(sequenceNumber) < minSequenceNumber ||
+        Number(sequenceNumber) > maxSequenceNumber
       ) {
         const schemeItems = [
           {

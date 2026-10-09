@@ -41,7 +41,7 @@
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
     "ffc-database": "1.0.27",
-    "govuk-frontend": "6.2.0",
+    "govuk-frontend": "6.3.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
     "joi": "18.2.9",

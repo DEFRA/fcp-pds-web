@@ -18,10 +18,10 @@ module.exports = [{
       const { payload } = await getBatchProcessorData('/sequence')
       const sequences = payload
 
-      const tableRows = sequences.sequences.map(sequence => [
-        { text: String(sequence.schemeId) },
-        { text: sequence.scheme.scheme },
-        { text: formatSequence(sequence.next) }
+      const tableRows = sequences.sequences.map(sequenceItem => [
+        { text: String(sequenceItem.schemeId) },
+        { text: sequenceItem.scheme.scheme },
+        { text: formatSequence(sequenceItem.next) }
       ])
 
       return h.view('sequence/sequence', {
@@ -43,11 +43,11 @@ module.exports = [{
           value: '',
           text: ''
         },
-        ...payload.sequences.map(sequence => ({
-          value: sequence.schemeId,
-          text: sequence.scheme.scheme,
+        ...payload.sequences.map(sequenceItem => ({
+          value: sequenceItem.schemeId,
+          text: sequenceItem.scheme.scheme,
           attributes: {
-            'data-sequence-number': sequence.next
+            'data-sequence-number': sequenceItem.next
           }
         }))
       ]
@@ -79,12 +79,12 @@ module.exports = [{
             value: '',
             text: ''
           },
-          ...payload.sequences.map(sequence => ({
-            value: sequence.schemeId,
-            text: sequence.scheme.scheme,
-            selected: String(sequence.schemeId) === String(schemeId),
+          ...payload.sequences.map(sequenceItem => ({
+            value: sequenceItem.schemeId,
+            text: sequenceItem.scheme.scheme,
+            selected: String(sequenceItem.schemeId) === String(schemeId),
             attributes: {
-              'data-sequence-number': sequence.next
+              'data-sequence-number': sequenceItem.next
             }
           }))
         ]

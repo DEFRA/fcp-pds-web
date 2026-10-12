@@ -26,6 +26,11 @@ services:
       STATEMENT_PUBLISHER_ENDPOINT: http://ffc-doc-statement-publisher:3010
       RETENTION_ENDPOINT: http://fcp-pds-data-retention:3076
       BATCH_PROCESSOR_ENDPOINT: http://ffc-pay-batch-processor:3017
+      AZUREID_CLIENT_SECRET: ${AZUREID_CLIENT_SECRET}
+      AZUREID_CLIENT_ID: ${AZUREID_CLIENT_ID}
+      AZUREID_TENANT_ID: ${AZUREID_TENANT_ID}
+      COOKIE_PASSWORD: cookiecookiecookiecookiecookiecookie
+      REDIRECT_URL: ${REDIRECT_URL}
 
   fcp-pds-web-postgres:
     image: postgres:11.4-alpine

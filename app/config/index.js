@@ -24,7 +24,7 @@ const config = convict({
   serviceName: {
     doc: 'The name of the service.',
     format: String,
-    default: 'Payments and Documents Services',
+    default: 'Payment and Document Services',
     env: 'SERVICE_NAME'
   },
   host: {

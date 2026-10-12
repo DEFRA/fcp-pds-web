@@ -11,12 +11,17 @@ container:
   pdsAzureStorageConnectionString: dummy
   payAzureStorageAccountName: testffcpayst1001
   docAzureStorageAccountName: testffcdocst1001
+  azureAppRegistrationRedirectUrl: authenticate
 
 secretProviderClass:
   azure:
     keyvaultName: DEVFFCINFKV1001
     objects:
       - objectName: devtest-ffcahwr-appInsights-connectionString
+        objectType: secret
+      - objectName: dev-fcp-pds-web-client-secret
+        objectType: secret
+      - objectName: dev-ffc-pay-cookie-password
         objectType: secret
 
   secretObjects:
@@ -25,3 +30,7 @@ secretProviderClass:
       data:
         - objectName: devtest-ffcahwr-appInsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: dev-fcp-pds-web-client-secret
+          key: AZUREID_CLIENT_SECRET
+        - objectName: dev-ffc-pay-cookie-password
+          key: COOKIE_PASSWORD

@@ -1,5 +1,33 @@
 // Core stylesheet for fcp-pds-web
 // Import the pre-built GOV.UK Frontend stylesheet
-@import 'govuk-frontend/dist/govuk/govuk-frontend.min.css';
+$govuk-suppressed-warnings: "legacy-organisation-colours";
+$govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
+@import '~govuk-frontend/dist/govuk/index';
 
 // Custom variables and styles can be added here
+.sequence-confirmation-panel {
+    background-color: #1d70b8;
+    padding: 40px;
+}
+
+.sequence-confirmation-panel .govuk-heading-l,
+.sequence-confirmation-panel .govuk-body {
+    color: #ffffff;
+}
+
+.sequence-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.sequence-actions .govuk-button {
+    margin-bottom: 0;
+}
+
+.sequence-actions .govuk-link,
+.sequence-actions .govuk-link:link,
+.sequence-actions .govuk-link:visited {
+    color: #ffffff;
+}

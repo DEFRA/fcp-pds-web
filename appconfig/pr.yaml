@@ -11,3 +11,4 @@ container:
   pdsAzureStorageConnectionString: dummy
   payAzureStorageAccountName: snd2ffcpayst2001
   docAzureStorageAccountName: snd2ffcdocst2001
+  azureAppRegistrationRedirectUrl: authenticate

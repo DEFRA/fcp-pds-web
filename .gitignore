@@ -18,3 +18,4 @@ dist/
 .gitleaks-shared
 _layout.njk
 _cookie-banner.njk
+cookies.txt

@@ -1,0 +1,119 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from 'macros/hold-selection-radios.njk' import holdSelectionRadios %}
+
+{% set pageTitle = "Batch generator" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form
+        method="POST"
+        action="/batch-generator"
+        autocomplete="off"
+        novalidate>
+        <input
+          type="hidden"
+          name="crumb"
+          value="{{ crumb }}"
+        />
+
+        {% if errors %}
+          {% set errorList = [] %}
+          {% for errorDetail in errors.details %}
+            {% set errorHref = "#" %}
+            {% if errorDetail.path[0] == "frn" %}
+              {% set errorHref = "#frn" %}
+            {% elif errorDetail.path[0] == "selectScheme" %}
+              {% set errorHref = "#selectScheme" %}
+            {% endif %}
+            {%
+              set errorList = (errorList.push({
+                text: errorDetail.message,
+                href: errorHref
+              }), errorList)
+            %}
+          {% endfor %}
+
+          {{
+            govukErrorSummary({
+              titleText: "There is a problem",
+              errorList: errorList
+            })
+          }}
+        {% endif %}
+
+        {% set frnError = null %}
+        {% set schemeError = null %}
+        {% if errors %}
+          {% for errorDetail in errors.details %}
+            {% if errorDetail.path[0] == "frn" %}
+              {% set frnError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "selectScheme" %}
+              {% set schemeError = { text: errorDetail.message } %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+        <p class="govuk-body">
+          This tool allows you to build a payment batch file for any scheme which supports batch file payments.
+        </p>
+
+
+        {{
+          govukInput({
+            label: {
+              text: "FRN (Firm Reference Number)",
+              classes: "govuk-label--s"
+            }, 
+            hint: { 
+              text: "Where a payment file is requested with more than one payment request, each FRN after the first payment request will be one higher than the previous."
+            },
+            id: "frn",
+            name: "frn",
+            value: frn,
+            classes: "govuk-input--width-10",
+            errorMessage: frnError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: "Continue",
+              attributes: {
+                id: "submit"
+              }
+            })
+          }}
+          <a
+            class="govuk-link"
+            href="/payment-holds/manage">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -27,15 +27,18 @@
         <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
         <p class="govuk-body">
-          This section allows users view the current sequence number for each scheme and amend them. The current sequence numbers are listed below
-        </p>
+Below, you can see the next expected sequence number for each scheme. Some schemes, including Vet Visits, FPTT and WMP, do not use sequence numbers and will therefore be displayed as 0001 by default.
+</p>
 
+<p class="govuk-body">
+The sequence number for CS-HT (Revenue) is not applicable because SitiAgri submits these payment requests using the SFI-EO batch file format.        </p>
+</p>
         {{
           govukTable({
             head: [
               { text: "Scheme ID" },
               { text: "Scheme" },
-              { text: "Current sequence number" }
+              { text: "Next sequence number" }
           ],
             rows: tableRows
           })

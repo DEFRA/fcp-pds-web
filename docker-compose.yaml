@@ -19,10 +19,10 @@ services:
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CREATE_CONTAINERS: "true"
+      COOKIE_PASSWORD: cookiecookiecookiecookiecookiecookie
       AZUREID_CLIENT_SECRET: ${AZUREID_CLIENT_SECRET}
       AZUREID_CLIENT_ID: ${AZUREID_CLIENT_ID}
       AZUREID_TENANT_ID: ${AZUREID_TENANT_ID}
-      COOKIE_PASSWORD: cookiecookiecookiecookiecookiecookie
       REDIRECT_URL: ${REDIRECT_URL}
 
   fcp-pds-web-postgres:

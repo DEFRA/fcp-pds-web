@@ -1,4 +1,4 @@
-const { applicationAdmin } = require('../auth/permissions')
+const authRoles = require('../auth/permissions')
 const sitemap = require('../constants/sitemap')
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
   path: '/',
   options: {
     auth: {
-      scope: [applicationAdmin]
+      scope: Object.values(authRoles)
     }
   },
   handler: async (request, h) => {

@@ -20,7 +20,7 @@ module.exports = [{
 
       const tableRows = sequences.sequences.map(sequenceItem => [
         { text: String(sequenceItem.schemeId) },
-        { text: sequenceItem.scheme.scheme },
+        { text: sequenceItem.scheme },
         { text: formatSequence(sequenceItem.next) }
       ])
 
@@ -45,7 +45,7 @@ module.exports = [{
         },
         ...payload.sequences.map(sequenceItem => ({
           value: sequenceItem.schemeId,
-          text: sequenceItem.scheme.scheme,
+          text: sequenceItem.scheme,
           attributes: {
             'data-sequence-number': sequenceItem.next
           }
@@ -66,7 +66,6 @@ module.exports = [{
     auth: false,
     handler: async (request, h) => {
       const { schemeId, sequenceNumber } = request.payload
-
       const { payload } = await getBatchProcessorData('/sequence')
 
       if (
@@ -81,7 +80,7 @@ module.exports = [{
           },
           ...payload.sequences.map(sequenceItem => ({
             value: sequenceItem.schemeId,
-            text: sequenceItem.scheme.scheme,
+            text: sequenceItem.scheme,
             selected: String(sequenceItem.schemeId) === String(schemeId),
             attributes: {
               'data-sequence-number': sequenceItem.next
@@ -104,7 +103,7 @@ module.exports = [{
 
       return h.view('sequence/confirm-sequence-change', {
         schemeId,
-        schemeName: sequence.scheme.scheme,
+        schemeName: sequence.scheme,
         currentSequence: formatSequence(sequence.next),
         newSequence: formatSequence(sequenceNumber)
       })

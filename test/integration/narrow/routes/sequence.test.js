@@ -17,16 +17,12 @@ describe('sequence routes', () => {
     {
       schemeId: 1,
       next: 1,
-      scheme: {
-        scheme: 'Scheme one'
-      }
+      scheme: 'Scheme one'
     },
     {
       schemeId: 2,
       next: 25,
-      scheme: {
-        scheme: 'Scheme two'
-      }
+      scheme: 'Scheme two'
     }
   ]
 
@@ -179,7 +175,7 @@ describe('sequence routes', () => {
             }
           ],
           errorMessage:
-                        'Sequence number must be between 1 and 9999',
+            'Sequence number must be between 1 and 9999',
           sequenceNumber: '1.5',
           selectedSchemeId: '2'
         }
@@ -200,7 +196,7 @@ describe('sequence routes', () => {
         'sequence/edit-sequence',
         expect.objectContaining({
           errorMessage:
-                        'Sequence number must be between 1 and 9999',
+            'Sequence number must be between 1 and 9999',
           sequenceNumber: '0',
           selectedSchemeId: '1'
         })
@@ -221,7 +217,7 @@ describe('sequence routes', () => {
         'sequence/edit-sequence',
         expect.objectContaining({
           errorMessage:
-                        'Sequence number must be between 1 and 9999',
+            'Sequence number must be between 1 and 9999',
           sequenceNumber: '10000',
           selectedSchemeId: '1'
         })
@@ -302,7 +298,7 @@ describe('sequence routes', () => {
     test('updates the sequence and redirects to sequence page', async () => {
       const route = routes.find(x =>
         x.method === 'POST' &&
-                x.path === '/edit-sequence/confirm'
+        x.path === '/edit-sequence/confirm'
       )
 
       const request = {

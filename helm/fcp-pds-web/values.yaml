@@ -46,6 +46,7 @@ container:
   docAzureStorageAccountName: ffcdoc
   azureStorageUseConnectionString: false
   azureStorageCreateContainers: false
+  cookiePassword: cookiecookiecookiecookiecookiecookie
   azureAppRegistrationEnabled: true
   azureAppRegistrationClientId:
   azureAppRegistrationTenantId:

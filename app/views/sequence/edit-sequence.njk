@@ -57,6 +57,12 @@
       <form
         method="post"
         action="/edit-sequence">
+        <input
+          type="hidden"
+          name="crumb"
+          value="{{ crumb }}"
+        />
+
         {{
           govukSelect({
             id: "schemeId",

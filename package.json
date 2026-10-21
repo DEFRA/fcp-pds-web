@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.1.8",
+  "version": "0.2.1",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -26,7 +26,6 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@azure/identity": "4.13.1",
     "@azure/monitor-opentelemetry": "1.20.0",
     "@azure/msal-node": "5.1.5",
     "@azure/storage-blob": "12.31.0",
@@ -40,8 +39,8 @@
     "@joi/date": "2.1.0",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
-    "ffc-database": "1.0.27",
-    "govuk-frontend": "6.3.0",
+    "ffc-database": "2.0.1",
+    "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
     "joi": "18.2.9",
@@ -57,7 +56,7 @@
     "jest-junit": "17.0.0",
     "mini-css-extract-plugin": "1.6.0",
     "neostandard": "0.13.0",
-    "nodemon": "3.1.14",
+    "nodemon": "3.0.1",
     "npm-run-all": "4.1.5",
     "resolve-url-loader": "5.0.0",
     "sass": "1.79.0",
@@ -67,7 +66,7 @@
     "webpack-cli": "4.10.0"
   },
   "overrides": {
-    "uuid": "11.1.1"
+    "shell-quote": "1.12.0"
   },
   "nodemonConfig": {
     "ignore": [

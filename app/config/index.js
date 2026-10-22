@@ -45,6 +45,49 @@ const config = convict({
     format: Number,
     default: 604800000,
     env: 'STATIC_CACHE_TIMEOUT_MILLIS'
+  },
+
+  paymentsEndpoint: {
+    doc: 'Payments service endpoint',
+    format: String,
+    default: '',
+    env: 'PAYMENTS_SERVICE_ENDPOINT'
+  },
+  trackingEndpoint: {
+    doc: 'Tracking service endpoint',
+    format: String,
+    default: '',
+    env: 'TRACKING_SERVICE_ENDPOINT'
+  },
+  injectionEndpoint: {
+    doc: 'Injection service endpoint',
+    format: String,
+    default: '',
+    env: 'INJECTION_SERVICE_ENDPOINT'
+  },
+  alertingEndpoint: {
+    doc: 'Alerting service endpoint',
+    format: String,
+    default: '',
+    env: 'ALERTING_SERVICE_ENDPOINT'
+  },
+  statementPublisherEndpoint: {
+    doc: 'Statement publisher endpoint',
+    format: String,
+    default: '',
+    env: 'STATEMENT_PUBLISHER_ENDPOINT'
+  },
+  retentionEndpoint: {
+    doc: 'Retention service endpoint',
+    format: String,
+    default: '',
+    env: 'RETENTION_ENDPOINT'
+  },
+  batchProcessorEndpoint: {
+    doc: 'Batch Processor service endpoint',
+    format: String,
+    default: '',
+    env: 'BATCH_PROCESSOR_ENDPOINT'
   }
 })
 

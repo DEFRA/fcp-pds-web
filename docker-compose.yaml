@@ -24,6 +24,13 @@ services:
       AZUREID_CLIENT_ID: ${AZUREID_CLIENT_ID}
       AZUREID_TENANT_ID: ${AZUREID_TENANT_ID}
       REDIRECT_URL: ${REDIRECT_URL}
+      PAYMENTS_SERVICE_ENDPOINT: http://ffc-pay-processing:3008
+      TRACKING_SERVICE_ENDPOINT: http://ffc-pay-tracking:3002
+      INJECTION_SERVICE_ENDPOINT: http://ffc-pay-injection:3014
+      ALERTING_SERVICE_ENDPOINT: http://ffc-pay-alerting:3025
+      STATEMENT_PUBLISHER_ENDPOINT: http://ffc-doc-statement-publisher:3010
+      RETENTION_ENDPOINT: http://fcp-pds-data-retention:3076
+      BATCH_PROCESSOR_ENDPOINT: http://ffc-pay-batch-processor:3017
 
   fcp-pds-web-postgres:
     image: postgres:11.4-alpine

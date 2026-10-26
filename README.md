@@ -60,7 +60,7 @@ This creates a dev user with `applicationAdmin` scope and redirects to the home 
 ### 3. Access the Home Page
 
 Visit `http://localhost:3023/` to see the home page with service cards:
-- **Payment Management**: Links to pay-web (port 3007)
+- **Payment and Document Services**: Links to pay-web (port 3007)
 - **Request Editor**: Links to request-editor (port 3008)
 
 ## Local Development

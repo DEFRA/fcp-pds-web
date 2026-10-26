@@ -16,4 +16,6 @@ dist/
 .vscode
 .env
 .gitleaks-shared
+_layout.njk
+_cookie-banner.njk
 cookies.txt

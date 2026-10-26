@@ -1,0 +1,54 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = "Sequence numbers" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+        <p class="govuk-body">
+Below, you can see the next expected sequence number for each scheme. Some schemes, including Vet Visits, FPTT and WMP, do not use sequence numbers and will therefore be displayed as 0001 by default.
+</p>
+
+<p class="govuk-body">
+The sequence number for CS-HT (Revenue) is not applicable because SitiAgri submits these payment requests using the SFI-EO batch file format.        </p>
+</p>
+        {{
+          govukTable({
+            head: [
+              { text: "Scheme ID" },
+              { text: "Scheme" },
+              { text: "Next sequence number" }
+          ],
+            rows: tableRows
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Amend a scheme sequence number",
+            href: "/edit-sequence"
+          })
+        }}
+
+{% endblock %}

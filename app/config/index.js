@@ -3,7 +3,7 @@ const convictFormatWithValidator = require('convict-format-with-validator')
 const authConfig = require('./auth')
 
 convict.addFormats(convictFormatWithValidator)
-const Millseconds = 1000
+const milliseconds = 1000
 const seconds = 60
 const minutes = 60
 const hours = 24
@@ -45,6 +45,49 @@ const config = convict({
     format: Number,
     default: 604800000,
     env: 'STATIC_CACHE_TIMEOUT_MILLIS'
+  },
+
+  paymentsEndpoint: {
+    doc: 'Payments service endpoint',
+    format: String,
+    default: '',
+    env: 'PAYMENTS_SERVICE_ENDPOINT'
+  },
+  trackingEndpoint: {
+    doc: 'Tracking service endpoint',
+    format: String,
+    default: '',
+    env: 'TRACKING_SERVICE_ENDPOINT'
+  },
+  injectionEndpoint: {
+    doc: 'Injection service endpoint',
+    format: String,
+    default: '',
+    env: 'INJECTION_SERVICE_ENDPOINT'
+  },
+  alertingEndpoint: {
+    doc: 'Alerting service endpoint',
+    format: String,
+    default: '',
+    env: 'ALERTING_SERVICE_ENDPOINT'
+  },
+  statementPublisherEndpoint: {
+    doc: 'Statement publisher endpoint',
+    format: String,
+    default: '',
+    env: 'STATEMENT_PUBLISHER_ENDPOINT'
+  },
+  retentionEndpoint: {
+    doc: 'Retention service endpoint',
+    format: String,
+    default: '',
+    env: 'RETENTION_ENDPOINT'
+  },
+  batchProcessorEndpoint: {
+    doc: 'Batch Processor service endpoint',
+    format: String,
+    default: '',
+    env: 'BATCH_PROCESSOR_ENDPOINT'
   }
 })
 
@@ -62,7 +105,7 @@ module.exports = {
   isDev: config.get('isDev'),
   authConfig,
   cookieOptions: {
-    ttl: Millseconds * seconds * minutes * hours * daysPerYear,
+    ttl: process.env.COOKIE_TTL_IN_MILLIS ?? milliseconds * seconds * minutes * hours * daysPerYear,
     isSameSite: 'Lax',
     encoding: 'base64json',
     isSecure: process.env.NODE_ENV === 'production',

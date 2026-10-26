@@ -10,7 +10,8 @@ const routes = [].concat(
   require('../routes/accessibility'),
   require('../routes/privacy'),
   require('../routes/sitemap'),
-  require('../routes/cookies')
+  require('../routes/cookies'),
+  require('../routes/batch-generator')
 )
 
 module.exports = {

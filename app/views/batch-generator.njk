@@ -4,7 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from 'macros/hold-selection-radios.njk' import holdSelectionRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% set pageTitle = "Batch generator" %}
 
@@ -31,11 +31,6 @@
         action="/batch-generator"
         autocomplete="off"
         novalidate>
-        <input
-          type="hidden"
-          name="crumb"
-          value="{{ crumb }}"
-        />
 
         {% if errors %}
           {% set errorList = [] %}
@@ -43,8 +38,20 @@
             {% set errorHref = "#" %}
             {% if errorDetail.path[0] == "frn" %}
               {% set errorHref = "#frn" %}
-            {% elif errorDetail.path[0] == "selectScheme" %}
-              {% set errorHref = "#selectScheme" %}
+            {% elif errorDetail.path[0] == "sequence" %}
+              {% set errorHref = "#sequence" %}
+            {% elif errorDetail.path[0] == "numberOfPR" %}
+              {% set errorHref = "#numberOfPR" %}
+            {% elif errorDetail.path[0] == "value" %}
+              {% set errorHref = "#value" %}
+            {% elif errorDetail.path[0] == "prn" %}
+              {% set errorHref = "#prn" %}
+            {% elif errorDetail.path[0] == "invoiceNumber" %}
+              {% set errorHref = "#invoiceNumber" %}
+            {% elif errorDetail.path[0] == "marketingYear" %}
+              {% set errorHref = "#marketingYear" %}
+            {% elif errorDetail.path[0] == "schemeId" %}
+              {% set errorHref = "#schemeId" %}
             {% endif %}
             {%
               set errorList = (errorList.push({
@@ -63,12 +70,31 @@
         {% endif %}
 
         {% set frnError = null %}
+        {% set sequenceError = null %}
+        {% set numberOfPRError = null %}
+        {% set valueError = null %}
+        {% set prnError = null %}
+        {% set invoiceNumberError = null %}
+        {% set marketingYearError = null %}
         {% set schemeError = null %}
+
         {% if errors %}
           {% for errorDetail in errors.details %}
             {% if errorDetail.path[0] == "frn" %}
               {% set frnError = { text: errorDetail.message } %}
-            {% elif errorDetail.path[0] == "selectScheme" %}
+            {% elif errorDetail.path[0] == "sequence" %}
+              {% set sequenceError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "numberOfPR" %}
+              {% set numberOfPRError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "value" %}
+              {% set valueError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "prn" %}
+              {% set prnError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "invoiceNumber" %}
+              {% set invoiceNumberError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "marketingYear" %}
+              {% set marketingYearError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "schemeId" %}
               {% set schemeError = { text: errorDetail.message } %}
             {% endif %}
           {% endfor %}
@@ -77,24 +103,141 @@
         <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
         <p class="govuk-body">
-          This tool allows you to build a payment batch file for any scheme which supports batch file payments.
+          Create payment batch files that can be used for testing specific use cases in both Payment Hub and D365. This feature is for testing only, and should not be used in Production to create payment files.
         </p>
 
+        {% set schemeItems = [] %}
+        {% for scheme in schemes %}
+          {%
+            set schemeItems = (schemeItems.push({
+              value: scheme.schemeId,
+              text: scheme.schemeName,
+              selected: schemeId == scheme.schemeId,
+              selected: schemeName == scheme.schemeName
+            }), schemeItems)
+          %}
+        {% endfor %}
+
+        {{
+          govukSelect({
+            id: "schemeId",
+            name: "schemeId",
+            label: {
+              text: "Scheme",
+              classes: "govuk-label--s"
+            },
+            items: schemeItems,
+            errorMessage: schemeError
+          })
+        }}
 
         {{
           govukInput({
             label: {
-              text: "FRN (Firm Reference Number)",
+              text: "Sequence number",
               classes: "govuk-label--s"
-            }, 
-            hint: { 
-              text: "Where a payment file is requested with more than one payment request, each FRN after the first payment request will be one higher than the previous."
+            },
+            id: "sequence",
+            name: "sequence",
+            value: sequence,
+            classes: "govuk-input--width-4",
+            errorMessage: sequenceError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Number of payment requests",
+              classes: "govuk-label--s"
+            },
+            id: "numberOfPR",
+            name: "numberOfPR",
+            value: numberOfPR,
+            classes: "govuk-input--width-4",
+            errorMessage: numberOfPRError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Value of payment requests (pence)",
+              classes: "govuk-label--s"
+            },
+            id: "value",
+            name: "value",
+            value: value,
+            classes: "govuk-input--width-5",
+            errorMessage: valueError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Payment request number",
+              classes: "govuk-label--s"
+            },
+            id: "prn",
+            name: "prn",
+            value: prn,
+            classes: "govuk-input--width-2",
+            errorMessage: prnError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "First invoice number",
+              classes: "govuk-label--s"
+            },
+            id: "invoiceNumber",
+            name: "invoiceNumber",
+            value: invoiceNumber,
+            classes: "govuk-input--width-5",
+            errorMessage: invoiceNumberError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "First FRN (Firm Reference Number)",
+              classes: "govuk-label--s"
             },
             id: "frn",
             name: "frn",
             value: frn,
             classes: "govuk-input--width-10",
             errorMessage: frnError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Marketing year",
+              classes: "govuk-label--s"
+            },
+            id: "marketingYear",
+            name: "marketingYear",
+            value: marketingYear,
+            classes: "govuk-input--width-4",
+            errorMessage: marketingYearError,
             inputmode: "numeric",
             spellcheck: false
           })

@@ -5,6 +5,10 @@ const {
 
 const minSequenceNumber = 1
 const maxSequenceNumber = 9999
+const maxCsSequenceNumber = 99999
+const csSchemeId = 5
+
+const schemesWithoutSequenceMaximum = [4, 7, 9, 10, 11, 17, 18]
 
 const formatSequence = value =>
   String(value).padStart(4, '0')
@@ -68,11 +72,26 @@ module.exports = [{
       const { schemeId, sequenceNumber } = request.payload
       const { payload } = await getBatchProcessorData('/sequence')
 
-      if (
-        !Number.isInteger(Number(sequenceNumber)) ||
-        Number(sequenceNumber) < minSequenceNumber ||
-        Number(sequenceNumber) > maxSequenceNumber
-      ) {
+      const numericSchemeId = Number(schemeId)
+      const numericSequenceNumber = Number(sequenceNumber)
+
+      const hasNoSequenceMaximum =
+        schemesWithoutSequenceMaximum.includes(numericSchemeId)
+
+      const isCsScheme = numericSchemeId === csSchemeId
+
+      const exceedsSequenceMaximum =
+        isCsScheme
+          ? numericSequenceNumber > maxCsSequenceNumber
+          : !hasNoSequenceMaximum &&
+          numericSequenceNumber > maxSequenceNumber
+
+      const sequenceNumberInvalid =
+        !Number.isInteger(numericSequenceNumber) ||
+        numericSequenceNumber < minSequenceNumber ||
+        exceedsSequenceMaximum
+
+      if (sequenceNumberInvalid) {
         const schemeItems = [
           {
             value: '',
@@ -81,24 +100,38 @@ module.exports = [{
           ...payload.sequences.map(sequenceItem => ({
             value: sequenceItem.schemeId,
             text: sequenceItem.scheme,
-            selected: String(sequenceItem.schemeId) === String(schemeId),
+            selected:
+              String(sequenceItem.schemeId) === String(schemeId),
             attributes: {
               'data-sequence-number': sequenceItem.next
             }
           }))
         ]
 
+        let errorMessage
+
+        if (isCsScheme) {
+          errorMessage =
+            `Sequence number must be between ${minSequenceNumber} and ${maxCsSequenceNumber}`
+        } else if (hasNoSequenceMaximum) {
+          errorMessage =
+            `Sequence number must be a whole number greater than or equal to ${minSequenceNumber}`
+        } else {
+          errorMessage =
+            `Sequence number must be between ${minSequenceNumber} and ${maxSequenceNumber}`
+        }
+
         return h.view('sequence/edit-sequence', {
           sequences: payload.sequences,
           schemeItems,
-          errorMessage: 'Sequence number must be between 1 and 9999',
+          errorMessage,
           sequenceNumber,
           selectedSchemeId: schemeId
         })
       }
 
       const sequence = payload.sequences.find(
-        x => x.schemeId === Number(schemeId)
+        x => x.schemeId === numericSchemeId
       )
 
       return h.view('sequence/confirm-sequence-change', {

@@ -6,9 +6,25 @@ const {
 const minSequenceNumber = 1
 const maxSequenceNumber = 9999
 const maxCsSequenceNumber = 99999
-const csSchemeId = 5
 
-const schemesWithoutSequenceMaximum = [4, 7, 9, 10, 11, 17, 18]
+const vetVisitsSchemeId = 4
+const csSchemeId = 5
+const dpsSchemeId = 7
+const esSchemeId = 9
+const fcSchemeId = 10
+const impsSchemeId = 11
+const fpttSchemeId = 17
+const wmpSchemeId = 18
+
+const schemesWithoutSequenceMaximum = new Set([
+  vetVisitsSchemeId,
+  dpsSchemeId,
+  esSchemeId,
+  fcSchemeId,
+  impsSchemeId,
+  fpttSchemeId,
+  wmpSchemeId
+])
 
 const formatSequence = value =>
   String(value).padStart(4, '0')
@@ -76,7 +92,7 @@ module.exports = [{
       const numericSequenceNumber = Number(sequenceNumber)
 
       const hasNoSequenceMaximum =
-        schemesWithoutSequenceMaximum.includes(numericSchemeId)
+        schemesWithoutSequenceMaximum.has(numericSchemeId)
 
       const isCsScheme = numericSchemeId === csSchemeId
 

@@ -6,7 +6,7 @@ const SESSION_AUTH = 'session-auth'
 
 const validateSession = async (request, session) => {
   console.log('validateSession called', {
-    path: request.path,
+    path: request?.path,
     hasSession: Boolean(session),
     hasAccount: Boolean(session?.account),
     hasScope: Boolean(session?.scope),

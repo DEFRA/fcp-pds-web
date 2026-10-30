@@ -1,0 +1,340 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = "Batch generator" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form
+        method="POST"
+        action="/batch-generator"
+        autocomplete="off"
+        novalidate>
+        {% if errors %}
+          {% set errorList = [] %}
+          {% for errorDetail in errors.details %}
+            {% set errorHref = "#" %}
+            {% if errorDetail.path[0] == "frn" %}
+              {% set errorHref = "#frn" %}
+            {% elif errorDetail.path[0] == "sequence" %}
+              {% set errorHref = "#sequence" %}
+            {% elif errorDetail.path[0] == "numberOfPR" %}
+              {% set errorHref = "#numberOfPR" %}
+            {% elif errorDetail.path[0] == "value" %}
+              {% set errorHref = "#value" %}
+            {% elif errorDetail.path[0] == "prn" %}
+              {% set errorHref = "#prn" %}
+            {% elif errorDetail.path[0] == "invoiceNumber" %}
+              {% set errorHref = "#invoiceNumber" %}
+            {% elif errorDetail.path[0] == "marketingYear" %}
+              {% set errorHref = "#marketingYear" %}
+            {% elif errorDetail.path[0] == "schemeId" %}
+              {% set errorHref = "#schemeId" %}
+            {% elif errorDetail.path[0] == "createChecksum" %}
+              {% set errorHref = "#createChecksum" %}
+            {% elif errorDetail.path[0] == "createControl" %}
+              {% set errorHref = "#createControl" %}
+            {% endif %}
+            {%
+              set errorList = (errorList.push({
+                text: errorDetail.message,
+                href: errorHref
+              }), errorList)
+            %}
+          {% endfor %}
+
+          {{
+            govukErrorSummary({
+              titleText: "There is a problem",
+              errorList: errorList
+            })
+          }}
+        {% endif %}
+
+        {% set frnError = null %}
+        {% set sequenceError = null %}
+        {% set numberOfPRError = null %}
+        {% set valueError = null %}
+        {% set prnError = null %}
+        {% set invoiceNumberError = null %}
+        {% set marketingYearError = null %}
+        {% set schemeError = null %}
+        {% set checksumError = null %}
+        {% set controlError = null %}
+
+        {% if errors %}
+          {% for errorDetail in errors.details %}
+            {% if errorDetail.path[0] == "frn" %}
+              {% set frnError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "sequence" %}
+              {% set sequenceError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "numberOfPR" %}
+              {% set numberOfPRError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "value" %}
+              {% set valueError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "prn" %}
+              {% set prnError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "invoiceNumber" %}
+              {% set invoiceNumberError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "marketingYear" %}
+              {% set marketingYearError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "schemeId" %}
+              {% set schemeError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "createChecksum" %}
+              {% set checksumError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "createControl" %}
+              {% set controlError = { text: errorDetail.message } %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+        <p class="govuk-body">
+          Create payment batch files that can be used for testing specific use
+          cases in both Payment Hub and D365.
+        </p>
+
+        <input
+          type="hidden"
+          name="crumb"
+          value="{{ crumb }}"
+        />
+
+        {% set schemeItems = [] %}
+        {% for scheme in schemes %}
+          {%
+            set schemeItems = (schemeItems.push({
+              value: scheme.schemeId,
+              text: scheme.schemeName,
+              selected: schemeId == scheme.schemeId,
+              selected: schemeName == scheme.schemeName
+            }), schemeItems)
+          %}
+        {% endfor %}
+
+        {{
+          govukSelect({
+            id: "schemeId",
+            name: "schemeId",
+            label: {
+              text: "Scheme",
+              classes: "govuk-label--s"
+            },
+            items: schemeItems,
+            errorMessage: schemeError
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Batch sequence number",
+              classes: "govuk-label--s"
+            },
+            id: "sequence",
+            name: "sequence",
+            value: sequence,
+            classes: "govuk-input--width-3",
+            errorMessage: sequenceError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Number of payment requests in batch",
+              classes: "govuk-label--s"
+            },
+            id: "numberOfPR",
+            name: "numberOfPR",
+            value: numberOfPR,
+            classes: "govuk-input--width-3",
+            errorMessage: numberOfPRError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Value of each payment request (pence)",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Note - all payment requests will have one G00 invoice line for the specified value"
+            },
+            id: "value",
+            name: "value",
+            value: value,
+            classes: "govuk-input--width-5",
+            errorMessage: valueError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Payment request number",
+              classes: "govuk-label--s"
+            },
+            id: "prn",
+            name: "prn",
+            value: prn,
+            classes: "govuk-input--width-2",
+            errorMessage: prnError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "First invoice number",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Any number input is padded with zeroes and append the appropriate leading character(s) for the scheme. For example, 1 for CS becomes A0000001. Subsequent payment requests then iterate up by one."
+            },
+            id: "invoiceNumber",
+            name: "invoiceNumber",
+            value: invoiceNumber,
+            classes: "govuk-input--width-10",
+            errorMessage: invoiceNumberError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "First FRN (Firm Reference Number)",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Subsequent payment requests then iterate up by one."
+            },
+            id: "frn",
+            name: "frn",
+            value: frn,
+            classes: "govuk-input--width-10",
+            errorMessage: frnError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Marketing year",
+              classes: "govuk-label--s"
+            },
+            id: "marketingYear",
+            name: "marketingYear",
+            value: marketingYear,
+            classes: "govuk-input--width-3",
+            errorMessage: marketingYearError,
+            inputmode: "numeric",
+            spellcheck: false
+          })
+        }}
+
+        {{
+          govukRadios({
+            idPrefix: "createChecksum",
+            name: "createChecksum",
+            fieldset: {
+              legend: {
+                text: "Create checksum file?",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            items: [
+              {
+                value: "true",
+                text: "Yes",
+                checked: createChecksum == true or createChecksum == "true"
+              },
+              {
+                value: "false",
+                text: "No",
+                checked: createChecksum == false or createChecksum == "false" or createChecksum is undefined
+              }
+            ],
+            errorMessage: checksumError
+          })
+        }}
+
+        {{
+          govukRadios({
+            idPrefix: "createControl",
+            name: "createControl",
+            fieldset: {
+              legend: {
+                text: "Create control file?",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            items: [
+              {
+                value: "true",
+                text: "Yes",
+                checked: createControl == true or createControl == "true"
+              },
+              {
+                value: "false",
+                text: "No",
+                checked: createControl == false or createControl == "false" or createControl is undefined
+              }
+            ],
+            errorMessage: controlError
+          })
+        }}
+
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: "Submit",
+              attributes: {
+                id: "submit"
+              }
+            })
+          }}
+          <a
+            class="govuk-link"
+            href="/payment-holds/manage">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

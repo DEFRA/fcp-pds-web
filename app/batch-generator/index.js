@@ -1,9 +1,9 @@
 const path = require('node:path')
 const crypto = require('node:crypto')
-const { getSitiAgriSchemeIds } = require('ffc-pay-schemes')
+const { getSchemeIds } = require('ffc-pay-schemes')
 const { createBatchContent } = require('./create-batch-content')
 
-const { CS } = getSitiAgriSchemeIds()
+const { CS } = getSchemeIds()
 
 const generateBatch = (options) => {
   const now = new Date()
@@ -18,7 +18,7 @@ const generateBatch = (options) => {
     frn: Number(options.frn ?? 1000000001),
     schemeYear: Number(options.schemeYear ?? now.getFullYear()),
     deliveryBody: options.deliveryBody ?? (
-      options.schemeId === CS ? 'NE00' : 'RP00'
+      Number(options.schemeId) === CS ? 'NE00' : 'RP00'
     )
   }
 

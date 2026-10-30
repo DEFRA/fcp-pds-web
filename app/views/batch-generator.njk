@@ -5,6 +5,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set pageTitle = "Batch generator" %}
 
@@ -31,7 +32,6 @@
         action="/batch-generator"
         autocomplete="off"
         novalidate>
-
         {% if errors %}
           {% set errorList = [] %}
           {% for errorDetail in errors.details %}
@@ -52,6 +52,10 @@
               {% set errorHref = "#marketingYear" %}
             {% elif errorDetail.path[0] == "schemeId" %}
               {% set errorHref = "#schemeId" %}
+            {% elif errorDetail.path[0] == "createChecksum" %}
+              {% set errorHref = "#createChecksum" %}
+            {% elif errorDetail.path[0] == "createControl" %}
+              {% set errorHref = "#createControl" %}
             {% endif %}
             {%
               set errorList = (errorList.push({
@@ -77,6 +81,8 @@
         {% set invoiceNumberError = null %}
         {% set marketingYearError = null %}
         {% set schemeError = null %}
+        {% set checksumError = null %}
+        {% set controlError = null %}
 
         {% if errors %}
           {% for errorDetail in errors.details %}
@@ -96,6 +102,10 @@
               {% set marketingYearError = { text: errorDetail.message } %}
             {% elif errorDetail.path[0] == "schemeId" %}
               {% set schemeError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "createChecksum" %}
+              {% set checksumError = { text: errorDetail.message } %}
+            {% elif errorDetail.path[0] == "createControl" %}
+              {% set controlError = { text: errorDetail.message } %}
             {% endif %}
           {% endfor %}
         {% endif %}
@@ -103,8 +113,15 @@
         <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
         <p class="govuk-body">
-          Create payment batch files that can be used for testing specific use cases in both Payment Hub and D365. This feature is for testing only, and should not be used in Production to create payment files.
+          Create payment batch files that can be used for testing specific use
+          cases in both Payment Hub and D365.
         </p>
+
+        <input
+          type="hidden"
+          name="crumb"
+          value="{{ crumb }}"
+        />
 
         {% set schemeItems = [] %}
         {% for scheme in schemes %}
@@ -134,13 +151,13 @@
         {{
           govukInput({
             label: {
-              text: "Sequence number",
+              text: "Batch sequence number",
               classes: "govuk-label--s"
             },
             id: "sequence",
             name: "sequence",
             value: sequence,
-            classes: "govuk-input--width-4",
+            classes: "govuk-input--width-3",
             errorMessage: sequenceError,
             inputmode: "numeric",
             spellcheck: false
@@ -150,13 +167,13 @@
         {{
           govukInput({
             label: {
-              text: "Number of payment requests",
+              text: "Number of payment requests in batch",
               classes: "govuk-label--s"
             },
             id: "numberOfPR",
             name: "numberOfPR",
             value: numberOfPR,
-            classes: "govuk-input--width-4",
+            classes: "govuk-input--width-3",
             errorMessage: numberOfPRError,
             inputmode: "numeric",
             spellcheck: false
@@ -166,8 +183,11 @@
         {{
           govukInput({
             label: {
-              text: "Value of payment requests (pence)",
+              text: "Value of each payment request (pence)",
               classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Note - all payment requests will have one G00 invoice line for the specified value"
             },
             id: "value",
             name: "value",
@@ -201,10 +221,13 @@
               text: "First invoice number",
               classes: "govuk-label--s"
             },
+            hint: {
+              text: "Any number input is padded with zeroes and append the appropriate leading character(s) for the scheme. For example, 1 for CS becomes A0000001. Subsequent payment requests then iterate up by one."
+            },
             id: "invoiceNumber",
             name: "invoiceNumber",
             value: invoiceNumber,
-            classes: "govuk-input--width-5",
+            classes: "govuk-input--width-10",
             errorMessage: invoiceNumberError,
             inputmode: "numeric",
             spellcheck: false
@@ -216,6 +239,9 @@
             label: {
               text: "First FRN (Firm Reference Number)",
               classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Subsequent payment requests then iterate up by one."
             },
             id: "frn",
             name: "frn",
@@ -236,17 +262,69 @@
             id: "marketingYear",
             name: "marketingYear",
             value: marketingYear,
-            classes: "govuk-input--width-4",
+            classes: "govuk-input--width-3",
             errorMessage: marketingYearError,
             inputmode: "numeric",
             spellcheck: false
           })
         }}
 
+        {{
+          govukRadios({
+            idPrefix: "createChecksum",
+            name: "createChecksum",
+            fieldset: {
+              legend: {
+                text: "Create checksum file?",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            items: [
+              {
+                value: "true",
+                text: "Yes",
+                checked: createChecksum == true or createChecksum == "true"
+              },
+              {
+                value: "false",
+                text: "No",
+                checked: createChecksum == false or createChecksum == "false" or createChecksum is undefined
+              }
+            ],
+            errorMessage: checksumError
+          })
+        }}
+
+        {{
+          govukRadios({
+            idPrefix: "createControl",
+            name: "createControl",
+            fieldset: {
+              legend: {
+                text: "Create control file?",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            items: [
+              {
+                value: "true",
+                text: "Yes",
+                checked: createControl == true or createControl == "true"
+              },
+              {
+                value: "false",
+                text: "No",
+                checked: createControl == false or createControl == "false" or createControl is undefined
+              }
+            ],
+            errorMessage: controlError
+          })
+        }}
+
         <div class="govuk-button-group">
           {{
             govukButton({
-              text: "Continue",
+              text: "Submit",
               attributes: {
                 id: "submit"
               }

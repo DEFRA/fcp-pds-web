@@ -17,7 +17,11 @@ module.exports = [
       auth,
       handler: (_request, h) => {
         const schemes = getBatchSchemes()
-        return h.view('batch-generator', { schemes })
+        return h.view('batch-generator', {
+          schemes,
+          createChecksum: false,
+          createControl: false
+        })
       }
     }
   },

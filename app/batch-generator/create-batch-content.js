@@ -1,10 +1,10 @@
-const { getSitiAgriSchemeIds } = require('ffc-pay-schemes')
+const { getSchemeIds } = require('ffc-pay-schemes')
 const { createBPS, createCS, createSFIP, createSFI22, createSFI23, createESFIO, createLS, createDelinked, createCOHTC, createCOHTR, createSFI26 } = require('./scheme-creators')
 
-const { SFI, SFI_PILOT, LUMP_SUMS, CS, BPS, SFI23, DELINKED, SFI_EXPANDED, COHT_REVENUE, COHT_CAPITAL, SFI26 } = getSitiAgriSchemeIds()
+const { SFI, SFI_PILOT, LUMP_SUMS, CS, BPS, SFI23, DELINKED, SFI_EXPANDED, COHT_REVENUE, COHT_CAPITAL, SFI26 } = getSchemeIds()
 
 const createBatchContent = (ctx) => {
-  switch (ctx.schemeId) {
+  switch (Number(ctx.schemeId)) {
     case BPS:
       return createBPS(ctx)
     case CS:

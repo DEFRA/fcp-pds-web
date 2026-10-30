@@ -69,7 +69,7 @@ describe('login route', () => {
     test('returns 500 when getAuthenticationUrl throws error', async () => {
       const testError = new Error('Failed to get auth URL')
       auth.getAuthenticationUrl.mockRejectedValue(testError)
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
       const response = await server.inject({ method: 'GET', url: '/login' })
 
@@ -80,7 +80,7 @@ describe('login route', () => {
     test('logs error message on getAuthenticationUrl failure', async () => {
       const testError = new Error('Auth service unavailable')
       auth.getAuthenticationUrl.mockRejectedValue(testError)
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
       await server.inject({ method: 'GET', url: '/login' })
 
@@ -90,7 +90,7 @@ describe('login route', () => {
 
     test('renders error view on authentication URL retrieval failure', async () => {
       auth.getAuthenticationUrl.mockRejectedValue(new Error('Service error'))
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
       const response = await server.inject({ method: 'GET', url: '/login' })
 
@@ -108,7 +108,7 @@ describe('login route', () => {
 
       for (const error of errors) {
         auth.getAuthenticationUrl.mockRejectedValueOnce(error)
-        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
         const response = await server.inject({ method: 'GET', url: '/login' })
         expect(response.statusCode).toBe(500)
@@ -126,7 +126,7 @@ describe('login route', () => {
       expect(response1.statusCode).toBe(302)
 
       auth.getAuthenticationUrl.mockRejectedValueOnce(new Error('Error'))
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
       const response2 = await server.inject({ method: 'GET', url: '/login' })
       expect(response2.statusCode).toBe(500)
 
@@ -145,7 +145,7 @@ describe('login route', () => {
     })
 
     test('handles multiple error requests', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
       for (let i = 0; i < 3; i++) {
         auth.getAuthenticationUrl.mockRejectedValueOnce(new Error(`Error ${i}`))
@@ -153,7 +153,7 @@ describe('login route', () => {
         expect(response.statusCode).toBe(500)
       }
 
-      expect(consoleSpy).toHaveBeenCalledTimes(3)
+      expect(consoleSpy).toHaveBeenCalledTimes(6)
       consoleSpy.mockRestore()
     })
   })

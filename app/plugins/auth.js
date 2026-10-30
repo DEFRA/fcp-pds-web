@@ -4,10 +4,21 @@ const auth = require('../auth')
 
 const SESSION_AUTH = 'session-auth'
 
-const validateSession = async (_request, session) => {
+const validateSession = async (request, session) => {
+  console.log('validateSession called', {
+    path: request?.path,
+    hasSession: Boolean(session),
+    hasAccount: Boolean(session?.account),
+    hasScope: Boolean(session?.scope),
+    roleCount: session?.scope?.length ?? 0
+  })
+
   if (session?.account) {
+    console.log('validateSession valid')
     return { valid: true, credentials: session }
   }
+
+  console.log('validateSession invalid')
   return { valid: false }
 }
 
@@ -40,6 +51,20 @@ const authPlugin = {
             request.cookieAuth
           )
         }
+        return h.continue
+      })
+
+      server.ext('onPreResponse', (request, h) => {
+        console.log('AUTH DEBUG', {
+          path: request.path,
+          isAuthenticated: request.auth?.isAuthenticated,
+          strategy: request.auth?.strategy,
+          mode: request.auth?.mode,
+          error: request.auth?.error?.message,
+          errorName: request.auth?.error?.name,
+          errorData: request.auth?.error?.data
+        })
+
         return h.continue
       })
     }

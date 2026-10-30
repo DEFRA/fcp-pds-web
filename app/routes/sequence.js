@@ -5,6 +5,26 @@ const {
 
 const minSequenceNumber = 1
 const maxSequenceNumber = 9999
+const maxCsSequenceNumber = 99999
+
+const vetVisitsSchemeId = 4
+const csSchemeId = 5
+const dpsSchemeId = 7
+const esSchemeId = 9
+const fcSchemeId = 10
+const impsSchemeId = 11
+const fpttSchemeId = 17
+const wmpSchemeId = 18
+
+const schemesWithoutSequenceMaximum = new Set([
+  vetVisitsSchemeId,
+  dpsSchemeId,
+  esSchemeId,
+  fcSchemeId,
+  impsSchemeId,
+  fpttSchemeId,
+  wmpSchemeId
+])
 
 const formatSequence = value =>
   String(value).padStart(4, '0')
@@ -68,11 +88,26 @@ module.exports = [{
       const { schemeId, sequenceNumber } = request.payload
       const { payload } = await getBatchProcessorData('/sequence')
 
-      if (
-        !Number.isInteger(Number(sequenceNumber)) ||
-        Number(sequenceNumber) < minSequenceNumber ||
-        Number(sequenceNumber) > maxSequenceNumber
-      ) {
+      const numericSchemeId = Number(schemeId)
+      const numericSequenceNumber = Number(sequenceNumber)
+
+      const hasNoSequenceMaximum =
+        schemesWithoutSequenceMaximum.has(numericSchemeId)
+
+      const isCsScheme = numericSchemeId === csSchemeId
+
+      const exceedsSequenceMaximum =
+        isCsScheme
+          ? numericSequenceNumber > maxCsSequenceNumber
+          : !hasNoSequenceMaximum &&
+          numericSequenceNumber > maxSequenceNumber
+
+      const sequenceNumberInvalid =
+        !Number.isInteger(numericSequenceNumber) ||
+        numericSequenceNumber < minSequenceNumber ||
+        exceedsSequenceMaximum
+
+      if (sequenceNumberInvalid) {
         const schemeItems = [
           {
             value: '',
@@ -81,24 +116,38 @@ module.exports = [{
           ...payload.sequences.map(sequenceItem => ({
             value: sequenceItem.schemeId,
             text: sequenceItem.scheme,
-            selected: String(sequenceItem.schemeId) === String(schemeId),
+            selected:
+              String(sequenceItem.schemeId) === String(schemeId),
             attributes: {
               'data-sequence-number': sequenceItem.next
             }
           }))
         ]
 
+        let errorMessage
+
+        if (isCsScheme) {
+          errorMessage =
+            `Sequence number must be between ${minSequenceNumber} and ${maxCsSequenceNumber}`
+        } else if (hasNoSequenceMaximum) {
+          errorMessage =
+            `Sequence number must be a whole number greater than or equal to ${minSequenceNumber}`
+        } else {
+          errorMessage =
+            `Sequence number must be between ${minSequenceNumber} and ${maxSequenceNumber}`
+        }
+
         return h.view('sequence/edit-sequence', {
           sequences: payload.sequences,
           schemeItems,
-          errorMessage: 'Sequence number must be between 1 and 9999',
+          errorMessage,
           sequenceNumber,
           selectedSchemeId: schemeId
         })
       }
 
       const sequence = payload.sequences.find(
-        x => x.schemeId === Number(schemeId)
+        x => x.schemeId === numericSchemeId
       )
 
       return h.view('sequence/confirm-sequence-change', {

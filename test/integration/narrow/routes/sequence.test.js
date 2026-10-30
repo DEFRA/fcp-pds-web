@@ -327,4 +327,75 @@ describe('sequence routes', () => {
       })
     })
   })
+
+  test('shows CS error when sequence number exceeds the CS maximum', async () => {
+    const route = routes.find(route =>
+      route.method === 'POST' &&
+      route.path === '/edit-sequence'
+    )
+
+    const request = {
+      payload: {
+        schemeId: '5',
+        sequenceNumber: '100000'
+      }
+    }
+
+    getBatchProcessorData.mockResolvedValue({
+      payload: {
+        sequences: [{
+          schemeId: 5,
+          scheme: 'CS',
+          next: 9999
+        }]
+      }
+    })
+
+    await route.options.handler(request, h)
+
+    expect(h.view).toHaveBeenCalledWith(
+      'sequence/edit-sequence',
+      expect.objectContaining({
+        errorMessage: 'Sequence number must be between 1 and 99999',
+        sequenceNumber: '100000',
+        selectedSchemeId: '5'
+      })
+    )
+  })
+
+  test('allows the maximum CS sequence number', async () => {
+    const route = routes.find(route =>
+      route.method === 'POST' &&
+      route.path === '/edit-sequence'
+    )
+
+    const request = {
+      payload: {
+        schemeId: '5',
+        sequenceNumber: '99999'
+      }
+    }
+
+    getBatchProcessorData.mockResolvedValue({
+      payload: {
+        sequences: [{
+          schemeId: 5,
+          scheme: 'CS',
+          next: 9999
+        }]
+      }
+    })
+
+    await route.options.handler(request, h)
+
+    expect(h.view).toHaveBeenCalledWith(
+      'sequence/confirm-sequence-change',
+      {
+        schemeId: '5',
+        schemeName: 'CS',
+        currentSequence: '9999',
+        newSequence: '99999'
+      }
+    )
+  })
 })

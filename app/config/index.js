@@ -103,6 +103,7 @@ module.exports = {
   has: config.has.bind(config),
   validate: config.validate.bind(config),
   isDev: config.get('isDev'),
+  isProd: config.get('env') === 'production',
   authConfig,
   cookieOptions: {
     ttl: process.env.COOKIE_TTL_IN_MILLIS ?? milliseconds * seconds * minutes * hours * daysPerYear,

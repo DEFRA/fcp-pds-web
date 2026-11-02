@@ -38,7 +38,7 @@ describe('create Delinked batch contents', () => {
   })
 
   test('buildBatch callback maps a requestNumber 1 record into the expected Delinked rows', () => {
-    const ctx = { sequence: 7 }
+    const ctx = { sequence: 7, fundCode: 'DRD10' }
 
     buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
       return mapper({
@@ -47,7 +47,8 @@ describe('create Delinked batch contents', () => {
         invoiceValue: 123.45,
         frn: '1234567890',
         deliveryBody: 'DB1',
-        schemeYear: 2024
+        schemeYear: 2024,
+        fundCode: ctx.fundCode
       })
     })
 
@@ -71,7 +72,7 @@ describe('create Delinked batch contents', () => {
   })
 
   test('buildBatch callback uses requestNumber 2 when requestNumber is not 1', () => {
-    const ctx = { sequence: 9 }
+    const ctx = { sequence: 9, fundCode: 'DRD10' }
 
     buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
       return mapper({
@@ -80,7 +81,8 @@ describe('create Delinked batch contents', () => {
         invoiceValue: 99.99,
         frn: '9876543210',
         deliveryBody: 'DB2',
-        schemeYear: 2025
+        schemeYear: 2025,
+        fundCode: ctx.fundCode
       })
     })
 

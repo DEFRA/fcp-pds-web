@@ -39,7 +39,7 @@ describe('create SFI Pilot batch contents', () => {
   })
 
   test('buildBatch callback maps a record into the expected SFI Pilot rows', () => {
-    const ctx = { sequence: 7 }
+    const ctx = { sequence: 7, fundCode: 'DRD10' }
 
     buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
       return mapper({
@@ -48,7 +48,8 @@ describe('create SFI Pilot batch contents', () => {
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
-        schemeYear: 2024
+        schemeYear: 2024,
+        fundCode: ctx.fundCode
       })
     })
 
@@ -71,7 +72,7 @@ describe('create SFI Pilot batch contents', () => {
   })
 
   test('returns the exact value produced by buildBatch', () => {
-    const ctx = { sequence: 99 }
+    const ctx = { sequence: 99, fundCode: 'DRD10' }
     const expected = { batchId: 'SFIP-099' }
 
     buildBatch.mockReturnValue(expected)

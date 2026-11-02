@@ -39,7 +39,7 @@ describe('create CS batch contents', () => {
   })
 
   test('buildBatch callback maps a record into the expected CS rows', () => {
-    const ctx = { sequence: 7 }
+    const ctx = { sequence: 7, fundCode: 'ERD14' }
 
     buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
       return mapper({
@@ -48,7 +48,8 @@ describe('create CS batch contents', () => {
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
-        schemeYear: 2024
+        schemeYear: 2024,
+        fundCode: ctx.fundCode
       })
     })
 
@@ -70,7 +71,7 @@ describe('create CS batch contents', () => {
   })
 
   test('returns the exact value produced by buildBatch', () => {
-    const ctx = { sequence: 99 }
+    const ctx = { sequence: 99, fundCode: 'ERD14' }
     const expected = { batchId: 'CS-099' }
 
     buildBatch.mockReturnValue(expected)

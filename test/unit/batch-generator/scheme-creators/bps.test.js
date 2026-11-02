@@ -39,7 +39,10 @@ describe('create BPS batch contents', () => {
   })
 
   test('buildBatch callback maps a record into the expected BPS rows', () => {
-    const ctx = { sequence: 7 }
+    const ctx = {
+      sequence: 7,
+      fundCode: 'EGF00'
+    }
 
     buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
       return mapper({
@@ -48,7 +51,8 @@ describe('create BPS batch contents', () => {
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
-        schemeYear: 2024
+        schemeYear: 2024,
+        fundCode: ctx.fundCode
       })
     })
 
@@ -70,7 +74,7 @@ describe('create BPS batch contents', () => {
   })
 
   test('returns the exact value produced by buildBatch', () => {
-    const ctx = { sequence: 99 }
+    const ctx = { sequence: 99, fundCode: 'DRD10' }
     const expected = { batchId: 'BPS-099' }
 
     buildBatch.mockReturnValue(expected)

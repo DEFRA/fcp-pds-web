@@ -11,6 +11,7 @@ jest.mock('ffc-pay-schemes', () => {
 jest.mock('../../../app/batch-generator/create-batch-content', () => ({
   createBatchContent: jest.fn()
 }))
+
 const { getSchemeIds, getSchemeProperties } = require('ffc-pay-schemes')
 const { createBatchContent } = require('../../../app/batch-generator/create-batch-content')
 const { generateBatch } = require('../../../app/batch-generator')
@@ -53,7 +54,8 @@ describe('generateBatch', () => {
       invoiceNumber: 1,
       frn: 1000000001,
       schemeYear: now.getFullYear(),
-      deliveryBody: 'RP00'
+      deliveryBody: 'RP00',
+      fundCode: 'DRD10'
     })
   })
 
@@ -79,14 +81,14 @@ describe('generateBatch', () => {
     )
   })
 
-  test('uses the scheme property deliveryBody when available', () => {
+  test('uses the scheme property deliveryBody and fundCode when available', () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
     createBatchContent.mockReturnValue(result)
-    getSchemeProperties.mockReturnValue({ deliveryBody: 'AB12' })
+    getSchemeProperties.mockReturnValue({ deliveryBody: 'AB12', fundCode: 'FUND99' })
 
     generateBatch({
       schemeId: BPS
@@ -94,7 +96,27 @@ describe('generateBatch', () => {
 
     expect(createBatchContent).toHaveBeenCalledWith(
       expect.objectContaining({
-        deliveryBody: 'AB12'
+        deliveryBody: 'AB12',
+        fundCode: 'FUND99'
+      })
+    )
+  })
+
+  test('defaults fundCode to DRD10 when no scheme property is set', () => {
+    const result = {
+      filename: 'batch-001.csv',
+      content: 'hello world'
+    }
+
+    createBatchContent.mockReturnValue(result)
+
+    generateBatch({
+      schemeId: BPS
+    })
+
+    expect(createBatchContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fundCode: 'DRD10'
       })
     )
   })

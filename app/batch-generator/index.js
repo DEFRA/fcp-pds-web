@@ -34,7 +34,8 @@ const getBatchContext = (options = {}) => {
     invoiceNumber: Number(options.invoiceNumber ?? defaultOne),
     frn: Number(options.frn ?? defaultFRN),
     schemeYear: Number(options.schemeYear ?? now.getFullYear()),
-    deliveryBody: getDeliveryBody(options, options.schemeId)
+    deliveryBody: getDeliveryBody(options, options.schemeId),
+    fundCode: getSchemeProperties(Number(options.schemeId))?.fundCode ?? 'DRD10'
   }
 }
 

@@ -7,6 +7,8 @@ const validSchemeIds = getBatchSchemes().map((scheme) => String(scheme.schemeId)
 
 const maxSequenceFiveDigit = 99999
 const maxSequenceFourDigit = 9999
+const minYear = 1993
+const maxYear = 2099
 
 const numericField = (requiredMessage, formatMessage) =>
   Joi.string()
@@ -109,8 +111,8 @@ module.exports = Joi.object({
     .required()
     .custom((value, helpers) => {
       const year = Number(value)
-      if (!Number.isInteger(year) || year < 1993 || year > 2099) {
-        return helpers.message('Marketing year must be between 1993 and 2099')
+      if (!Number.isInteger(year) || year < minYear || year > maxYear) {
+        return helpers.message(`Marketing year must be between ${minYear} and ${maxYear}`)
       }
       return value
     })

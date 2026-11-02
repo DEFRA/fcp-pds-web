@@ -30,7 +30,6 @@ describe('create SFI23 batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITISFIA',
-      'SFIA',
       '0042',
       'SFIA',
       expect.any(Function)
@@ -40,7 +39,7 @@ describe('create SFI23 batch contents', () => {
   test('buildBatch callback maps a requestNumber 1 record into the expected SFI23 rows', () => {
     const ctx = { sequence: 7, fundCode: 'DRD10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 1,
@@ -74,7 +73,7 @@ describe('create SFI23 batch contents', () => {
   test('buildBatch callback uses requestNumber 2 when requestNumber is not 1', () => {
     const ctx = { sequence: 9, fundCode: 'DRD10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 8,
         requestNumber: 2,

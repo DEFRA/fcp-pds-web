@@ -31,7 +31,6 @@ describe('create CS batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITICS',
-      'SITI AGRI CS SYS',
       ctx.sequence,
       'SITI AGRI CS SYS',
       expect.any(Function)
@@ -41,7 +40,7 @@ describe('create CS batch contents', () => {
   test('buildBatch callback maps a record into the expected CS rows', () => {
     const ctx = { sequence: 7, fundCode: 'ERD14' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,

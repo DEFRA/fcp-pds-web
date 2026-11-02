@@ -10,7 +10,7 @@ const decemberMonth = 11
 const firstDayOfMonth = 1
 
 const createSFI26 = (ctx) => {
-  return buildBatch(ctx, 'SITISFI26', 'SFI26', pad(ctx.sequence, sequencePad), 'SFI26', (r) => [
+  return buildBatch(ctx, 'SITISFI26', pad(ctx.sequence, sequencePad), 'SFI26', (r) => [
     `H^SFI26${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^G${lastDigits(r.frn, contractNumberPad)}^${r.requestNumber === defaultPPAIndicator ? defaultPPAIndicator : ppaAdjustmentIndicator}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SFI26^Q4`,
     `L^SFI26${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^80201^${r.fundCode}^G${lastDigits(r.frn, contractNumberPad)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^SOS270`,
   ])

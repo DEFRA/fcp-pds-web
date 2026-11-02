@@ -31,7 +31,6 @@ describe('create Lump Sums batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITILSES',
-      'LSES',
       ctx.sequence,
       'LSES',
       expect.any(Function)
@@ -41,7 +40,7 @@ describe('create Lump Sums batch contents', () => {
   test('buildBatch callback maps a record into the expected Lump Sums rows', () => {
     const ctx = { sequence: 7, fundCode: 'DOM10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,

@@ -31,7 +31,6 @@ describe('create SFI Pilot batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITIELM',
-      'SFIP',
       '0042',
       'SFIP',
       expect.any(Function)
@@ -41,7 +40,7 @@ describe('create SFI Pilot batch contents', () => {
   test('buildBatch callback maps a record into the expected SFI Pilot rows', () => {
     const ctx = { sequence: 7, fundCode: 'DRD10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,

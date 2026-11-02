@@ -31,7 +31,6 @@ describe('create BPS batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITI_',
-      'SITI AGRI SYS',
       ctx.sequence,
       'SITI AGRI SYS',
       expect.any(Function)
@@ -44,7 +43,7 @@ describe('create BPS batch contents', () => {
       fundCode: 'EGF00'
     }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,

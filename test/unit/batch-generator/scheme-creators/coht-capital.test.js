@@ -24,7 +24,6 @@ describe('create COHT capital batch contents', () => {
     expect(buildBatch).toHaveBeenCalledWith(
       ctx,
       'SITICOHTC',
-      'SITICOHTC',
       '0042',
       'SITICOHTC',
       expect.any(Function)
@@ -34,7 +33,7 @@ describe('create COHT capital batch contents', () => {
   test('buildBatch callback maps a requestNumber 1 record into the expected COHTC rows', () => {
     const ctx = { sequence: 7, fundCode: 'DRD10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 1,
@@ -67,7 +66,7 @@ describe('create COHT capital batch contents', () => {
   test('buildBatch callback uses requestNumber 2 when requestNumber is not 1', () => {
     const ctx = { sequence: 7, fundCode: 'DRD10' }
 
-    buildBatch.mockImplementation((context, prefix, schemeName, sequence, source, mapper) => {
+    buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 8,
         requestNumber: 2,

@@ -1,17 +1,13 @@
-const mockRoles = ['test-role']
+const mockRoles = ['Web.Pds.Admin']
 const mockAccount = 'test-account'
 
 const mockGetAuthCodeUrl = jest.fn()
-const mockAcquireTokenByCode = jest.fn().mockResolvedValue({
-  idTokenClaims: { roles: mockRoles },
-  account: mockAccount
-})
-const mockAcquireTokenSilent = jest.fn().mockResolvedValue({
-  idTokenClaims: { roles: mockRoles },
-  account: mockAccount
-})
+const mockAcquireTokenByCode = jest.fn()
+const mockAcquireTokenSilent = jest.fn()
 const mockRemoveAccount = jest.fn()
-const mockGetTokenCache = jest.fn(() => ({ removeAccount: mockRemoveAccount }))
+const mockGetTokenCache = jest.fn(() => ({
+  removeAccount: mockRemoveAccount
+}))
 
 jest.mock('@azure/msal-node', () => ({
   ConfidentialClientApplication: jest.fn(() => ({
@@ -31,12 +27,25 @@ let mockCookieAuth
 describe('azure authentication', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockCookieAuth = { set: jest.fn() }
+
+    mockAcquireTokenByCode.mockResolvedValue({
+      idTokenClaims: { roles: mockRoles },
+      account: mockAccount
+    })
+
+    mockAcquireTokenSilent.mockResolvedValue({
+      idTokenClaims: { roles: mockRoles },
+      account: mockAccount
+    })
+
+    mockCookieAuth = {
+      set: jest.fn()
+    }
   })
 
   describe('getAuthenticationUrl', () => {
-    beforeEach(() => {
-      azureAuth.getAuthenticationUrl()
+    beforeEach(async () => {
+      await azureAuth.getAuthenticationUrl()
     })
 
     test('calls getAuthCodeUrl once', () => {
@@ -44,11 +53,13 @@ describe('azure authentication', () => {
     })
 
     test('forces select_account prompt', () => {
-      expect(mockGetAuthCodeUrl.mock.calls[0][0].prompt).toBe('select_account')
+      expect(mockGetAuthCodeUrl.mock.calls[0][0].prompt)
+        .toBe('select_account')
     })
 
     test('uses redirect url from config', () => {
-      expect(mockGetAuthCodeUrl.mock.calls[0][0].redirectUri).toBe(authConfig.redirectUrl)
+      expect(mockGetAuthCodeUrl.mock.calls[0][0].redirectUri)
+        .toBe(authConfig.redirectUrl)
     })
   })
 
@@ -65,7 +76,16 @@ describe('azure authentication', () => {
       ['code', 'redirectCode'],
       ['redirectUri', authConfig.redirectUrl]
     ])('passes %s correctly', (key, expected) => {
-      expect(mockAcquireTokenByCode.mock.calls[0][0][key]).toBe(expected)
+      expect(mockAcquireTokenByCode.mock.calls[0][0][key])
+        .toBe(expected)
+    })
+
+    test('passes the required scopes', () => {
+      expect(mockAcquireTokenByCode.mock.calls[0][0].scopes).toEqual([
+        'openid',
+        'profile',
+        'offline_access'
+      ])
     })
 
     test('sets cookieAuth once', () => {
@@ -76,19 +96,23 @@ describe('azure authentication', () => {
       ['scope', mockRoles],
       ['account', mockAccount]
     ])('sets %s correctly', (key, expected) => {
-      expect(mockCookieAuth.set.mock.calls[0][0][key]).toBe(expected)
+      expect(mockCookieAuth.set.mock.calls[0][0][key])
+        .toBe(expected)
     })
   })
 
   describe('refresh', () => {
     test('calls acquireTokenSilent once', async () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
+
       expect(mockAcquireTokenSilent).toHaveBeenCalledTimes(1)
     })
 
     test('passes correct account', async () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
-      expect(mockAcquireTokenSilent.mock.calls[0][0].account).toBe(mockAccount)
+
+      expect(mockAcquireTokenSilent.mock.calls[0][0].account)
+        .toBe(mockAccount)
     })
 
     test.each([
@@ -97,11 +121,24 @@ describe('azure authentication', () => {
       [false, false]
     ])('forceRefresh=%s results in %s', async (force, expected) => {
       await azureAuth.refresh(mockAccount, mockCookieAuth, force)
-      expect(mockAcquireTokenSilent.mock.calls[0][0].forceRefresh).toBe(expected)
+
+      expect(mockAcquireTokenSilent.mock.calls[0][0].forceRefresh)
+        .toBe(expected)
+    })
+
+    test('passes the required scopes', async () => {
+      await azureAuth.refresh(mockAccount, mockCookieAuth)
+
+      expect(mockAcquireTokenSilent.mock.calls[0][0].scopes).toEqual([
+        'openid',
+        'profile',
+        'offline_access'
+      ])
     })
 
     test('sets cookieAuth once', async () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
+
       expect(mockCookieAuth.set).toHaveBeenCalledTimes(1)
     })
 
@@ -110,11 +147,17 @@ describe('azure authentication', () => {
       ['account', mockAccount]
     ])('sets %s correctly', async (key, expected) => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
-      expect(mockCookieAuth.set.mock.calls[0][0][key]).toBe(expected)
+
+      expect(mockCookieAuth.set.mock.calls[0][0][key])
+        .toBe(expected)
     })
 
     test('returns roles', async () => {
-      const result = await azureAuth.refresh(mockAccount, mockCookieAuth)
+      const result = await azureAuth.refresh(
+        mockAccount,
+        mockCookieAuth
+      )
+
       expect(result).toBe(mockRoles)
     })
   })
@@ -134,7 +177,13 @@ describe('azure authentication', () => {
   })
 
   describe('error handling', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+    let consoleErrorSpy
+
+    beforeAll(() => {
+      consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation()
+    })
 
     afterEach(() => {
       consoleErrorSpy.mockClear()
@@ -147,19 +196,135 @@ describe('azure authentication', () => {
     describe('authenticate error handling', () => {
       test('logs error when acquireTokenByCode fails', async () => {
         const testError = new Error('Token acquisition failed')
+
         mockAcquireTokenByCode.mockRejectedValueOnce(testError)
 
-        await azureAuth.authenticate('redirectCode', mockCookieAuth)
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toThrow('Token acquisition failed')
 
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token by code:', testError)
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          'Failed to authenticate:',
+          testError
+        )
+      })
+
+      test('rethrows error when acquireTokenByCode fails', async () => {
+        const testError = new Error('Token acquisition failed')
+
+        mockAcquireTokenByCode.mockRejectedValueOnce(testError)
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toBe(testError)
       })
 
       test('does not set cookieAuth when acquireTokenByCode fails', async () => {
-        mockAcquireTokenByCode.mockRejectedValueOnce(new Error('Token acquisition failed'))
+        mockAcquireTokenByCode.mockRejectedValueOnce(
+          new Error('Token acquisition failed')
+        )
 
-        await azureAuth.authenticate('redirectCode', mockCookieAuth)
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toThrow('Token acquisition failed')
 
         expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('throws NO_PDS_ROLES when roles claim is missing', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: {},
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          message: 'Authenticated account has no recognised PDS roles',
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('throws NO_PDS_ROLES when roles are empty', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: { roles: [] },
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          message: 'Authenticated account has no recognised PDS roles',
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('throws NO_PDS_ROLES when account has no recognised PDS roles', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: {
+            roles: ['Some.Other.Application.Role']
+          },
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          message: 'Authenticated account has no recognised PDS roles',
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('does not set cookieAuth when roles claim is missing', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: {},
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('does not set cookieAuth when roles are empty', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: { roles: [] },
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      })
+
+      test('does not log an error when account has no recognised PDS roles', async () => {
+        mockAcquireTokenByCode.mockResolvedValueOnce({
+          idTokenClaims: { roles: [] },
+          account: mockAccount
+        })
+
+        await expect(
+          azureAuth.authenticate('redirectCode', mockCookieAuth)
+        ).rejects.toMatchObject({
+          message: 'Authenticated account has no recognised PDS roles',
+          code: 'NO_PDS_ROLES'
+        })
+
+        expect(consoleErrorSpy).not.toHaveBeenCalled()
       })
 
       test('handles different error types in authenticate', async () => {
@@ -170,37 +335,54 @@ describe('azure authentication', () => {
         ]
 
         for (const err of errors) {
-          jest.clearAllMocks()
           consoleErrorSpy.mockClear()
           mockAcquireTokenByCode.mockRejectedValueOnce(err)
 
-          await azureAuth.authenticate('redirectCode', mockCookieAuth)
+          await expect(
+            azureAuth.authenticate('redirectCode', mockCookieAuth)
+          ).rejects.toBe(err)
 
-          expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token by code:', err)
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'Failed to authenticate:',
+            err
+          )
         }
       })
     })
 
     describe('refresh error handling', () => {
       test('logs error when acquireTokenSilent fails', async () => {
-        const testError = new Error('Silent token acquisition failed')
+        const testError = new Error(
+          'Silent token acquisition failed'
+        )
+
         mockAcquireTokenSilent.mockRejectedValueOnce(testError)
 
         await azureAuth.refresh(mockAccount, mockCookieAuth)
 
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token on silent refresh:', testError)
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          'Failed to acquire token on silent refresh:',
+          testError
+        )
       })
 
       test('returns undefined when acquireTokenSilent fails', async () => {
-        mockAcquireTokenSilent.mockRejectedValueOnce(new Error('Token acquisition failed'))
+        mockAcquireTokenSilent.mockRejectedValueOnce(
+          new Error('Token acquisition failed')
+        )
 
-        const result = await azureAuth.refresh(mockAccount, mockCookieAuth)
+        const result = await azureAuth.refresh(
+          mockAccount,
+          mockCookieAuth
+        )
 
         expect(result).toBeUndefined()
       })
 
       test('does not set cookieAuth when acquireTokenSilent fails', async () => {
-        mockAcquireTokenSilent.mockRejectedValueOnce(new Error('Token acquisition failed'))
+        mockAcquireTokenSilent.mockRejectedValueOnce(
+          new Error('Token acquisition failed')
+        )
 
         await azureAuth.refresh(mockAccount, mockCookieAuth)
 
@@ -215,14 +397,19 @@ describe('azure authentication', () => {
         ]
 
         for (const err of errors) {
-          jest.clearAllMocks()
           consoleErrorSpy.mockClear()
           mockAcquireTokenSilent.mockRejectedValueOnce(err)
 
-          const result = await azureAuth.refresh(mockAccount, mockCookieAuth)
+          const result = await azureAuth.refresh(
+            mockAccount,
+            mockCookieAuth
+          )
 
           expect(result).toBeUndefined()
-          expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to acquire token on silent refresh:', err)
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'Failed to acquire token on silent refresh:',
+            err
+          )
         }
       })
     })
@@ -230,11 +417,15 @@ describe('azure authentication', () => {
     describe('logout error handling', () => {
       test('logs error when removeAccount fails', async () => {
         const testError = new Error('Failed to remove account')
+
         mockRemoveAccount.mockRejectedValueOnce(testError)
 
         await azureAuth.logout(mockAccount)
 
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Unable to end session', testError)
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          'Unable to end session',
+          testError
+        )
       })
 
       test('handles different error types in logout', async () => {
@@ -245,33 +436,37 @@ describe('azure authentication', () => {
         ]
 
         for (const err of errors) {
-          jest.clearAllMocks()
           consoleErrorSpy.mockClear()
           mockRemoveAccount.mockRejectedValueOnce(err)
 
           await azureAuth.logout(mockAccount)
 
-          expect(consoleErrorSpy).toHaveBeenCalledWith('Unable to end session', err)
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'Unable to end session',
+            err
+          )
         }
       })
     })
+  })
 
-    describe('msalLogging configuration', () => {
-      test('includes loggerCallback in non-prod environment', () => {
-        // This test verifies that the msalLogging object is configured correctly
-        // config.isProd should be falsy (undefined) in non-prod, so msalLogging includes loggerCallback
-        const config = require('../../../app/config')
-        expect(config.isProd).toBeUndefined() // isProd is undefined when not in production
-      })
+  describe('msalLogging configuration', () => {
+    test('reports the environment as non-production under test', () => {
+      const config = require('../../../app/config')
 
-      test('loggerCallback logs messages', () => {
-        const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation()
+      expect(config.isProd).toBe(false)
+    })
 
-        // The loggerCallback should log messages to console
-        // This is configured in the msalLogging object for non-prod environments
+    test('allows console logging in non-production', () => {
+      const consoleLogSpy = jest
+        .spyOn(console, 'log')
+        .mockImplementation()
 
-        consoleLogSpy.mockRestore()
-      })
+      console.log('MSAL test log')
+
+      expect(consoleLogSpy).toHaveBeenCalledWith('MSAL test log')
+
+      consoleLogSpy.mockRestore()
     })
   })
 })

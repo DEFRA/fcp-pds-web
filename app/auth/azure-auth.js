@@ -1,5 +1,9 @@
 const config = require('../config')
 const msal = require('@azure/msal-node')
+const permissions = require('./permissions')
+
+const hasPdsRole = roles =>
+  roles.some(role => Object.values(permissions).includes(role))
 
 const msalLogging = config.isProd
   ? {}
@@ -33,18 +37,26 @@ const authenticate = async (redirectCode, cookieAuth) => {
       scopes: ['openid', 'profile', 'offline_access']
     })
 
-    console.log('ID token claims diagnostic', {
-      hasRolesClaim: Object.hasOwn(token.idTokenClaims, 'roles'),
-      roleCount: token.idTokenClaims.roles?.length ?? 0,
-      claimNames: Object.keys(token.idTokenClaims).sort()
-    })
+    const roles = token.idTokenClaims.roles || []
+
+    if (!hasPdsRole(roles)) {
+      const error = new Error(
+        'Authenticated account has no recognised PDS roles'
+      )
+      error.code = 'NO_PDS_ROLES'
+      throw error
+    }
 
     cookieAuth.set({
-      scope: token.idTokenClaims.roles || [],
+      scope: roles,
       account: token.account
     })
   } catch (err) {
-    console.error('Failed to acquire token by code:', err)
+    if (err.code !== 'NO_PDS_ROLES') {
+      console.error('Failed to authenticate:', err)
+    }
+
+    throw err
   }
 }
 
@@ -56,12 +68,18 @@ const refresh = async (account, cookieAuth, forceRefresh = true) => {
       forceRefresh
     })
 
+    const roles = token.idTokenClaims.roles || []
+
+    if (!hasPdsRole(roles)) {
+      return undefined
+    }
+
     cookieAuth.set({
-      scope: token.idTokenClaims.roles || [],
+      scope: roles,
       account: token.account
     })
 
-    return token.idTokenClaims.roles
+    return roles
   } catch (err) {
     console.error('Failed to acquire token on silent refresh:', err)
     return undefined

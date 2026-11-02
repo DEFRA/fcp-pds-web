@@ -13,9 +13,17 @@ module.exports = {
       await auth.authenticate(request.query.code, request.cookieAuth)
       return h.redirect('/')
     } catch (err) {
-      console.error('Error authenticating:', err)
-    }
+      if (err.code === 'NO_PDS_ROLES') {
+        return h
+          .view(ERROR_VIEWS.NOT_AUTHORIZED)
+          .code(HTTP_STATUS.FORBIDDEN)
+      }
 
-    return h.view(ERROR_VIEWS.INTERNAL_SERVER_ERROR).code(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      console.error('Error authenticating:', err)
+
+      return h
+        .view(ERROR_VIEWS.INTERNAL_SERVER_ERROR)
+        .code(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    }
   }
 }

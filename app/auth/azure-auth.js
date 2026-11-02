@@ -33,6 +33,12 @@ const authenticate = async (redirectCode, cookieAuth) => {
       scopes: ['openid', 'profile', 'offline_access']
     })
 
+    console.log('ID token claims diagnostic', {
+      hasRolesClaim: Object.hasOwn(token.idTokenClaims, 'roles'),
+      roleCount: token.idTokenClaims.roles?.length ?? 0,
+      claimNames: Object.keys(token.idTokenClaims).sort()
+    })
+
     cookieAuth.set({
       scope: token.idTokenClaims.roles || [],
       account: token.account

@@ -57,7 +57,7 @@ describe('create Delinked batch contents', () => {
     expect(result).toHaveLength(2)
 
     expect(result[0]).toBe(
-      'H^DP0000012^01^E34567890^1^1234567890^GBP^123.45^DB1^GBP^DP^Q4'
+      'H^DP0000012^01^Z34567890^1^1234567890^GBP^123.45^DB1^GBP^DP^Q4'
     )
     expect(result[1]).toBe(
       'L^DP0000012^123.45^2024^80101^DRD10^Z34567890^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS210'
@@ -87,7 +87,7 @@ describe('create Delinked batch contents', () => {
     const result = createDelinked(ctx)
 
     expect(result[0]).toBe(
-      'H^DP0000008^02^E76543210^2^9876543210^GBP^99.99^DB2^GBP^DP^Q4'
+      'H^DP0000008^02^Z76543210^2^9876543210^GBP^99.99^DB2^GBP^DP^Q4'
     )
     expect(result[1]).toBe(
       'L^DP0000008^99.99^2025^80101^DRD10^Z76543210^DB2^N^1^G00 - Gross value of claim^2025-12-01^2025-12-01^SOS210'

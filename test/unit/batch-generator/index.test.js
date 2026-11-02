@@ -1,10 +1,17 @@
 const crypto = require('node:crypto')
-const { getSchemeIds } = require('ffc-pay-schemes')
+
+jest.mock('ffc-pay-schemes', () => {
+  const actual = jest.requireActual('ffc-pay-schemes')
+  return {
+    ...actual,
+    getSchemeProperties: jest.fn()
+  }
+})
 
 jest.mock('../../../app/batch-generator/create-batch-content', () => ({
   createBatchContent: jest.fn()
 }))
-
+const { getSchemeIds, getSchemeProperties } = require('ffc-pay-schemes')
 const { createBatchContent } = require('../../../app/batch-generator/create-batch-content')
 const { generateBatch } = require('../../../app/batch-generator')
 
@@ -13,6 +20,7 @@ const { BPS, CS } = getSchemeIds()
 describe('generateBatch', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    getSchemeProperties.mockReturnValue(undefined)
   })
 
   test('builds the default batch context and returns the generated file list', () => {
@@ -47,6 +55,48 @@ describe('generateBatch', () => {
       schemeYear: now.getFullYear(),
       deliveryBody: 'RP00'
     })
+  })
+
+  test('uses an explicit deliveryBody when provided', () => {
+    const result = {
+      filename: 'batch-001.csv',
+      content: 'hello world'
+    }
+
+    createBatchContent.mockReturnValue(result)
+
+    generateBatch({
+      schemeId: BPS,
+      deliveryBody: 'ZZ99',
+      createChecksum: false,
+      createControl: false
+    })
+
+    expect(createBatchContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        deliveryBody: 'ZZ99'
+      })
+    )
+  })
+
+  test('uses the scheme property deliveryBody when available', () => {
+    const result = {
+      filename: 'batch-001.csv',
+      content: 'hello world'
+    }
+
+    createBatchContent.mockReturnValue(result)
+    getSchemeProperties.mockReturnValue({ deliveryBody: 'AB12' })
+
+    generateBatch({
+      schemeId: BPS
+    })
+
+    expect(createBatchContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        deliveryBody: 'AB12'
+      })
+    )
   })
 
   test('adds a checksum file when createChecksum is true', () => {
@@ -134,6 +184,25 @@ describe('generateBatch', () => {
     expect(createBatchContent).toHaveBeenCalledWith(
       expect.objectContaining({
         deliveryBody: 'NE00'
+      })
+    )
+  })
+
+  test('uses the non-CS default delivery body when no scheme property is set', () => {
+    const result = {
+      filename: 'batch-001.csv',
+      content: 'hello world'
+    }
+
+    createBatchContent.mockReturnValue(result)
+
+    generateBatch({
+      schemeId: BPS
+    })
+
+    expect(createBatchContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        deliveryBody: 'RP00'
       })
     )
   })

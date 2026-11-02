@@ -5,6 +5,9 @@ const { getBatchSchemes } = require('../../helpers/get-batch-schemes')
 const { CS } = getSchemeIds()
 const validSchemeIds = getBatchSchemes().map((scheme) => String(scheme.schemeId))
 
+const maxSequenceFiveDigit = 99999
+const maxSequenceFourDigit = 9999
+
 const numericField = (requiredMessage, formatMessage) =>
   Joi.string()
     .pattern(/^\d+$/)
@@ -32,7 +35,7 @@ module.exports = Joi.object({
       const payload = helpers.state.ancestors[0]
       const sequence = Number(value)
       const schemeId = Number(payload.schemeId)
-      const maxSequence = schemeId === CS ? 99999 : 9999
+      const maxSequence = schemeId === CS ? maxSequenceFiveDigit : maxSequenceFourDigit
 
       if (!Number.isInteger(sequence) || sequence < 1 || sequence > maxSequence) {
         return helpers.message(`Sequence must be between 1 and ${maxSequence}`)

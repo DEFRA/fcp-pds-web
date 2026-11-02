@@ -1,54 +1,84 @@
 const path = require('node:path')
 const crypto = require('node:crypto')
-const { getSchemeIds } = require('ffc-pay-schemes')
+const { getSchemeIds, getSchemeProperties } = require('ffc-pay-schemes')
 const { createBatchContent } = require('./create-batch-content')
 
 const { CS } = getSchemeIds()
+const defaultOne = 1
+const defaultValue = 100
+const defaultFRN = 1000000001
 
-const generateBatch = (options) => {
+const getDeliveryBody = (options, schemeId) => {
+  if (options.deliveryBody) {
+    return options.deliveryBody
+  }
+
+  const schemeDeliveryBody = getSchemeProperties(Number(schemeId))?.deliveryBody
+  if (schemeDeliveryBody) {
+    return schemeDeliveryBody
+  }
+
+  return Number(schemeId) === CS ? 'NE00' : 'RP00'
+}
+
+const getBatchContext = (options = {}) => {
   const now = new Date()
-  const ctx = {
+
+  return {
     ...options,
     now,
-    batchSize: Number(options.batchSize ?? 1),
-    invoiceValue: Number(options.invoiceValue ?? 100),
-    sequence: Number(options.sequence ?? 1),
-    requestNumber: Number(options.requestNumber ?? 1),
-    invoiceNumber: Number(options.invoiceNumber ?? 1),
-    frn: Number(options.frn ?? 1000000001),
+    batchSize: Number(options.batchSize ?? defaultOne),
+    invoiceValue: Number(options.invoiceValue ?? defaultValue),
+    sequence: Number(options.sequence ?? defaultOne),
+    requestNumber: Number(options.requestNumber ?? defaultOne),
+    invoiceNumber: Number(options.invoiceNumber ?? defaultOne),
+    frn: Number(options.frn ?? defaultFRN),
     schemeYear: Number(options.schemeYear ?? now.getFullYear()),
-    deliveryBody: options.deliveryBody ?? (
-      Number(options.schemeId) === CS ? 'NE00' : 'RP00'
-    )
+    deliveryBody: getDeliveryBody(options, options.schemeId)
   }
+}
 
-  if (!Number.isInteger(ctx.batchSize) || ctx.batchSize < 1) {
+const validateBatchSize = (batchSize) => {
+  if (!Number.isInteger(batchSize) || batchSize < 1) {
     throw new Error('batchSize must be a positive integer')
   }
+}
 
-  const result = createBatchContent(ctx)
+const getChecksumFilename = (filename) => `${path.basename(filename, path.extname(filename))}.txt`
+
+const createFiles = (result, options) => {
   const files = [{ filename: result.filename, content: result.content }]
+  const checksumFilename = getChecksumFilename(result.filename)
 
   if (options.createChecksum) {
-    const checksumFilename = `${path.basename(result.filename, path.extname(result.filename))}.txt`
-    const checksum = crypto
-      .createHash('sha256')
-      .update(result.content, 'utf8')
-      .digest('hex')
-
-    files.push({ filename: checksumFilename, content: checksum })
+    files.push({
+      filename: checksumFilename,
+      content: crypto
+        .createHash('sha256')
+        .update(result.content, 'utf8')
+        .digest('hex')
+    })
   }
 
-  if (options.createControl) {
-    files.push({ filename: `CTL_${path.basename(result.filename)}`, content: '' })
+  if (!options.createControl) {
+    return files
+  }
 
-    if (options.createChecksum) {
-      const checksumFilename = `${path.basename(result.filename, path.extname(result.filename))}.txt`
-      files.push({ filename: `CTL_${checksumFilename}`, content: '' })
-    }
+  files.push({ filename: `CTL_${path.basename(result.filename)}`, content: '' })
+
+  if (options.createChecksum) {
+    files.push({ filename: `CTL_${checksumFilename}`, content: '' })
   }
 
   return files
+}
+
+const generateBatch = (options = {}) => {
+  const ctx = getBatchContext(options)
+  validateBatchSize(ctx.batchSize)
+
+  const result = createBatchContent(ctx)
+  return createFiles(result, options)
 }
 
 module.exports = {

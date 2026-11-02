@@ -1,9 +1,16 @@
 const { buildBatch, pad, lastDigits } = require('./helpers')
 
+const sequencePad = 4
+const invoiceNumberPad = 7
+const requestNumberPad = 2
+const contractNumberPad = 8
+const defaultPPAIndicator = 1
+const ppaAdjustmentIndicator = 2
+
 const createCOHTC = (ctx) => {
-  return buildBatch(ctx, 'SITICOHTC', 'SITICOHTC', pad(ctx.sequence, 4), 'SITICOHTC', (r) => [
-    `H^SITICOHTC${pad(r.invoiceNumber, 7)}^${pad(r.requestNumber, 2)}^Z${lastDigits(r.frn, 8)}^${r.requestNumber === 1 ? 1 : 2}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SITICOHTC^`,
-    `L^SITICOHTC${pad(r.invoiceNumber, 7)}^${String(r.invoiceValue)}^${r.schemeYear}^80201^DRD10^Z${lastDigits(r.frn, 8)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^SOS270`,
+  return buildBatch(ctx, 'SITICOHTC', 'SITICOHTC', pad(ctx.sequence, sequencePad), 'SITICOHTC', (r) => [
+    `H^SITICOHTC${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^Z${lastDigits(r.frn, contractNumberPad)}^${r.requestNumber === defaultPPAIndicator ? defaultPPAIndicator : ppaAdjustmentIndicator}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SITICOHTC^`,
+    `L^SITICOHTC${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^80201^DRD10^Z${lastDigits(r.frn, contractNumberPad)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^SOS270`
   ])
 }
 

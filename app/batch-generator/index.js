@@ -1,6 +1,6 @@
 const path = require('node:path')
 const crypto = require('node:crypto')
-const { getSchemeIds, getSchemeProperties } = require('ffc-pay-schemes')
+const { getSchemeIds, getDeliveryBodyFromSchemeId, getFundCodeFromSchemeId } = require('ffc-pay-schemes')
 const { createBatchContent } = require('./create-batch-content')
 
 const { CS } = getSchemeIds()
@@ -13,7 +13,7 @@ const getDeliveryBody = (options, schemeId) => {
     return options.deliveryBody
   }
 
-  const schemeDeliveryBody = getSchemeProperties(Number(schemeId))?.deliveryBody
+  const schemeDeliveryBody = getDeliveryBodyFromSchemeId(Number(schemeId))
   if (schemeDeliveryBody) {
     return schemeDeliveryBody
   }
@@ -35,7 +35,7 @@ const getBatchContext = (options = {}) => {
     frn: Number(options.frn ?? defaultFRN),
     schemeYear: Number(options.schemeYear ?? now.getFullYear()),
     deliveryBody: getDeliveryBody(options, options.schemeId),
-    fundCode: getSchemeProperties(Number(options.schemeId))?.fundCode ?? 'DRD10'
+    fundCode: getFundCodeFromSchemeId(Number(options.schemeId)) ?? 'DRD10'
   }
 }
 

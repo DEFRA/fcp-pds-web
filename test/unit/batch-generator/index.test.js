@@ -4,7 +4,8 @@ jest.mock('ffc-pay-schemes', () => {
   const actual = jest.requireActual('ffc-pay-schemes')
   return {
     ...actual,
-    getSchemeProperties: jest.fn()
+    getDeliveryBodyFromSchemeId: jest.fn(),
+    getFundCodeFromSchemeId: jest.fn()
   }
 })
 
@@ -12,7 +13,11 @@ jest.mock('../../../app/batch-generator/create-batch-content', () => ({
   createBatchContent: jest.fn()
 }))
 
-const { getSchemeIds, getSchemeProperties } = require('ffc-pay-schemes')
+const {
+  getSchemeIds,
+  getDeliveryBodyFromSchemeId,
+  getFundCodeFromSchemeId
+} = require('ffc-pay-schemes')
 const { createBatchContent } = require('../../../app/batch-generator/create-batch-content')
 const { generateBatch } = require('../../../app/batch-generator')
 
@@ -21,7 +26,8 @@ const { BPS, CS } = getSchemeIds()
 describe('generateBatch', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    getSchemeProperties.mockReturnValue(undefined)
+    getDeliveryBodyFromSchemeId.mockReturnValue(undefined)
+    getFundCodeFromSchemeId.mockReturnValue(undefined)
   })
 
   test('builds the default batch context and returns the generated file list', () => {
@@ -81,14 +87,15 @@ describe('generateBatch', () => {
     )
   })
 
-  test('uses the scheme property deliveryBody and fundCode when available', () => {
+  test('uses the scheme deliveryBody and fundCode when available', () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
     createBatchContent.mockReturnValue(result)
-    getSchemeProperties.mockReturnValue({ deliveryBody: 'AB12', fundCode: 'FUND99' })
+    getDeliveryBodyFromSchemeId.mockReturnValue('AB12')
+    getFundCodeFromSchemeId.mockReturnValue('FUND99')
 
     generateBatch({
       schemeId: BPS
@@ -102,7 +109,7 @@ describe('generateBatch', () => {
     )
   })
 
-  test('defaults fundCode to DRD10 when no scheme property is set', () => {
+  test('defaults fundCode to DRD10 when no scheme helper is set', () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
@@ -210,7 +217,7 @@ describe('generateBatch', () => {
     )
   })
 
-  test('uses the non-CS default delivery body when no scheme property is set', () => {
+  test('uses the non-CS default delivery body when no scheme helper is set', () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'

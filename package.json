@@ -39,8 +39,8 @@
     "@joi/date": "2.1.0",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
-    "ffc-database": "2.0.1",
-    "ffc-pay-schemes": "1.1.5",
+    "ffc-database": "2.0.2",
+    "ffc-pay-schemes": "1.2.0",
     "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
@@ -66,10 +66,6 @@
     "style-loader": "2.0.0",
     "webpack": "5.105.3",
     "webpack-cli": "4.10.0"
-  },
-  "overrides": {
-    "@azure/msal-node": "7.1.2",
-    "minimatch": "11.0.4"
   },
   "nodemonConfig": {
     "ignore": [

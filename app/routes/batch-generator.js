@@ -9,6 +9,7 @@ const schema = require('./schemas/batch-generator')
 const auth = {
   scope: [applicationAdmin, batchViewer]
 }
+const BATCH_GENERATOR_ROUTE = '/batch-generator'
 
 const pendingDownloads = new Map()
 const downloadedTokens = new Set()
@@ -16,7 +17,7 @@ const downloadedTokens = new Set()
 module.exports = [
   {
     method: 'GET',
-    path: '/batch-generator',
+    path: BATCH_GENERATOR_ROUTE,
     options: {
       auth,
       handler: (_request, h) => {
@@ -31,7 +32,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/batch-generator',
+    path: BATCH_GENERATOR_ROUTE,
     options: {
       auth,
       handler: async (request, h) => {
@@ -56,13 +57,13 @@ module.exports = [
         const token = crypto.randomUUID()
         pendingDownloads.set(token, payload)
 
-        return h.redirect(`/batch-generator/confirm?token=${token}`)
+        return h.redirect(`${BATCH_GENERATOR_ROUTE}/confirm?token=${token}`)
       }
     }
   },
   {
     method: 'GET',
-    path: '/batch-generator/confirm',
+    path: `${BATCH_GENERATOR_ROUTE}/confirm`,
     options: {
       auth,
       handler: async (request, h) => {
@@ -70,7 +71,7 @@ module.exports = [
         const payload = pendingDownloads.get(token)
 
         if (!payload) {
-          return h.redirect('/batch-generator')
+          return h.redirect(BATCH_GENERATOR_ROUTE)
         }
 
         return h.view('batch-generator-confirm', {
@@ -83,7 +84,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/batch-generator/download',
+    path: `${BATCH_GENERATOR_ROUTE}/download`,
     options: {
       auth,
       handler: async (request, h) => {
@@ -91,7 +92,7 @@ module.exports = [
         const payload = pendingDownloads.get(token)
 
         if (!payload || downloadedTokens.has(token)) {
-          return h.redirect(`/batch-generator/confirm?token=${token}`)
+          return h.redirect(`${BATCH_GENERATOR_ROUTE}/confirm?token=${token}`)
         }
 
         const files = generateBatch(payload)

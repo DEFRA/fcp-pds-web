@@ -12,7 +12,6 @@ module.exports = {
         const statusCode = request.response.statusCode
         if (request.response.variety === 'view' && statusCode !== NOT_FOUND && statusCode !== INTERNAL_SERVER_ERROR && request.response.source.manager._context) {
           const cookiesPolicy = getCurrentPolicy(request, h)
-          console.log(cookiesPolicy)
           request.response.source.manager._context.cookiesPolicy = cookiesPolicy
         }
         return h.continue

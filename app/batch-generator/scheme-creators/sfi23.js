@@ -1,0 +1,21 @@
+const { buildBatch, pad, dateString, lastDigits } = require('./helpers')
+
+const sequencePad = 4
+const invoiceNumberPad = 7
+const requestNumberPad = 2
+const contractNumberPad = 8
+const defaultPPAIndicator = 1
+const ppaAdjustmentIndicator = 2
+const decemberMonth = 11
+const firstDayOfMonth = 1
+
+const createSFI23 = (ctx) => {
+  return buildBatch(ctx, 'SITISFIA', pad(ctx.sequence, sequencePad), 'SFIA', (r) => [
+    `H^SFIA${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^Z${lastDigits(r.frn, contractNumberPad)}^${r.requestNumber === defaultPPAIndicator ? defaultPPAIndicator : ppaAdjustmentIndicator}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SFIA^Q4`,
+    `L^SFIA${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^80201^${r.fundCode}^Z${lastDigits(r.frn, contractNumberPad)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^SOS270`
+  ])
+}
+
+module.exports = {
+  createSFI23
+}

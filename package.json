@@ -40,11 +40,11 @@
     "@joi/date": "2.1.0",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
-    "ffc-database": "2.0.1",
+    "ffc-database": "2.0.2",
     "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
-    "joi": "18.2.9",
+    "joi": "18.3.2",
     "log-timestamp": "0.3.0",
     "nunjucks": "3.2.4"
   },

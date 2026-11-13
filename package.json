@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -13,6 +13,7 @@
     "test:lint": "eslint",
     "test:lint:fix": "eslint --fix",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache",
+    "test:sonar": "./scripts/sonar",
     "start:watch": "npm-run-all --parallel build:watch start:nodemon",
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js,njk,scss --legacy-watch app/index.js",
     "start:nodemon": "nodemon --inspect=0.0.0.0 --ext css,js,njk --legacy-watch app/index.js",
@@ -27,7 +28,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/monitor-opentelemetry": "1.20.0",
-    "@azure/msal-node": "5.1.5",
+    "@azure/msal-node": "7.1.2",
     "@azure/storage-blob": "12.31.0",
     "@hapi/boom": "9.1.1",
     "@hapi/cookie": "11.0.2",
@@ -39,11 +40,11 @@
     "@joi/date": "2.1.0",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
-    "ffc-database": "2.0.1",
+    "ffc-database": "2.0.2",
     "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
-    "joi": "18.2.9",
+    "joi": "18.3.2",
     "log-timestamp": "0.3.0",
     "nunjucks": "3.2.4"
   },

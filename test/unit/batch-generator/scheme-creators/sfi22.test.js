@@ -43,6 +43,7 @@ describe('create SFI22 batch contents', () => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 1,
+        uniqueContractNumber: '1234567890',
         invoiceValue: 123.45,
         frn: '1234567890',
         deliveryBody: 'DB1',
@@ -55,18 +56,17 @@ describe('create SFI22 batch contents', () => {
 
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
-
     expect(result[0]).toBe(
-      'H^SFI00000012^01^34567890^1^1234567890^GBP^123.45^DB1^GBP^SFI^Q4'
+      'H^SFI00000012^01^T4567890^1^1234567890^GBP^123.45^DB1^GBP^SFI^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFI00000012^123.45^2024^80101^DRD10^34567890^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
+      'L^SFI00000012^123.45^2024^80101^DRD10^T4567890^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
     )
 
     expect(pad).toHaveBeenCalledWith(7, 4)
     expect(pad).toHaveBeenCalledWith(12, 8)
     expect(pad).toHaveBeenCalledWith(1, 2)
-    expect(lastDigits).toHaveBeenCalledWith('1234567890', 8)
+    expect(lastDigits).toHaveBeenCalledWith('1234567890', 7)
     expect(dateString).toHaveBeenCalledWith(new Date(2024, 11, 1))
   })
 
@@ -77,6 +77,7 @@ describe('create SFI22 batch contents', () => {
       return mapper({
         invoiceNumber: 8,
         requestNumber: 2,
+        uniqueContractNumber: '1234567890',
         invoiceValue: 99.99,
         frn: '9876543210',
         deliveryBody: 'DB2',
@@ -88,10 +89,10 @@ describe('create SFI22 batch contents', () => {
     const result = createSFI22(ctx)
 
     expect(result[0]).toBe(
-      'H^SFI00000008^02^76543210^2^9876543210^GBP^99.99^DB2^GBP^SFI^Q4'
+      'H^SFI00000008^02^T4567890^2^9876543210^GBP^99.99^DB2^GBP^SFI^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFI00000008^99.99^2025^80101^DRD10^76543210^DB2^N^1^G00 - Gross value of claim^2025-12-01^2025-12-01^SOS270'
+      'L^SFI00000008^99.99^2025^80101^DRD10^T4567890^DB2^N^1^G00 - Gross value of claim^2025-12-01^2025-12-01^SOS270'
     )
   })
 })

@@ -27,7 +27,7 @@ const getBatchContext = (options = {}) => {
   return {
     ...options,
     now,
-    batchSize: Number(options.batchSize ?? defaultOne),
+    batchSize: Number(options.numberOfPR ?? defaultOne),
     invoiceValue: Number(options.invoiceValue ?? defaultValue),
     sequence: Number(options.sequence ?? defaultOne),
     requestNumber: Number(options.requestNumber ?? defaultOne),
@@ -74,11 +74,11 @@ const createFiles = (result, options) => {
   return files
 }
 
-const generateBatch = (options = {}) => {
+const generateBatch = async (options = {}) => {
   const ctx = getBatchContext(options)
   validateBatchSize(ctx.batchSize)
 
-  const result = createBatchContent(ctx)
+  const result = await createBatchContent(ctx)
   return createFiles(result, options)
 }
 

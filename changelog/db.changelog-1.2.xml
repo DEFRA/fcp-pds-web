@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Sam Plackett" id="1">
+    <tagDatabase tag="v1.2.0" />
+  </changeSet>
+
+  <changeSet author="Sam Plackett" id="2">
+    <createTable tableName="generatorContractNumbers">
+      <column autoIncrement="true" name="contractId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="contractId_pkey" />
+      </column>
+      <column name="schemeId" type="INTEGER" />
+      <column name="frn" type="BIGINT" />
+      <column name="created" type="TIMESTAMP" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

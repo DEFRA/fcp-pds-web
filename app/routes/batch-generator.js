@@ -95,7 +95,7 @@ module.exports = [
           return h.redirect(`${BATCH_GENERATOR_ROUTE}/confirm?token=${token}`)
         }
 
-        const files = generateBatch(payload)
+        const files = await generateBatch(payload)
         const zip = new JSZip()
 
         for (const file of files) {

@@ -51,11 +51,20 @@ describe('batch generation helpers', () => {
         deliveryBody: 'DB-1',
         schemeYear: 2024,
         fundCode: 'FUND-7',
-        sequence: 3
+        sequence: 3,
+        uniqueContractNumber: ['CONTRACT-1', 'CONTRACT-2']
       }
 
-      const rowBuilder = ({ invoiceNumber, frn, invoiceValue, deliveryBody, schemeYear, fundCode }) => [
-        `ROW^${invoiceNumber}^${frn}^${invoiceValue}^${deliveryBody}^${schemeYear}^${fundCode}`
+      const rowBuilder = ({
+        invoiceNumber,
+        frn,
+        invoiceValue,
+        deliveryBody,
+        schemeYear,
+        fundCode,
+        uniqueContractNumber
+      }) => [
+          `ROW^${invoiceNumber}^${frn}^${invoiceValue}^${deliveryBody}^${schemeYear}^${fundCode}^${uniqueContractNumber}`
       ]
 
       const result = buildBatch(ctx, 'PREFIX_', 42, 'HEADER', rowBuilder)
@@ -64,8 +73,8 @@ describe('batch generation helpers', () => {
       expect(result.content).toBe(
         [
           'B^2024-01-05^2^20^42^HEADER^AP',
-          'ROW^100^200^10^DB-1^2024^FUND-7',
-          'ROW^101^201^10^DB-1^2024^FUND-7'
+          'ROW^100^200^10^DB-1^2024^FUND-7^CONTRACT-1',
+          'ROW^101^201^10^DB-1^2024^FUND-7^CONTRACT-2'
         ].join(os.EOL) + os.EOL
       )
     })
@@ -82,10 +91,20 @@ describe('batch generation helpers', () => {
         deliveryBody: 'DB-2',
         schemeYear: 2025,
         fundCode: 'FUND-9',
-        sequence: 7
+        sequence: 7,
+        uniqueContractNumber: ['CONTRACT-3']
       }
 
-      const rowBuilder = jest.fn(({ invoiceNumber, frn, requestNumber, invoiceValue, deliveryBody, schemeYear, fundCode }) => {
+      const rowBuilder = jest.fn(({
+        invoiceNumber,
+        frn,
+        requestNumber,
+        invoiceValue,
+        deliveryBody,
+        schemeYear,
+        fundCode,
+        uniqueContractNumber
+      }) => {
         expect(invoiceNumber).toBe(500)
         expect(frn).toBe(600)
         expect(requestNumber).toBe('REQ-2')
@@ -93,6 +112,7 @@ describe('batch generation helpers', () => {
         expect(deliveryBody).toBe('DB-2')
         expect(schemeYear).toBe(2025)
         expect(fundCode).toBe('FUND-9')
+        expect(uniqueContractNumber).toBe('CONTRACT-3')
 
         return ['ROW^OK']
       })

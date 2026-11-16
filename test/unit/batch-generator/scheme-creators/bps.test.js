@@ -18,9 +18,7 @@ describe('create BPS batch contents', () => {
   })
 
   test('calls buildBatch with the expected arguments', () => {
-    const ctx = {
-      sequence: 42
-    }
+    const ctx = { sequence: 42 }
 
     buildBatch.mockReturnValue('batch-result')
 
@@ -38,15 +36,13 @@ describe('create BPS batch contents', () => {
   })
 
   test('buildBatch callback maps a record into the expected BPS rows', () => {
-    const ctx = {
-      sequence: 7,
-      fundCode: 'EGF00'
-    }
+    const ctx = { sequence: 7, fundCode: 'EGF00' }
 
     buildBatch.mockImplementation((context, prefix, sequence, source, mapper) => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,
+        uniqueContractNumber: '1234567',
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
@@ -59,9 +55,8 @@ describe('create BPS batch contents', () => {
 
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
-
     expect(result[0]).toBe(
-      'H^SITI0000012^007^C0000012^FRN123^1^123.45^DB1^GBP'
+      'H^SITI0000012^007^T1234567^FRN123^1^123.45^DB1^GBP'
     )
     expect(result[1]).toBe(
       'L^SITI0000012^123.45^2024^10501^EGF00^DB1^1^G00 - Gross value of claim^2024-12-01'
@@ -69,6 +64,7 @@ describe('create BPS batch contents', () => {
 
     expect(pad).toHaveBeenCalledWith(12, 7)
     expect(pad).toHaveBeenCalledWith(7, 3)
+    expect(pad).toHaveBeenCalledWith('1234567', 7)
     expect(dateString).toHaveBeenCalledWith(new Date(2024, 11, 1))
   })
 

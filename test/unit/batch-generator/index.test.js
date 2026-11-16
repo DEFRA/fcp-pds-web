@@ -30,16 +30,16 @@ describe('generateBatch', () => {
     getFundCodeFromSchemeId.mockReturnValue(undefined)
   })
 
-  test('builds the default batch context and returns the generated file list', () => {
+  test('builds the default batch context and returns the generated file list', async () => {
     const now = new Date()
     const result = {
       filename: 'batch-001.csv',
       content: 'batch-content'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    const files = generateBatch({
+    const files = await generateBatch({
       schemeId: BPS,
       createChecksum: false,
       createControl: false
@@ -65,15 +65,15 @@ describe('generateBatch', () => {
     })
   })
 
-  test('uses an explicit deliveryBody when provided', () => {
+  test('uses an explicit deliveryBody when provided', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    generateBatch({
+    await generateBatch({
       schemeId: BPS,
       deliveryBody: 'ZZ99',
       createChecksum: false,
@@ -87,17 +87,17 @@ describe('generateBatch', () => {
     )
   })
 
-  test('uses the scheme deliveryBody and fundCode when available', () => {
+  test('uses the scheme deliveryBody and fundCode when available', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
     getDeliveryBodyFromSchemeId.mockReturnValue('AB12')
     getFundCodeFromSchemeId.mockReturnValue('FUND99')
 
-    generateBatch({
+    await generateBatch({
       schemeId: BPS
     })
 
@@ -109,15 +109,15 @@ describe('generateBatch', () => {
     )
   })
 
-  test('defaults fundCode to DRD10 when no scheme helper is set', () => {
+  test('defaults fundCode to DRD10 when no scheme helper is set', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    generateBatch({
+    await generateBatch({
       schemeId: BPS
     })
 
@@ -128,15 +128,15 @@ describe('generateBatch', () => {
     )
   })
 
-  test('adds a checksum file when createChecksum is true', () => {
+  test('adds a checksum file when createChecksum is true', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    const files = generateBatch({
+    const files = await generateBatch({
       schemeId: CS,
       createChecksum: true
     })
@@ -152,15 +152,15 @@ describe('generateBatch', () => {
     ])
   })
 
-  test('adds control files when createControl is true', () => {
+  test('adds control files when createControl is true', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    const files = generateBatch({
+    const files = await generateBatch({
       schemeId: CS,
       createControl: true
     })
@@ -171,15 +171,15 @@ describe('generateBatch', () => {
     ])
   })
 
-  test('adds checksum and control files together when both options are true', () => {
+  test('adds checksum and control files together when both options are true', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    const files = generateBatch({
+    const files = await generateBatch({
       schemeId: CS,
       createChecksum: true,
       createControl: true
@@ -198,15 +198,15 @@ describe('generateBatch', () => {
     ])
   })
 
-  test('uses the CS default delivery body when the scheme is CS', () => {
+  test('uses the CS default delivery body when the scheme is CS', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    generateBatch({
+    await generateBatch({
       schemeId: CS
     })
 
@@ -217,15 +217,15 @@ describe('generateBatch', () => {
     )
   })
 
-  test('uses the non-CS default delivery body when no scheme helper is set', () => {
+  test('uses the non-CS default delivery body when no scheme helper is set', async () => {
     const result = {
       filename: 'batch-001.csv',
       content: 'hello world'
     }
 
-    createBatchContent.mockReturnValue(result)
+    createBatchContent.mockResolvedValue(result)
 
-    generateBatch({
+    await generateBatch({
       schemeId: BPS
     })
 
@@ -236,9 +236,12 @@ describe('generateBatch', () => {
     )
   })
 
-  test('throws when batchSize is not a positive integer', () => {
-    expect(() => generateBatch({ batchSize: 0 })).toThrow('batchSize must be a positive integer')
-    expect(() => generateBatch({ batchSize: -1 })).toThrow('batchSize must be a positive integer')
-    expect(() => generateBatch({ batchSize: 1.5 })).toThrow('batchSize must be a positive integer')
+  test('rejects when numberOfPR is not a positive integer', async () => {
+    await expect(generateBatch({ numberOfPR: 0 }))
+      .rejects.toThrow('batchSize must be a positive integer')
+    await expect(generateBatch({ numberOfPR: -1 }))
+      .rejects.toThrow('batchSize must be a positive integer')
+    await expect(generateBatch({ numberOfPR: 1.5 }))
+      .rejects.toThrow('batchSize must be a positive integer')
   })
 })

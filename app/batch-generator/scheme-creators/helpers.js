@@ -38,7 +38,8 @@ const buildBatch = (ctx, filenamePrefix, sequenceValue, headerLabel, rowBuilder)
       invoiceValue: ctx.invoiceValue,
       deliveryBody: ctx.deliveryBody,
       schemeYear: ctx.schemeYear,
-      fundCode: ctx.fundCode
+      fundCode: ctx.fundCode,
+      uniqueContractNumber: ctx.uniqueContractNumber[i]
     }))
   }
 

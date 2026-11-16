@@ -3,6 +3,7 @@ const TABLES = require('./tables')
 const PRIMARY_KEYS = {
   [TABLES.category]: 'categoryId',
   [TABLES.debtData]: 'debtDataId',
+  [TABLES.generatorContractNumbers]: 'contractId',
   [TABLES.invoiceLine]: 'invoiceLineId',
   [TABLES.manualLedgerPaymentRequest]: 'manualLedgerPaymentRequestId',
   [TABLES.paymentRequest]: 'paymentRequestId',
@@ -29,6 +30,12 @@ const COLUMNS = {
     'createdById',
     'migrated',
     'migrationId'
+  ],
+  [TABLES.generatorContractNumbers]: [
+    'contractId',
+    'schemeId',
+    'frn',
+    'created'
   ],
   [TABLES.invoiceLine]: [
     'invoiceLineId',

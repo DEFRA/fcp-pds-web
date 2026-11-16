@@ -18,9 +18,7 @@ describe('create Lump Sums batch contents', () => {
   })
 
   test('calls buildBatch with the expected arguments', () => {
-    const ctx = {
-      sequence: 42
-    }
+    const ctx = { sequence: 42 }
 
     buildBatch.mockReturnValue('batch-result')
 
@@ -44,6 +42,7 @@ describe('create Lump Sums batch contents', () => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,
+        uniqueContractNumber: '1234567',
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
@@ -56,9 +55,8 @@ describe('create Lump Sums batch contents', () => {
 
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
-
     expect(result[0]).toBe(
-      'H^LSES0000012^007^L0000012^FRN123^1^123.45^DB1^GBP'
+      'H^LSES0000012^007^T1234567^FRN123^1^123.45^DB1^GBP'
     )
     expect(result[1]).toBe(
       'L^LSES0000012^123.45^2024^10570^DOM10^DB1^1^G00 - Gross value of claim^2024-11-01'

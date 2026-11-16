@@ -36,6 +36,7 @@ describe('database module', () => {
     expect(require('../../app/constants/tables')).toEqual({
       category: 'category',
       debtData: 'debtData',
+      generatorContractNumbers: 'generatorContractNumbers',
       invoiceLine: 'invoiceLines',
       manualLedgerPaymentRequest: 'manualLedgerPaymentRequest',
       paymentRequest: 'paymentRequests',

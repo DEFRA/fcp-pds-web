@@ -18,9 +18,7 @@ describe('create SFI Pilot batch contents', () => {
   })
 
   test('calls buildBatch with the expected arguments', () => {
-    const ctx = {
-      sequence: 42
-    }
+    const ctx = { sequence: 42 }
 
     buildBatch.mockReturnValue('batch-result')
 
@@ -44,6 +42,7 @@ describe('create SFI Pilot batch contents', () => {
       return mapper({
         invoiceNumber: 12,
         requestNumber: 7,
+        uniqueContractNumber: '1234567',
         invoiceValue: 123.45,
         frn: 'FRN123',
         deliveryBody: 'DB1',
@@ -56,12 +55,11 @@ describe('create SFI Pilot batch contents', () => {
 
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
-
     expect(result[0]).toBe(
-      'H^SFIP0000012^07^S0000012^2^FRN123^GBP^123.45^DB1^GBP^SFIP^Q4'
+      'H^SFIP0000012^07^T1234567^2^FRN123^GBP^123.45^DB1^GBP^SFIP^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFIP0000012^123.45^2024^80001^DRD10^S000000FRN123^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
+      'L^SFIP0000012^123.45^2024^80001^DRD10^T000001234567^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
     )
 
     expect(pad).toHaveBeenCalledWith(7, 4)

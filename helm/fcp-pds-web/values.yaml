@@ -52,6 +52,9 @@ container:
   azureAppRegistrationTenantId:
   azureAppRegistrationClientSecret:
   azureAppRegistrationRedirectUrl: authenticate
+  googleAnalyticsMeasurementId: G-5CZ5WF6BZS
+  analyticsEnabled: true
+  analyticsAlwaysTrack: false
 
 postgresService:
   postgresDb: fcp_pds_web

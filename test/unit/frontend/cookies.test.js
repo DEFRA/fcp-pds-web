@@ -90,6 +90,7 @@ describe('cookies.js', () => {
     require('../../../app/frontend/js/cookies')
 
     expect(mockCookieContainer.style.display).toBe('block')
+    expect(global.XMLHttpRequest).not.toHaveBeenCalled()
   })
 
   test('accept button triggers showBanner with acceptedBanner', () => {
@@ -134,7 +135,10 @@ describe('cookies.js', () => {
     expect(mockCookieBanner.setAttribute).toHaveBeenCalledWith('hidden', 'hidden')
   })
 
-  test('submits cookie preference via POST request', () => {
+  test.each([
+    ['accept', true],
+    ['reject', false]
+  ])('submits the %s preference via POST request', (_choice, analytics) => {
     const xhrMock = {
       open: jest.fn(),
       setRequestHeader: jest.fn(),
@@ -145,17 +149,19 @@ describe('cookies.js', () => {
 
     require('../../../app/frontend/js/cookies')
 
-    const acceptCallback = mockAcceptButton.addEventListener.mock.calls.find(
+    const button = analytics ? mockAcceptButton : mockRejectButton
+    const callback = button.addEventListener.mock.calls.find(
       call => call[0] === 'click'
     )[1]
 
-    acceptCallback({ preventDefault: jest.fn() })
+    callback({ preventDefault: jest.fn() })
 
     expect(xhrMock.open).toHaveBeenCalledWith('POST', '/cookies', true)
     expect(xhrMock.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json')
+    expect(xhrMock.send).toHaveBeenCalledTimes(1)
     expect(xhrMock.send).toHaveBeenCalledWith(
       JSON.stringify({
-        analytics: true,
+        analytics,
         async: true
       })
     )

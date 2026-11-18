@@ -54,6 +54,13 @@ const authenticate = async (redirectCode, cookieAuth) => {
 
     const roles = token.idTokenClaims.roles || []
 
+    console.log('PDS AUTH ROLE DEBUG', {
+      hasIdTokenClaims: Boolean(token.idTokenClaims),
+      roles,
+      recognisedRoles: Object.values(permissions),
+      hasPdsRole: hasPdsRole(roles)
+    })
+
     if (!hasPdsRole(roles)) {
       const error = new Error(
         'Authenticated account has no recognised PDS roles'

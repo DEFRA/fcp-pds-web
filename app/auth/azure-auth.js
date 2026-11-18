@@ -10,12 +10,12 @@ const hasPdsRole = roles =>
 const msalLogging = config.isProd
   ? {}
   : {
-      loggerCallback (_loglevel, message, _containsPii) {
-        console.log(message)
-      },
-      piiLoggingEnabled: false,
-      logLevel: msal.LogLevel.Verbose
-    }
+    loggerCallback(_loglevel, message, _containsPii) {
+      console.log(message)
+    },
+    piiLoggingEnabled: false,
+    logLevel: msal.LogLevel.Verbose
+  }
 
 const msalClientApplication = new msal.ConfidentialClientApplication({
   auth: config.authConfig.azure,
@@ -53,6 +53,13 @@ const authenticate = async (redirectCode, cookieAuth) => {
     }
 
     const roles = token.idTokenClaims.roles || []
+
+    console.log('PDS AUTH ROLE DEBUG', {
+      hasIdTokenClaims: Boolean(token.idTokenClaims),
+      roles,
+      recognisedRoles: Object.values(permissions),
+      hasPdsRole: hasPdsRole(roles)
+    })
 
     if (!hasPdsRole(roles)) {
       const error = new Error(

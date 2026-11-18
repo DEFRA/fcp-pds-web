@@ -131,6 +131,16 @@ describe('vision plugin', () => {
       expect(env.opts.autoescape).toBe(true)
     })
 
+    test.each([
+      [1234, '1,234'],
+      [1234.56, '1,234.56'],
+      [undefined, '0']
+    ])('localize renders %s as %s', (value, expected) => {
+      prepareFunc(testOptions, mockNext)
+      const env = testOptions.compileOptions.environment
+      expect(env.renderString('{{ value | localize }}', { value })).toBe(expected)
+    })
+
     test('prepare respects isDev config for watch setting', async () => {
       // Ensure isDev is false before this test
       config.isDev = false

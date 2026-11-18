@@ -24,12 +24,31 @@ const msalClientApplication = new msal.ConfidentialClientApplication({
 
 const getAuthenticationUrl = () => {
   const authCodeUrlParameters = {
-    prompt: 'select_account', // Force the MS account select dialog
+    prompt: 'select_account',
     redirectUri: config.authConfig.redirectUrl,
     scopes: AUTH_SCOPES
   }
 
   return msalClientApplication.getAuthCodeUrl(authCodeUrlParameters)
+}
+
+const getSessionAccount = account => ({
+  homeAccountId: account.homeAccountId,
+  environment: account.environment,
+  tenantId: account.tenantId,
+  username: account.username,
+  localAccountId: account.localAccountId,
+  name: account.name
+})
+
+const getCachedAccount = async account => {
+  if (!account?.homeAccountId) {
+    return null
+  }
+
+  return msalClientApplication
+    .getTokenCache()
+    .getAccountByHomeId(account.homeAccountId)
 }
 
 const authenticate = async (redirectCode, cookieAuth) => {
@@ -54,13 +73,6 @@ const authenticate = async (redirectCode, cookieAuth) => {
 
     const roles = token.idTokenClaims.roles || []
 
-    console.log('PDS AUTH ROLE DEBUG', {
-      hasIdTokenClaims: Boolean(token.idTokenClaims),
-      roles,
-      recognisedRoles: Object.values(permissions),
-      hasPdsRole: hasPdsRole(roles)
-    })
-
     if (!hasPdsRole(roles)) {
       const error = new Error(
         'Authenticated account has no recognised PDS roles'
@@ -71,7 +83,7 @@ const authenticate = async (redirectCode, cookieAuth) => {
 
     cookieAuth.set({
       scope: roles,
-      account: token.account
+      account: getSessionAccount(token.account)
     })
 
     return token
@@ -92,8 +104,15 @@ const authenticate = async (redirectCode, cookieAuth) => {
 
 const refresh = async (account, cookieAuth, forceRefresh = false) => {
   try {
+    const cachedAccount = await getCachedAccount(account)
+
+    if (!cachedAccount) {
+      console.warn('Unable to refresh token: account not found in MSAL cache')
+      return undefined
+    }
+
     const token = await msalClientApplication.acquireTokenSilent({
-      account,
+      account: cachedAccount,
       scopes: AUTH_SCOPES,
       forceRefresh
     })
@@ -112,7 +131,7 @@ const refresh = async (account, cookieAuth, forceRefresh = false) => {
 
     cookieAuth.set({
       scope: roles,
-      account: token.account
+      account: getSessionAccount(token.account)
     })
 
     return roles
@@ -129,9 +148,15 @@ const refresh = async (account, cookieAuth, forceRefresh = false) => {
   }
 }
 
-const logout = async (account) => {
+const logout = async account => {
   try {
-    await msalClientApplication.getTokenCache().removeAccount(account)
+    const cachedAccount = await getCachedAccount(account)
+
+    if (cachedAccount) {
+      await msalClientApplication
+        .getTokenCache()
+        .removeAccount(cachedAccount)
+    }
   } catch (err) {
     console.error('Unable to end session', err)
   }

@@ -123,10 +123,16 @@ describe('cookies.js', () => {
     expect(mockRejectedBanner.removeAttribute).toHaveBeenCalledWith('hidden')
   })
 
-  test('hide button closes cookie banner', () => {
+  test.each([
+    ['accepted', 0],
+    ['rejected', 1]
+  ])('hide button on the %s banner closes the cookie banner', (_choice, buttonIndex) => {
     require('../../../app/frontend/js/cookies')
 
-    const hideCallback = mockHideButtons[0].addEventListener.mock.calls.find(
+    const banner = buttonIndex === 0 ? mockAcceptedBanner : mockRejectedBanner
+    expect(banner.querySelector).toHaveBeenCalledWith('.js-hide')
+
+    const hideCallback = mockHideButtons[buttonIndex].addEventListener.mock.calls.find(
       call => call[0] === 'click'
     )[1]
 
@@ -150,11 +156,11 @@ describe('cookies.js', () => {
     require('../../../app/frontend/js/cookies')
 
     const button = analytics ? mockAcceptButton : mockRejectButton
-    const callback = button.addEventListener.mock.calls.find(
+    const clickHandler = button.addEventListener.mock.calls.find(
       call => call[0] === 'click'
     )[1]
 
-    callback({ preventDefault: jest.fn() })
+    clickHandler({ preventDefault: jest.fn() })
 
     expect(xhrMock.open).toHaveBeenCalledWith('POST', '/cookies', true)
     expect(xhrMock.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json')

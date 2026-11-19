@@ -1,11 +1,16 @@
+jest.mock('../../../app/config', () => ({
+  isDev: false,
+  get: jest.fn(setting => ({
+    googleAnalyticsMeasurementId: 'G-TEST12345',
+    analyticsEnabled: true,
+    analyticsAlwaysTrack: false
+  })[setting])
+}))
+
 const visionPlugin = require('../../../app/plugins/vision')
 const nunjucks = require('nunjucks')
 const { version } = require('../../../package.json')
 const config = require('../../../app/config')
-
-jest.mock('../../../app/config', () => ({
-  isDev: false
-}))
 
 describe('vision plugin', () => {
   afterEach(() => {
@@ -38,6 +43,12 @@ describe('vision plugin', () => {
       expect(visionPlugin.options.context).toBeDefined()
       expect(visionPlugin.options.context.appVersion).toBe(version)
       expect(visionPlugin.options.context.assetPath).toBe('/static')
+      expect(visionPlugin.options.context.googleAnalyticsMeasurementId).toBe('G-TEST12345')
+      expect(config.get).toHaveBeenCalledWith('googleAnalyticsMeasurementId')
+      expect(visionPlugin.options.context.analyticsEnabled).toBe(true)
+      expect(config.get).toHaveBeenCalledWith('analyticsEnabled')
+      expect(visionPlugin.options.context.analyticsAlwaysTrack).toBe(false)
+      expect(config.get).toHaveBeenCalledWith('analyticsAlwaysTrack')
       expect(visionPlugin.options.context.govukAssetPath).toBe('/assets')
       expect(visionPlugin.options.context.serviceName).toBe('Payment and Document Services')
     })

@@ -4,12 +4,9 @@ const { generateSchemeYears } = require('../helpers/generate-scheme-years')
 const METRICS_ROUTES = require('../constants/metrics-routes')
 const METRICS_VIEWS = require('../constants/metrics-views')
 const MONTHS = require('../constants/months')
+const CRITICAL_ERROR = 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
 
 const AUTH_SCOPE = { scope: [applicationAdmin, metricsViewer] }
-
-const buildCriticalErrorMessage = () => {
-  return 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
-}
 
 const buildPartialFailureMessage = (paymentsMetrics, statementsMetrics) => {
   const errors = []
@@ -45,7 +42,7 @@ const buildNoDataMessage = (noData, noPaymentData, noStatementData) => {
 
 const buildErrorMessage = (paymentsMetrics, statementsMetrics, criticalError, partialFailure, noData, noPaymentData, noStatementData) => {
   if (criticalError) {
-    return buildCriticalErrorMessage()
+    return CRITICAL_ERROR
   }
 
   if (partialFailure) {

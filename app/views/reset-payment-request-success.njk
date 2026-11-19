@@ -1,0 +1,61 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Payment request successfully reset" %}
+
+{% block pageTitle %}
+  {{ pageTitle }} - {{ serviceName }}
+{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      },{
+        text: "Reset payment request",
+        href: "/payment-request/reset"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div
+        class="govuk-notification-banner govuk-notification-banner--success"
+        role="alert"
+        aria-labelledby="govuk-notification-banner-title-reset-payment-successful"
+        data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+          <h2
+            class="govuk-notification-banner__title"
+            id="govuk-notification-banner-title-reset-payment-successful">
+            Success
+          </h2>
+        </div>
+
+        <div class="govuk-notification-banner__content">
+          <p class="govuk-body">
+            <strong>
+              Payment request {{ invoiceNumber }}
+              has been successfully reset and will be reprocessed by Payment Hub
+            </strong>
+          </p>
+
+          <p class="govuk-body govuk-!-margin-bottom-0">
+            <a
+              class="govuk-link"
+              href="/payment-request/reset">Reset another payment request</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

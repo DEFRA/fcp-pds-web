@@ -1,8 +1,10 @@
 const config = require('../config')
+const { GET } = require('../constants/api-methods')
+const { STATIC_PATHS } = require('../constants/paths')
 
 module.exports = [{
-  method: 'GET',
-  path: '/assets/{path*}',
+  method: GET,
+  path: `${STATIC_PATHS.ASSETS}/{path*}`,
   options: {
     auth: false,
     handler: {
@@ -18,8 +20,8 @@ module.exports = [{
     }
   }
 }, {
-  method: 'GET',
-  path: '/static/{path*}',
+  method: GET,
+  path: `${STATIC_PATHS.STATIC}/{path*}`,
   options: {
     auth: false,
     handler: {

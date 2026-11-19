@@ -1,12 +1,22 @@
 const mockRoles = ['Web.Pds.Admin']
-const mockAccount = 'test-account'
+const mockAccount = {
+  homeAccountId: 'test-home-account-id',
+  environment: 'login.microsoftonline.com',
+  tenantId: 'test-tenant-id',
+  username: 'test@example.com',
+  localAccountId: 'test-local-account-id',
+  name: 'Test User'
+}
+const mockFullAccount = { ...mockAccount, extraClaim: 'excluded from cookie' }
 
 const mockGetAuthCodeUrl = jest.fn()
 const mockAcquireTokenByCode = jest.fn()
 const mockAcquireTokenSilent = jest.fn()
 const mockRemoveAccount = jest.fn()
+const mockGetAccountByHomeId = jest.fn()
 const mockGetTokenCache = jest.fn(() => ({
-  removeAccount: mockRemoveAccount
+  removeAccount: mockRemoveAccount,
+  getAccountByHomeId: mockGetAccountByHomeId
 }))
 
 jest.mock('@azure/msal-node', () => ({
@@ -27,15 +37,16 @@ let mockCookieAuth
 describe('azure authentication', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetAccountByHomeId.mockResolvedValue(mockFullAccount)
 
     mockAcquireTokenByCode.mockResolvedValue({
       idTokenClaims: { roles: mockRoles },
-      account: mockAccount
+      account: mockFullAccount
     })
 
     mockAcquireTokenSilent.mockResolvedValue({
       idTokenClaims: { roles: mockRoles },
-      account: mockAccount
+      account: mockFullAccount
     })
 
     mockCookieAuth = {
@@ -97,11 +108,53 @@ describe('azure authentication', () => {
       ['account', mockAccount]
     ])('sets %s correctly', (key, expected) => {
       expect(mockCookieAuth.set.mock.calls[0][0][key])
-        .toBe(expected)
+        .toEqual(expected)
     })
   })
 
+  test('does not store extra MSAL account fields in the cookie', async () => {
+    await azureAuth.authenticate('redirectCode', mockCookieAuth)
+    expect(mockCookieAuth.set).toHaveBeenCalledWith({
+      scope: mockRoles,
+      account: mockAccount
+    })
+    expect(mockCookieAuth.set.mock.calls[0][0].account)
+      .not.toHaveProperty('extraClaim')
+  })
+
   describe('refresh', () => {
+    test('looks up the complete account before silent acquisition', async () => {
+      await azureAuth.refresh(mockAccount, mockCookieAuth)
+      expect(mockGetAccountByHomeId).toHaveBeenCalledWith(mockAccount.homeAccountId)
+      expect(mockAcquireTokenSilent).toHaveBeenCalledWith({
+        account: mockFullAccount,
+        scopes: ['openid', 'profile', 'offline_access'],
+        forceRefresh: false
+      })
+    })
+
+    test('skips silent acquisition if the account is missing from cache', async () => {
+      mockGetAccountByHomeId.mockResolvedValueOnce(null)
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => { })
+      try {
+        expect(await azureAuth.refresh(mockAccount, mockCookieAuth)).toBeUndefined()
+        expect(mockAcquireTokenSilent).not.toHaveBeenCalled()
+        expect(mockCookieAuth.set).not.toHaveBeenCalled()
+      } finally {
+        warn.mockRestore()
+      }
+    })
+
+    test('skips cache lookup if the account has no homeAccountId', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => { })
+      try {
+        expect(await azureAuth.refresh({}, mockCookieAuth)).toBeUndefined()
+        expect(mockGetAccountByHomeId).not.toHaveBeenCalled()
+      } finally {
+        warn.mockRestore()
+      }
+    })
+
     test('calls acquireTokenSilent once', async () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
 
@@ -112,11 +165,11 @@ describe('azure authentication', () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
 
       expect(mockAcquireTokenSilent.mock.calls[0][0].account)
-        .toBe(mockAccount)
+        .toBe(mockFullAccount)
     })
 
     test.each([
-      [undefined, true],
+      [undefined, false],
       [true, true],
       [false, false]
     ])('forceRefresh=%s results in %s', async (force, expected) => {
@@ -149,7 +202,7 @@ describe('azure authentication', () => {
       await azureAuth.refresh(mockAccount, mockCookieAuth)
 
       expect(mockCookieAuth.set.mock.calls[0][0][key])
-        .toBe(expected)
+        .toEqual(expected)
     })
 
     test('returns roles', async () => {
@@ -172,8 +225,15 @@ describe('azure authentication', () => {
     })
 
     test('passes correct account', () => {
-      expect(mockRemoveAccount).toHaveBeenCalledWith(mockAccount)
+      expect(mockGetAccountByHomeId).toHaveBeenCalledWith(mockAccount.homeAccountId)
+      expect(mockRemoveAccount).toHaveBeenCalledWith(mockFullAccount)
     })
+  })
+
+  test('logout skips removal when cached account is absent', async () => {
+    mockGetAccountByHomeId.mockResolvedValueOnce(null)
+    await azureAuth.logout(mockAccount)
+    expect(mockRemoveAccount).not.toHaveBeenCalled()
   })
 
   describe('error handling', () => {
@@ -205,7 +265,13 @@ describe('azure authentication', () => {
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
           'Failed to authenticate:',
-          testError
+          {
+            name: testError.name,
+            errorCode: testError.errorCode,
+            errorMessage: testError.errorMessage,
+            subError: testError.subError,
+            correlationId: testError.correlationId
+          }
         )
       })
 
@@ -344,7 +410,13 @@ describe('azure authentication', () => {
 
           expect(consoleErrorSpy).toHaveBeenCalledWith(
             'Failed to authenticate:',
-            err
+            {
+              name: err.name,
+              errorCode: err.errorCode,
+              errorMessage: err.errorMessage,
+              subError: err.subError,
+              correlationId: err.correlationId
+            }
           )
         }
       })
@@ -362,7 +434,13 @@ describe('azure authentication', () => {
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
           'Failed to acquire token on silent refresh:',
-          testError
+          {
+            name: testError.name,
+            errorCode: testError.errorCode,
+            errorMessage: testError.errorMessage,
+            subError: testError.subError,
+            correlationId: testError.correlationId
+          }
         )
       })
 
@@ -408,7 +486,13 @@ describe('azure authentication', () => {
           expect(result).toBeUndefined()
           expect(consoleErrorSpy).toHaveBeenCalledWith(
             'Failed to acquire token on silent refresh:',
-            err
+            {
+              name: err.name,
+              errorCode: err.errorCode,
+              errorMessage: err.errorMessage,
+              subError: err.subError,
+              correlationId: err.correlationId
+            }
           )
         }
       })

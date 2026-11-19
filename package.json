@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.2.9",
+  "version": "0.2.12",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -28,7 +28,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/monitor-opentelemetry": "1.20.0",
-    "@azure/msal-node": "5.1.5",
+    "@azure/msal-node": "7.1.2",
     "@azure/storage-blob": "12.31.0",
     "@hapi/boom": "10.0.0",
     "@hapi/cookie": "11.0.2",

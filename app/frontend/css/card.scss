@@ -1,6 +1,4 @@
-$govuk-suppressed-warnings: "legacy-organisation-colours";
-$govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
-@import '~govuk-frontend/dist/govuk/index';
+@use 'govuk-frontend/dist/govuk/helpers/media-queries' as govuk;
 
 .govuk-service-navigation__container { 
   display: flex; 
@@ -29,7 +27,7 @@ $govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
     margin-bottom: 0;
   }
 
-  @include govuk-media-query($from: desktop) {
+  @include govuk.govuk-media-query($from: desktop) {
     width: calc(50% - 10px);
     min-height: 220px;
 
@@ -38,7 +36,7 @@ $govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
     }
   }
 
-  @include govuk-media-query($from: tablet, $until: desktop) {
+  @include govuk.govuk-media-query($from: tablet, $until: desktop) {
     width: calc(50% - 8px);
     min-height: 220px;
 
@@ -47,7 +45,7 @@ $govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
     }
   }
 
-  @include govuk-media-query($until: tablet) {
+  @include govuk.govuk-media-query($until: tablet) {
     width: 100%;
   }
 }

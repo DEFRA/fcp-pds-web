@@ -1,0 +1,84 @@
+{% extends '_layout.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set pageTitle = "Batch ready" %}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, { 
+        text: "Batch generator",
+        href: "/batch-generator"
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Batch ready</h1>
+
+      <p class="govuk-body">
+        Your batch has been created and is ready to download.
+      </p>
+
+      <div class="govuk-button-group">
+        {% if alreadyDownloaded %}
+          <button
+            id="download-zip"
+            type="button"
+            class="govuk-button govuk-button--disabled"
+            data-downloaded="true"
+            aria-disabled="true"
+            disabled>
+            Downloaded
+          </button>
+        {% else %}
+          <button
+            id="download-zip"
+            type="button"
+            class="govuk-button"
+            data-downloaded="false"
+            aria-disabled="false">
+            Download zip
+          </button>
+        {% endif %}
+
+        <a
+          class="govuk-link"
+          href="/batch-generator">
+          Return to batch generator
+        </a>
+      </div>
+
+      <script>
+      const downloadButton = document.getElementById('download-zip')
+
+        if (downloadButton) {
+          downloadButton.addEventListener('click', () => {
+            if (downloadButton.dataset.downloaded === 'true' || downloadButton.disabled) {
+              return
+            }
+
+            downloadButton.dataset.downloaded = 'true'
+            downloadButton.disabled = true
+            downloadButton.setAttribute('aria-disabled', 'true')
+            downloadButton.classList.add('govuk-button--disabled')
+            downloadButton.textContent = 'Downloaded'
+
+            const token = '{{ token }}'
+            window.location.href = `/batch-generator/download?token=${token}`
+          })
+        }
+      </script>
+    </div>
+  </div>
+{% endblock %}

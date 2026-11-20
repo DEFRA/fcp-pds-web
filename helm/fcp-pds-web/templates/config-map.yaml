@@ -50,4 +50,5 @@ data:
   {{- end }}
   REDIRECT_URL: https://{{ .Values.ingress.endpoint }}.{{ .Values.ingress.server }}/{{ .Values.container.azureAppRegistrationRedirectUrl }}
   SITE_HOSTNAME: https://{{ .Values.ingress.endpoint }}.{{ .Values.ingress.server }}
+  BATCH_GENERATOR_ENABLED: {{ quote .Values.container.batchGeneratorEnabled }}
 {{- end -}}

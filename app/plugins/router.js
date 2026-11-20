@@ -1,3 +1,5 @@
+const config = require('../config')
+
 const routes = [].concat(
   require('../routes/healthy'),
   require('../routes/healthz'),
@@ -14,6 +16,10 @@ const routes = [].concat(
   require('../routes/cookies'),
   require('../routes/sequence')
 )
+
+if (config.batchGeneratorEnabled) {
+  routes.push(...require('../routes/batch-generator'))
+}
 
 module.exports = {
   plugin: {

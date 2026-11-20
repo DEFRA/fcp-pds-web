@@ -24,11 +24,7 @@ const addDateErrorIfRequired = (error, payload) => {
   const monthIsValid = isValidDatePart(month, MIN_MONTH, MAX_MONTH)
   const yearIsValid = isValidDatePart(year, MIN_YEAR, MAX_YEAR)
 
-  if (!dayIsValid || !monthIsValid || !yearIsValid) {
-    return error
-  }
-
-  if (isValidDate(day, month, year)) {
+  if (!dayIsValid || !monthIsValid || !yearIsValid || isValidDate(day, month, year)) {
     return error
   }
 

@@ -1,5 +1,6 @@
 const { getSchemeNames } = require('ffc-pay-schemes')
 const { getStatementPublisherData } = require('../../api')
+const { STATEMENT_PUBLISHER_GET } = require('../../constants/api-calls')
 
 const { SFI, DELINKED, SFI23 } = getSchemeNames()
 
@@ -25,7 +26,7 @@ const transformStatementSchemeName = schemeName => {
  */
 const getStatementMetrics = async (period = 'ytd', schemeYear = null, month = null) => {
   try {
-    let url = `/metrics?period=${period}`
+    let url = `${STATEMENT_PUBLISHER_GET.METRICS}?period=${period}`
     if (period === 'year' && schemeYear) {
       url += `&schemeYear=${schemeYear}`
     }

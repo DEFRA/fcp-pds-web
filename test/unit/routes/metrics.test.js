@@ -8,8 +8,8 @@ jest.mock('../../../app/auth/permissions', () => ({
 const metricsRoutes = require('../../../app/routes/metrics')
 const { getAllMetrics } = require('../../../app/metrics/get-metrics')
 const { generateSchemeYears } = require('../../../app/helpers/generate-scheme-years')
-const METRICS_ROUTES = require('../../../app/constants/metrics-routes')
-const METRICS_VIEWS = require('../../../app/constants/metrics-views')
+const { METRICS_PATHS } = require('../../../app/constants/paths')
+const { METRICS_VIEWS } = require('../../../app/constants/views')
 const MONTHS = require('../../../app/constants/months')
 
 describe('metrics routes', () => {
@@ -70,7 +70,7 @@ describe('metrics routes', () => {
     })
 
     const metricsRoute = metricsRoutes.find(
-      route => route.method === 'GET' && route.path === METRICS_ROUTES.BASE
+      route => route.method === 'GET' && route.path === METRICS_PATHS.METRICS
     )
     handler = metricsRoute.options.handler
   })
@@ -84,7 +84,7 @@ describe('metrics routes', () => {
     test('should have correct method and path', () => {
       const route = metricsRoutes[0]
       expect(route.method).toBe('GET')
-      expect(route.path).toBe(METRICS_ROUTES.BASE)
+      expect(route.path).toBe(METRICS_PATHS.METRICS)
     })
 
     test('should have correct auth scope', () => {
@@ -162,7 +162,7 @@ describe('metrics routes', () => {
 
       const result = await handler(mockRequest, mockH)
 
-      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.BASE, {
+      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.METRICS, {
         paymentsMetrics: mockPaymentsMetrics.data,
         statementsMetrics: mockStatementsMetrics.data,
         selectedPeriod: 'ytd',
@@ -180,7 +180,7 @@ describe('metrics routes', () => {
 
       await handler(mockRequest, mockH)
 
-      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.BASE, {
+      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.METRICS, {
         paymentsMetrics: mockPaymentsMetrics.data,
         statementsMetrics: mockStatementsMetrics.data,
         selectedPeriod: 'monthInYear',
@@ -265,7 +265,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load payment metrics. Please try again later. If this error persists, contact a member of the Payments and Documents team.'
         })
@@ -292,7 +292,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load document metrics. Please try again later. If this error persists, contact a member of the Payments and Documents team.'
         })
@@ -324,7 +324,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
         })
@@ -351,7 +351,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load payment metrics. Connection issue detected. Please try again later. If this error persists, contact a member of the Payments and Documents team.'
         })
@@ -378,7 +378,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load document metrics. Connection issue detected. Please try again later. If this error persists, contact a member of the Payments and Documents team.'
         })
@@ -410,7 +410,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
         })
@@ -442,7 +442,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           paymentsMetrics: errorPaymentsMetrics.data,
           statementsMetrics: mockStatementsMetrics.data
@@ -477,7 +477,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           paymentsMetrics: mockPaymentsMetrics.data,
           statementsMetrics: errorStatementsMetrics.data
@@ -510,7 +510,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
         })
@@ -550,7 +550,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'No metrics data is available for the selected period from either payment or document services. This may indicate no activity has been recorded yet.'
         })
@@ -579,7 +579,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'No payment metrics data is available for the selected period.'
         })
@@ -610,7 +610,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'No document metrics data is available for the selected period.'
         })
@@ -648,7 +648,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'No payment or document metrics data is available for the selected period.'
         })
@@ -688,7 +688,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
         })
@@ -727,7 +727,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load payment metrics. Please try again later. If this error persists, contact a member of the Payments and Documents team.'
         })
@@ -744,7 +744,7 @@ describe('metrics routes', () => {
       await handler(mockRequest, mockH)
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading metrics:', error)
-      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.BASE, {
+      expect(mockH.view).toHaveBeenCalledWith(METRICS_VIEWS.METRICS, {
         paymentsMetrics: {
           totalPayments: 0,
           totalValue: 0,
@@ -775,7 +775,7 @@ describe('metrics routes', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading metrics:', error)
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics. Please try again later.'
         })
@@ -792,7 +792,7 @@ describe('metrics routes', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading metrics:', expect.any(Error))
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics. Please try again later.'
         })
@@ -815,7 +815,7 @@ describe('metrics routes', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading metrics:', expect.any(TypeError))
       expect(mockH.view).toHaveBeenCalledWith(
-        METRICS_VIEWS.BASE,
+        METRICS_VIEWS.METRICS,
         expect.objectContaining({
           error: 'Unable to load metrics. Please try again later.'
         })

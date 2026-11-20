@@ -1,10 +1,12 @@
 const auth = require('../auth')
-const HTTP_STATUS = require('../constants/http-status-codes')
-const ERROR_VIEWS = require('../constants/error-views')
+const { GET } = require('../constants/api-methods')
+const { INTERNAL_SERVER_ERROR } = require('../constants/http-status-codes')
+const { AUTH_PATHS } = require('../constants/paths')
+const { ERROR_VIEWS } = require('../constants/views')
 
 module.exports = {
-  method: 'GET',
-  path: '/login',
+  method: GET,
+  path: AUTH_PATHS.LOGIN,
   options: {
     auth: false
   },
@@ -15,6 +17,6 @@ module.exports = {
     } catch (err) {
       console.log('Error authenticating', err)
     }
-    return h.view(ERROR_VIEWS.INTERNAL_SERVER_ERROR).code(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    return h.view(ERROR_VIEWS.INTERNAL_SERVER_ERROR).code(INTERNAL_SERVER_ERROR)
   }
 }

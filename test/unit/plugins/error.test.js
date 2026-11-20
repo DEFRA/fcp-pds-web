@@ -1,4 +1,4 @@
-const ERROR_VIEWS = require('../../../app/constants/error-views')
+const { ERROR_VIEWS } = require('../../../app/constants/views')
 const {
   NOT_AUTHORIZED,
   FORBIDDEN,

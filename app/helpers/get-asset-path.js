@@ -1,7 +1,7 @@
 const fs = require('node:fs')
 const path = require('node:path')
 
-function getAssetPath (assetName) {
+const getAssetPath = (assetName) => {
   const distPath = path.join(__dirname, '../dist/css')
 
   if (!fs.existsSync(distPath)) {

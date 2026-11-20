@@ -1,3 +1,3 @@
 module.exports = {
-  BASE: '/metrics'
+  CATEGORY: 'frn'
 }

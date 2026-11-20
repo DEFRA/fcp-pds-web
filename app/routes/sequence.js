@@ -1,41 +1,36 @@
+const { getSchemeIds } = require('ffc-pay-schemes')
 const {
   getBatchProcessorData,
   postBatchProcessor
 } = require('../api')
+const { BATCH_PROCESSOR_GET, BATCH_PROCESSOR_POST } = require('../constants/api-calls')
+const { GET, POST } = require('../constants/api-methods')
+const { MAX_SEQUENCE_NUMBER_CS, MAX_SEQUENCE_NUMBER, MIN_SEQUENCE_NUMBER } = require('../constants/min-max-values')
+const { SEQUENCE_PATHS } = require('../constants/paths')
+const { INVALID_SEQUENCE_CS_ERROR, SEQUENCE_TOO_LOW_ERROR, INVALID_SEQUENCE_ERROR } = require('../constants/validation-errors')
+const { SEQUENCE_VIEWS } = require('../constants/views')
 
-const minSequenceNumber = 1
-const maxSequenceNumber = 9999
-const maxCsSequenceNumber = 99999
-
-const vetVisitsSchemeId = 4
-const csSchemeId = 5
-const dpsSchemeId = 7
-const esSchemeId = 9
-const fcSchemeId = 10
-const impsSchemeId = 11
-const fpttSchemeId = 17
-const wmpSchemeId = 18
+const { VET_VISITS, CS, ES, FC, IMPS, FPTT, WMP } = getSchemeIds()
 
 const schemesWithoutSequenceMaximum = new Set([
-  vetVisitsSchemeId,
-  dpsSchemeId,
-  esSchemeId,
-  fcSchemeId,
-  impsSchemeId,
-  fpttSchemeId,
-  wmpSchemeId
+  VET_VISITS,
+  ES,
+  FC,
+  IMPS,
+  FPTT,
+  WMP
 ])
 
 const formatSequence = value =>
   String(value).padStart(4, '0')
 
 module.exports = [{
-  method: 'GET',
-  path: '/sequence',
+  method: GET,
+  path: SEQUENCE_PATHS.SEQUENCE,
   options: {
     auth: false,
     handler: async (_request, h) => {
-      const { payload } = await getBatchProcessorData('/sequence')
+      const { payload } = await getBatchProcessorData(BATCH_PROCESSOR_GET.SEQUENCE)
       const sequences = payload
 
       const tableRows = sequences.sequences.map(sequenceItem => [
@@ -44,19 +39,19 @@ module.exports = [{
         { text: formatSequence(sequenceItem.next) }
       ])
 
-      return h.view('sequence/sequence', {
+      return h.view(SEQUENCE_VIEWS.SEQUENCE, {
         tableRows
       })
     }
   }
 },
 {
-  method: 'GET',
-  path: '/edit-sequence',
+  method: GET,
+  path: SEQUENCE_PATHS.EDIT_SEQUENCE,
   options: {
     auth: false,
     handler: async (_request, h) => {
-      const { payload } = await getBatchProcessorData('/sequence')
+      const { payload } = await getBatchProcessorData(BATCH_PROCESSOR_GET.SEQUENCE)
 
       const schemeItems = [
         {
@@ -72,7 +67,7 @@ module.exports = [{
         }))
       ]
 
-      return h.view('sequence/edit-sequence', {
+      return h.view(SEQUENCE_VIEWS.EDIT_SEQUENCE, {
         sequences: payload.sequences,
         schemeItems
       })
@@ -80,13 +75,13 @@ module.exports = [{
   }
 },
 {
-  method: 'POST',
-  path: '/edit-sequence',
+  method: POST,
+  path: SEQUENCE_PATHS.EDIT_SEQUENCE,
   options: {
     auth: false,
     handler: async (request, h) => {
       const { schemeId, sequenceNumber } = request.payload
-      const { payload } = await getBatchProcessorData('/sequence')
+      const { payload } = await getBatchProcessorData(BATCH_PROCESSOR_GET.SEQUENCE)
 
       const numericSchemeId = Number(schemeId)
       const numericSequenceNumber = Number(sequenceNumber)
@@ -94,17 +89,17 @@ module.exports = [{
       const hasNoSequenceMaximum =
         schemesWithoutSequenceMaximum.has(numericSchemeId)
 
-      const isCsScheme = numericSchemeId === csSchemeId
+      const isCsScheme = numericSchemeId === CS
 
       const exceedsSequenceMaximum =
         isCsScheme
-          ? numericSequenceNumber > maxCsSequenceNumber
+          ? numericSequenceNumber > MAX_SEQUENCE_NUMBER_CS
           : !hasNoSequenceMaximum &&
-          numericSequenceNumber > maxSequenceNumber
+          numericSequenceNumber > MAX_SEQUENCE_NUMBER
 
       const sequenceNumberInvalid =
         !Number.isInteger(numericSequenceNumber) ||
-        numericSequenceNumber < minSequenceNumber ||
+        numericSequenceNumber < MIN_SEQUENCE_NUMBER ||
         exceedsSequenceMaximum
 
       if (sequenceNumberInvalid) {
@@ -127,17 +122,14 @@ module.exports = [{
         let errorMessage
 
         if (isCsScheme) {
-          errorMessage =
-            `Sequence number must be between ${minSequenceNumber} and ${maxCsSequenceNumber}`
+          errorMessage = INVALID_SEQUENCE_CS_ERROR
         } else if (hasNoSequenceMaximum) {
-          errorMessage =
-            `Sequence number must be a whole number greater than or equal to ${minSequenceNumber}`
+          errorMessage = SEQUENCE_TOO_LOW_ERROR
         } else {
-          errorMessage =
-            `Sequence number must be between ${minSequenceNumber} and ${maxSequenceNumber}`
+          errorMessage = INVALID_SEQUENCE_ERROR
         }
 
-        return h.view('sequence/edit-sequence', {
+        return h.view(SEQUENCE_VIEWS.EDIT_SEQUENCE, {
           sequences: payload.sequences,
           schemeItems,
           errorMessage,
@@ -150,7 +142,7 @@ module.exports = [{
         x => x.schemeId === numericSchemeId
       )
 
-      return h.view('sequence/confirm-sequence-change', {
+      return h.view(SEQUENCE_VIEWS.CONFIRM_SEQUENCE_CHANGE, {
         schemeId,
         schemeName: sequence.scheme,
         currentSequence: formatSequence(sequence.next),
@@ -160,19 +152,19 @@ module.exports = [{
   }
 },
 {
-  method: 'POST',
-  path: '/edit-sequence/confirm',
+  method: POST,
+  path: SEQUENCE_PATHS.EDIT_SEQUENCE_CONFIRM,
   options: {
     auth: false,
     handler: async (request, h) => {
       const { schemeId, sequenceNumber } = request.payload
 
-      await postBatchProcessor('/update-sequence', {
+      await postBatchProcessor(BATCH_PROCESSOR_POST.UPDATE_SEQUENCE, {
         schemeId: Number(schemeId),
         next: Number(sequenceNumber)
       })
 
-      return h.redirect('/sequence')
+      return h.redirect(SEQUENCE_PATHS.SEQUENCE)
     }
   }
 }]

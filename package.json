@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -27,6 +27,7 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@azure/identity": "4.14.1",
     "@azure/monitor-opentelemetry": "1.20.0",
     "@azure/msal-node": "7.1.2",
     "@azure/storage-blob": "12.31.0",
@@ -42,14 +43,17 @@
     "convict-format-with-validator": "6.2.0",
     "ffc-database": "2.0.2",
     "ffc-pay-schemes": "1.4.0",
-    "govuk-frontend": "6.2.0",
+    "govuk-frontend": "6.6.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
     "joi": "18.3.2",
     "log-timestamp": "0.3.0",
+    "moment": "2.31.0",
     "nunjucks": "3.2.4"
   },
   "devDependencies": {
+    "@types/cheerio": "0.22.30",
+    "cheerio": "1.0.0-rc.10",
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.2.6",
     "eslint": "9.39.4",

@@ -1,20 +1,23 @@
+const joi = require('joi')
 const ViewModel = require('./models/cookies-policy')
 const { updatePolicy } = require('../cookies')
-const joi = require('joi')
+const { COOKIES_PATHS } = require('../constants/paths')
+const { GET, POST } = require('../constants/api-methods')
+const { COOKIES_VIEWS } = require('../constants/views')
 
 module.exports = [
   {
-    method: 'GET',
-    path: '/cookies',
+    method: GET,
+    path: COOKIES_PATHS.COOKIES,
     options: {
       auth: false,
       handler: (request, h) => {
-        return h.view('cookies', new ViewModel(request.state.cookies_policy, request.query.updated))
+        return h.view(COOKIES_VIEWS.COOKIES, new ViewModel(request.state.cookies_policy, request.query.updated))
       }
     }
   }, {
-    method: 'POST',
-    path: '/cookies',
+    method: POST,
+    path: COOKIES_PATHS.COOKIES,
     options: {
       auth: false,
       plugins: {
@@ -31,7 +34,7 @@ module.exports = [
         if (request.payload.async) {
           return h.response('ok')
         }
-        return h.redirect('/cookies?updated=true')
+        return h.redirect(`${COOKIES_PATHS.COOKIES}?updated=true`)
       }
     }
   }

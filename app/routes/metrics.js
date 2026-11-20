@@ -1,11 +1,12 @@
 const { applicationAdmin, metricsViewer } = require('../auth/permissions')
 const { getAllMetrics } = require('../metrics/get-metrics')
 const { generateSchemeYears } = require('../helpers/generate-scheme-years')
-const METRICS_ROUTES = require('../constants/metrics-routes')
-const METRICS_VIEWS = require('../constants/metrics-views')
+const { METRICS_PATHS } = require('../constants/paths')
+const { METRICS_VIEWS } = require('../constants/views')
 const MONTHS = require('../constants/months')
-const CRITICAL_ERROR = 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
+const { GET } = require('../constants/api-methods')
 
+const CRITICAL_ERROR = 'Unable to load metrics from both payment and document services. Please try again later or contact the Payments and Documents team.'
 const AUTH_SCOPE = { scope: [applicationAdmin, metricsViewer] }
 
 const buildPartialFailureMessage = (paymentsMetrics, statementsMetrics) => {
@@ -102,8 +103,8 @@ const buildLogMessage = (selectedPeriod, schemeYear, selectedMonth) => {
 }
 
 module.exports = [{
-  method: 'GET',
-  path: METRICS_ROUTES.BASE,
+  method: GET,
+  path: METRICS_PATHS.METRICS,
   options: {
     auth: AUTH_SCOPE,
     handler: async (request, h) => {
@@ -118,10 +119,10 @@ module.exports = [{
 
         const error = buildErrorMessage(paymentsMetrics, statementsMetrics, criticalError, partialFailure, noData, noPaymentData, noStatementData)
 
-        return h.view(METRICS_VIEWS.BASE, buildViewData(paymentsMetrics, statementsMetrics, selectedPeriod, schemeYear, selectedMonth, error))
+        return h.view(METRICS_VIEWS.METRICS, buildViewData(paymentsMetrics, statementsMetrics, selectedPeriod, schemeYear, selectedMonth, error))
       } catch (error) {
         console.error('Error loading metrics:', error)
-        return h.view(METRICS_VIEWS.BASE, buildFallbackViewData())
+        return h.view(METRICS_VIEWS.METRICS, buildFallbackViewData())
       }
     }
   }

@@ -153,7 +153,7 @@ describe('login route', () => {
         expect(response.statusCode).toBe(500)
       }
 
-      expect(consoleSpy).toHaveBeenCalledTimes(6)
+      expect(consoleSpy).toHaveBeenCalledTimes(3)
       consoleSpy.mockRestore()
     })
   })

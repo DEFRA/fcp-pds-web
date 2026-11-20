@@ -1,12 +1,12 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.2.12",
+  "version": "0.3.0",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
   "scripts": {
     "build": "webpack",
-    "build:watch": "webpack --watch",
+    "build:watch": "webpack --watch --stats errors-warnings",
     "pretest": "npm run test:lint",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
@@ -43,7 +43,7 @@
     "convict-format-with-validator": "6.2.0",
     "ffc-database": "2.0.2",
     "ffc-pay-schemes": "1.4.0",
-    "govuk-frontend": "6.2.0",
+    "govuk-frontend": "6.6.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
     "joi": "18.3.2",

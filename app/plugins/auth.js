@@ -53,20 +53,6 @@ const authPlugin = {
         }
         return h.continue
       })
-
-      server.ext('onPreResponse', (request, h) => {
-        console.log('AUTH DEBUG', {
-          path: request.path,
-          isAuthenticated: request.auth?.isAuthenticated,
-          strategy: request.auth?.strategy,
-          mode: request.auth?.mode,
-          error: request.auth?.error?.message,
-          errorName: request.auth?.error?.name,
-          errorData: request.auth?.error?.data
-        })
-
-        return h.continue
-      })
     }
   }
 }

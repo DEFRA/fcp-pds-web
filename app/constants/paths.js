@@ -34,6 +34,10 @@ const HOME_PATHS = {
   HOME: '/'
 }
 
+const METRICS_PATHS = {
+  METRICS: '/metrics'
+}
+
 const PRIVACY_PATHS = {
   PRIVACY: '/privacy'
 }
@@ -60,6 +64,7 @@ module.exports = {
   COOKIES_PATHS,
   HEALTHCHECK_PATHS,
   HOME_PATHS,
+  METRICS_PATHS,
   PRIVACY_PATHS,
   SEQUENCE_PATHS,
   SITEMAP_PATHS,

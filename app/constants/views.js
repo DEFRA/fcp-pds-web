@@ -25,6 +25,10 @@ const HOME_VIEWS = {
   HOME: 'home'
 }
 
+const METRICS_VIEWS = {
+  METRICS: 'metrics/metrics'
+}
+
 const PRIVACY_VIEWS = {
   PRIVACY: 'privacy'
 }
@@ -45,6 +49,7 @@ module.exports = {
   COOKIES_VIEWS,
   ERROR_VIEWS,
   HOME_VIEWS,
+  METRICS_VIEWS,
   PRIVACY_VIEWS,
   SEQUENCE_VIEWS,
   SITEMAP_VIEWS

@@ -6,7 +6,7 @@
   "main": "app/index.js",
   "scripts": {
     "build": "webpack",
-    "build:watch": "webpack --watch",
+    "build:watch": "webpack --watch --stats errors-warnings",
     "pretest": "npm run test:lint",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
@@ -29,7 +29,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/monitor-opentelemetry": "1.20.0",
-    "@azure/msal-node": "5.1.5",
+    "@azure/msal-node": "7.1.2",
     "@azure/storage-blob": "12.31.0",
     "@hapi/boom": "9.1.1",
     "@hapi/cookie": "11.0.2",
@@ -42,7 +42,7 @@
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
     "ffc-database": "2.0.2",
-    "ffc-pay-schemes": "1.2.0",
+    "ffc-pay-schemes": "1.4.0",
     "govuk-frontend": "6.2.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",

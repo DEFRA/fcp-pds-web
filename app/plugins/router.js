@@ -9,6 +9,7 @@ const routes = [].concat(
   require('../routes/login'),
   require('../routes/logout'),
   require('../routes/dev-auth'),
+  require('../routes/metrics'),
   require('../routes/accessibility'),
   require('../routes/privacy'),
   require('../routes/sitemap'),

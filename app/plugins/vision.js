@@ -28,6 +28,9 @@ module.exports = {
           const numberFormat = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 2 })
           env.addFilter('localize', (value) => numberFormat.format(value ?? 0))
 
+          const currencyFormat = new Intl.NumberFormat('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+          env.addFilter('localizeCurrency', (value) => currencyFormat.format(value ?? 0))
+
           const SLASH_LENGTH = 1
           env.addGlobal('getAssetPath', function (assetPath) {
             const base = options?.context?.assetPath || '/static'

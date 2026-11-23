@@ -1,5 +1,11 @@
-{% if googleTagManagerKey %}
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe title="Google Tag Manager" src="https://www.googletagmanager.com/ns.html?id={{ googleTagManagerKey }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
+{% if googleAnalyticsMeasurementId %}
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsMeasurementId }}"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', '{{ googleAnalyticsMeasurementId }}');
+  </script>
 {% endif %}

@@ -89,6 +89,24 @@ const config = convict({
     format: String,
     default: '',
     env: 'BATCH_PROCESSOR_ENDPOINT'
+  },
+  googleAnalyticsMeasurementId: {
+    doc: 'Google Analytics Measurement ID',
+    format: String,
+    default: '',
+    env: 'GOOGLE_ANALYTICS_MEASUREMENT_ID'
+  },
+  analyticsEnabled: {
+    doc: 'Enable analytics functionality.',
+    format: Boolean,
+    default: true,
+    env: 'ANALYTICS_ENABLED'
+  },
+  analyticsAlwaysTrack: {
+    doc: 'Load analytics regardless of the visitor consent preference.',
+    format: Boolean,
+    default: false,
+    env: 'ANALYTICS_ALWAYS_TRACK'
   }
 })
 

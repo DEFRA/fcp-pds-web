@@ -9,6 +9,12 @@ const AUTH_PATHS = {
   LOGOUT: '/logout'
 }
 
+const BATCH_GENERATOR_PATHS = {
+  GENERATOR: '/batch-generator/generator',
+  CONFIRM: '/batch-generator/confirm',
+  DOWNLOAD: '/batch-generator/download'
+}
+
 const CLOSURE_PATHS = {
   ADD: '/closure/add',
   ADD_CONFIRM: '/closure/add-confirm',
@@ -60,6 +66,7 @@ const STATIC_PATHS = {
 module.exports = {
   ACCESSIBILITY_PATHS,
   AUTH_PATHS,
+  BATCH_GENERATOR_PATHS,
   CLOSURE_PATHS,
   COOKIES_PATHS,
   HEALTHCHECK_PATHS,

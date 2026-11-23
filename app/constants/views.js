@@ -2,6 +2,11 @@ const ACCESSIBILITY_VIEWS = {
   ACCESSIBILITY: 'accessibility'
 }
 
+const BATCH_GENERATOR_VIEWS = {
+  GENERATOR: 'batch-generator/generator',
+  CONFIRM: 'batch-generator/confirm'
+}
+
 const CLOSURE_VIEWS = {
   MANAGE: 'closure/manage',
   SEARCH: 'closure/search',
@@ -45,6 +50,7 @@ const SITEMAP_VIEWS = {
 
 module.exports = {
   ACCESSIBILITY_VIEWS,
+  BATCH_GENERATOR_VIEWS,
   CLOSURE_VIEWS,
   COOKIES_VIEWS,
   ERROR_VIEWS,

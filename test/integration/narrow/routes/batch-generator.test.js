@@ -73,22 +73,22 @@ describe('batch generator routes', () => {
   const getRoute = (method, path) =>
     routes.find(x => x.method === method && x.path === path)
 
-  describe('GET /batch-generator', () => {
+  describe('GET /batch-generator/generator', () => {
     test('gets the form and displays schemes with default values', async () => {
-      const route = getRoute('GET', '/batch-generator')
+      const route = getRoute('GET', '/batch-generator/generator')
 
       const result = await route.options.handler({}, h)
 
       expect(mockGetBatchSchemes).toHaveBeenCalledTimes(1)
 
-      expect(h.view).toHaveBeenCalledWith('batch-generator', {
+      expect(h.view).toHaveBeenCalledWith('batch-generator/generator', {
         schemes: [{ id: 1, name: 'Scheme one' }],
         createChecksum: false,
         createControl: false
       })
 
       expect(result).toEqual({
-        view: 'batch-generator',
+        view: 'batch-generator/generator',
         context: {
           schemes: [{ id: 1, name: 'Scheme one' }],
           createChecksum: false,
@@ -98,9 +98,9 @@ describe('batch generator routes', () => {
     })
   })
 
-  describe('POST /batch-generator', () => {
+  describe('POST /batch-generator/generator', () => {
     test('redirects to confirmation when validation passes', async () => {
-      const route = getRoute('POST', '/batch-generator')
+      const route = getRoute('POST', '/batch-generator/generator')
 
       const request = {
         payload: {
@@ -128,7 +128,7 @@ describe('batch generator routes', () => {
     })
 
     test('renders the form again when validation fails', async () => {
-      const route = getRoute('POST', '/batch-generator')
+      const route = getRoute('POST', '/batch-generator/generator')
 
       const validationError = {
         details: [{ message: 'Bad payload' }]
@@ -147,7 +147,7 @@ describe('batch generator routes', () => {
 
       await route.options.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('batch-generator', {
+      expect(h.view).toHaveBeenCalledWith('batch-generator/generator', {
         ...request.payload,
         schemes: [{ id: 1, name: 'Scheme one' }],
         errors: validationError
@@ -157,7 +157,7 @@ describe('batch generator routes', () => {
 
   describe('GET /batch-generator/confirm', () => {
     test('renders the confirm page when token is valid', async () => {
-      const postRoute = getRoute('POST', '/batch-generator')
+      const postRoute = getRoute('POST', '/batch-generator/generator')
 
       await postRoute.options.handler({
         payload: {
@@ -175,7 +175,7 @@ describe('batch generator routes', () => {
         }
       }, h)
 
-      expect(h.view).toHaveBeenCalledWith('batch-generator-confirm', {
+      expect(h.view).toHaveBeenCalledWith('batch-generator/confirm', {
         token: 'test-token',
         payload: {
           schemeId: '1',
@@ -186,7 +186,7 @@ describe('batch generator routes', () => {
       })
 
       expect(result).toEqual({
-        view: 'batch-generator-confirm',
+        view: 'batch-generator/confirm',
         context: {
           token: 'test-token',
           payload: {
@@ -208,13 +208,13 @@ describe('batch generator routes', () => {
         }
       }, h)
 
-      expect(h.redirect).toHaveBeenCalledWith('/batch-generator')
+      expect(h.redirect).toHaveBeenCalledWith('/batch-generator/generator')
     })
   })
 
   describe('GET /batch-generator/download', () => {
     test('creates the zip archive and returns it to the client', async () => {
-      const route = getRoute('POST', '/batch-generator')
+      const route = getRoute('POST', '/batch-generator/generator')
       const downloadRoute = getRoute('GET', '/batch-generator/download')
 
       await route.options.handler({

@@ -81,7 +81,7 @@ const SEQUENCE_LINKS = [
 ]
 
 const BATCH_LINKS = [
-  { href: '/batch-generator', text: 'Create sample batch files', homeAuth: [permissions.applicationAdmin, permissions.batchViewer] }
+  { href: '/batch-generator/generator', text: 'Create sample batch files', homeAuth: [permissions.applicationAdmin, permissions.batchViewer] }
 ]
 
 const HELP_LINKS = [

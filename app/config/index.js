@@ -1,6 +1,7 @@
 const convict = require('convict')
 const convictFormatWithValidator = require('convict-format-with-validator')
 const authConfig = require('./auth')
+const storageConfig = require('./storage')
 
 convict.addFormats(convictFormatWithValidator)
 const milliseconds = 1000
@@ -114,6 +115,7 @@ config.validate({ allowed: 'strict' })
 // Attach auth config
 const configWithAuth = config.getProperties()
 configWithAuth.authConfig = authConfig
+configWithAuth.storageConfig = storageConfig
 
 module.exports = {
   get: config.get.bind(config),
@@ -123,6 +125,7 @@ module.exports = {
   isDev: config.get('isDev'),
   isProd: config.get('env') === 'production',
   authConfig,
+  storageConfig,
   cookieOptions: {
     ttl: process.env.COOKIE_TTL_IN_MILLIS ?? milliseconds * seconds * minutes * hours * daysPerYear,
     isSameSite: 'Lax',

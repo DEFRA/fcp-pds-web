@@ -1,4 +1,5 @@
 const { getProcessingData } = require('../../api')
+const { PROCESSING_GET } = require('../../constants/api-calls')
 
 const transformPaymentScheme = (scheme) => ({
   schemeName: scheme.schemeName,
@@ -57,7 +58,7 @@ const buildEmptyPaymentMetrics = () => ({
  */
 const getPaymentMetrics = async (period = 'ytd', schemeYear = null, month = null) => {
   try {
-    let url = `/metrics?period=${period}`
+    let url = `${PROCESSING_GET.METRICS}?period=${period}`
     if (period === 'year' && schemeYear) {
       url += `&schemeYear=${schemeYear}`
     }

@@ -32,6 +32,9 @@ services:
       STATEMENT_PUBLISHER_ENDPOINT: http://ffc-doc-statement-publisher:3010
       RETENTION_ENDPOINT: http://fcp-pds-data-retention:3076
       BATCH_PROCESSOR_ENDPOINT: http://ffc-pay-batch-processor:3017
+      PAY_AZURE_STORAGE_ACCOUNT_NAME: ${PAY_AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
+      DOC_AZURE_STORAGE_ACCOUNT_NAME: ${DOC_AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
+      PDS_AZURE_STORAGE_ACCOUNT_NAME: ${PDS_AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
 
   fcp-pds-web-postgres:
     image: postgres:16.5-alpine

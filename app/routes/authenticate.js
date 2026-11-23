@@ -1,10 +1,12 @@
 const auth = require('../auth')
+const { GET } = require('../constants/api-methods')
 const HTTP_STATUS = require('../constants/http-status-codes')
-const ERROR_VIEWS = require('../constants/error-views')
+const { AUTH_PATHS, HOME_PATHS } = require('../constants/paths')
+const { ERROR_VIEWS } = require('../constants/views')
 
 module.exports = {
-  method: 'GET',
-  path: '/authenticate',
+  method: GET,
+  path: AUTH_PATHS.AUTHENTICATE,
   options: {
     auth: { mode: 'try' }
   },
@@ -29,8 +31,7 @@ module.exports = {
       }
 
       await auth.authenticate(request.query.code, request.cookieAuth)
-
-      return h.redirect('/')
+      return h.redirect(HOME_PATHS.HOME)
     } catch (err) {
       if (err.code === 'NO_PDS_ROLES') {
         return h

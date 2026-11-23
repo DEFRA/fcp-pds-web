@@ -1,0 +1,6 @@
+module.exports = {
+  SOURCE_SYSTEM_INDEX: 0,
+  FRN_INDEX: 1,
+  AGREEMENT_NUMBER_INDEX: 2,
+  CLOSURE_DATE_INDEX: 3
+}

@@ -46,14 +46,33 @@ describe('cookies policy', () => {
     test('updates analytics to false and unstates GA cookies', () => {
       const request = { state: { cookies_policy: { analytics: true, confirmed: false, essential: true } } }
       updatePolicy(request, mockH, false)
+      expect(mockH.state).toHaveBeenCalledWith(
+        'cookies_policy',
+        { analytics: false, confirmed: true, essential: true },
+        mockConfig
+      )
       expect(mockH.unstate).toHaveBeenCalledWith('_ga')
+      expect(mockH.unstate).toHaveBeenCalledWith('_ga_5CZ5WF6BZS')
       expect(mockH.unstate).toHaveBeenCalledWith('_gid')
+      expect(mockH.unstate).toHaveBeenCalledTimes(3)
     })
 
     test('creates default policy when none exists before updating', () => {
       const request = { state: {} }
       updatePolicy(request, mockH, true)
       expect(mockH.state).toHaveBeenCalledTimes(2)
+    })
+
+    test('records rejection when no policy exists', () => {
+      const request = { state: {} }
+      updatePolicy(request, mockH, false)
+      expect(mockH.state).toHaveBeenLastCalledWith(
+        'cookies_policy',
+        { analytics: false, confirmed: true, essential: true },
+        mockConfig
+      )
+      expect(mockH.unstate).toHaveBeenCalledWith('_ga_5CZ5WF6BZS')
+      expect(mockH.unstate).toHaveBeenCalledTimes(3)
     })
   })
 })

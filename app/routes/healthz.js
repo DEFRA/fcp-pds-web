@@ -1,12 +1,14 @@
-const HTTP_OK = 200
+const { GET } = require('../constants/api-methods')
+const { SUCCESS } = require('../constants/http-status-codes')
+const { HEALTHCHECK_PATHS } = require('../constants/paths')
 
 module.exports = {
-  method: 'GET',
-  path: '/healthz',
+  method: GET,
+  path: HEALTHCHECK_PATHS.HEALTHZ,
   options: {
     auth: false
   },
   handler: (_request, h) => {
-    return h.response('ok').code(HTTP_OK)
+    return h.response('ok').code(SUCCESS)
   }
 }

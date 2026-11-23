@@ -16,6 +16,9 @@ data:
   PDS_AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.pdsAzureStorageConnectionString }}
   PAY_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.payAzureStorageAccountName }}
   DOC_AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.docAzureStorageAccountName }}  
+  GOOGLE_ANALYTICS_MEASUREMENT_ID: {{ quote .Values.container.googleAnalyticsMeasurementId }}
+  ANALYTICS_ALWAYS_TRACK: {{ quote .Values.container.analyticsAlwaysTrack }}
+  ANALYTICS_ENABLED: {{ quote .Values.container.analyticsEnabled }}
   {{- if (.Values.environmentCode) }}
     {{- if ne .Values.environmentCode "snd" }}
   PAYMENTS_SERVICE_ENDPOINT: {{ .Values.container.paymentsEndpoint }}-{{ .Values.environmentCode }}

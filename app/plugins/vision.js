@@ -50,6 +50,9 @@ module.exports = {
     context: {
       appVersion: version,
       assetPath: '/static',
+      googleAnalyticsMeasurementId: config.get('googleAnalyticsMeasurementId'),
+      analyticsEnabled: config.get('analyticsEnabled'),
+      analyticsAlwaysTrack: config.get('analyticsAlwaysTrack'),
       govukAssetPath: '/assets',
       serviceName: 'Payment and Document Services'
     }

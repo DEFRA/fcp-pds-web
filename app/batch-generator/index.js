@@ -28,12 +28,12 @@ const getBatchContext = (options = {}) => {
     ...options,
     now,
     batchSize: Number(options.numberOfPR ?? defaultOne),
-    invoiceValue: Number(options.invoiceValue ?? defaultValue),
+    invoiceValue: Number(options.value ?? defaultValue),
     sequence: Number(options.sequence ?? defaultOne),
-    requestNumber: Number(options.requestNumber ?? defaultOne),
+    requestNumber: Number(options.prn ?? defaultOne),
     invoiceNumber: Number(options.invoiceNumber ?? defaultOne),
     frn: Number(options.frn ?? defaultFRN),
-    schemeYear: Number(options.schemeYear ?? now.getFullYear()),
+    schemeYear: Number(options.marketingYear ?? now.getFullYear()),
     deliveryBody: getDeliveryBody(options, options.schemeId),
     fundCode: getFundCodeFromSchemeId(Number(options.schemeId)) ?? 'DRD10'
   }

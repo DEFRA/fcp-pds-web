@@ -8,7 +8,7 @@ const mgmtPermissions = {
   holdViewer: 'Management.Pay.Hold',
   injectionViewer: 'Management.Pay.Injection',
   closureViewer: 'Management.Pay.Closure',
-  alertViewer: 'Management.Pay.Alert',
+  alertAdmin: 'Payment.Alert.Admin',
   statementViewer: 'Management.Doc.Statement',
   metricsViewer: 'Management.Pds.Metrics',
   resetViewer: 'Management.Pay.Reset',

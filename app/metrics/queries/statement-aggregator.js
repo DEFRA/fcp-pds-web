@@ -1,0 +1,75 @@
+const { getSchemeNames } = require('ffc-pay-schemes')
+const { getStatementPublisherData } = require('../../api')
+const { STATEMENT_PUBLISHER_GET } = require('../../constants/api-calls')
+
+const { SFI, DELINKED, SFI23 } = getSchemeNames()
+
+const transformStatementSchemeName = schemeName => {
+  switch (schemeName) {
+    case 'Delinked Payment Statement':
+      return DELINKED
+
+    case 'Sustainable Farming Incentive':
+      return SFI
+
+    case 'Sustainable Farming Incentive 2023':
+      return SFI23
+
+    default:
+      return schemeName
+  }
+}
+
+/**
+ * Get statement metrics for a period
+ * Calls ffc-doc-statement-publisher's /metrics endpoint
+ */
+const getStatementMetrics = async (period = 'ytd', schemeYear = null, month = null) => {
+  try {
+    let url = `${STATEMENT_PUBLISHER_GET.METRICS}?period=${period}`
+    if (period === 'year' && schemeYear) {
+      url += `&schemeYear=${schemeYear}`
+    }
+    if (period === 'monthInYear' && schemeYear && month) {
+      url += `&schemeYear=${schemeYear}&month=${month}`
+    }
+
+    const payload = await getStatementPublisherData(url)
+
+    return {
+      data: {
+        ...payload,
+        totalPrintPostCost: Number.parseInt(payload.totalPrintPostCost) || 0,
+        statementsByScheme: payload.statementsByScheme.map(s => ({
+          ...s,
+          schemeName: transformStatementSchemeName(s.schemeName),
+          receivedYear: s.receivedYear,
+          receivedMonth: s.receivedMonth,
+          printPostCost: Number.parseInt(s.printPostCost) || 0
+        }))
+      },
+      error: false,
+      message: ''
+    }
+  } catch (error) {
+    console.error('Error fetching document metrics:', error)
+
+    // Return empty structure with error flag
+    return {
+      data: {
+        totalStatements: 0,
+        totalPrintPost: 0,
+        totalPrintPostCost: 0,
+        totalEmail: 0,
+        totalFailures: 0,
+        statementsByScheme: []
+      },
+      error: true,
+      message: 'Unable to load document metrics. Please try again later.'
+    }
+  }
+}
+
+module.exports = {
+  getStatementMetrics
+}

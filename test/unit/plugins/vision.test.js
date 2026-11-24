@@ -1,11 +1,16 @@
+jest.mock('../../../app/config', () => ({
+  isDev: false,
+  get: jest.fn(setting => ({
+    googleAnalyticsMeasurementId: 'G-TEST12345',
+    analyticsEnabled: true,
+    analyticsAlwaysTrack: false
+  })[setting])
+}))
+
 const visionPlugin = require('../../../app/plugins/vision')
 const nunjucks = require('nunjucks')
 const { version } = require('../../../package.json')
 const config = require('../../../app/config')
-
-jest.mock('../../../app/config', () => ({
-  isDev: false
-}))
 
 describe('vision plugin', () => {
   afterEach(() => {
@@ -38,6 +43,12 @@ describe('vision plugin', () => {
       expect(visionPlugin.options.context).toBeDefined()
       expect(visionPlugin.options.context.appVersion).toBe(version)
       expect(visionPlugin.options.context.assetPath).toBe('/static')
+      expect(visionPlugin.options.context.googleAnalyticsMeasurementId).toBe('G-TEST12345')
+      expect(config.get).toHaveBeenCalledWith('googleAnalyticsMeasurementId')
+      expect(visionPlugin.options.context.analyticsEnabled).toBe(true)
+      expect(config.get).toHaveBeenCalledWith('analyticsEnabled')
+      expect(visionPlugin.options.context.analyticsAlwaysTrack).toBe(false)
+      expect(config.get).toHaveBeenCalledWith('analyticsAlwaysTrack')
       expect(visionPlugin.options.context.govukAssetPath).toBe('/assets')
       expect(visionPlugin.options.context.serviceName).toBe('Payment and Document Services')
     })
@@ -129,6 +140,26 @@ describe('vision plugin', () => {
       await prepareFunc(testOptions, mockNext)
       const env = testOptions.compileOptions.environment
       expect(env.opts.autoescape).toBe(true)
+    })
+
+    test.each([
+      [1234, '1,234'],
+      [1234.56, '1,234.56'],
+      [undefined, '0']
+    ])('localize renders %s as %s', (value, expected) => {
+      prepareFunc(testOptions, mockNext)
+      const env = testOptions.compileOptions.environment
+      expect(env.renderString('{{ value | localize }}', { value })).toBe(expected)
+    })
+
+    test.each([
+      [1234.5, '1,234.50'],
+      [1234.567, '1,234.57'],
+      [undefined, '0.00']
+    ])('localizeCurrency renders %s as %s', (value, expected) => {
+      prepareFunc(testOptions, mockNext)
+      const env = testOptions.compileOptions.environment
+      expect(env.renderString('{{ value | localizeCurrency }}', { value })).toBe(expected)
     })
 
     test('prepare respects isDev config for watch setting', async () => {
@@ -349,6 +380,57 @@ describe('vision plugin', () => {
       const compiledTemplate = compileFunc(src, options)
       const output = compiledTemplate({ message: 'Hello World' })
       expect(output).toContain('Hello World')
+    })
+
+    test('renders all metrics counts and currency amounts', () => {
+      env.loaders.unshift({
+        cache: {},
+        getSource: (name) => name === '_layout.njk'
+          ? { src: '{% block content %}{% endblock %}', path: name }
+          : null
+      })
+
+      const output = env.render('metrics/metrics.njk', {
+        selectedPeriod: 'all',
+        paymentsMetrics: {
+          totalPayments: 3456,
+          totalValue: 234550,
+          totalPendingPayments: 1234,
+          totalProcessedPayments: 2222,
+          paymentsByScheme: [{
+            schemeName: 'Test scheme',
+            schemeYear: 2026,
+            totalPayments: 3456,
+            totalValue: 234550,
+            paymentsByStatus: { pending: 1234, processed: 2222 }
+          }]
+        },
+        statementsMetrics: {
+          totalStatements: 6789,
+          totalPrintPost: 2345,
+          totalPrintPostCost: 345600,
+          totalEmail: 4444,
+          statementsByScheme: [{
+            schemeName: 'Test scheme',
+            schemeYear: 2026,
+            totalStatements: 6789,
+            printPostCount: 2345,
+            printPostCost: 345600,
+            emailCount: 4444
+          }]
+        }
+      })
+
+      const panelValues = Array.from(output.matchAll(/<div class="govuk-panel__body metrics-panel__body">\s*([^<]*?)\s*<\/div>/g), ([, value]) => value.replace(/£\s+/, '£'))
+      const tableValues = Array.from(output.matchAll(/class="govuk-table__cell govuk-table__cell--numeric[^"]*">\s*([^<]*?)\s*<\/td>/g), ([, value]) => value)
+
+      expect(panelValues).toEqual(['3,456', '£2,345.50', '6,789'])
+      expect(tableValues).toEqual([
+        '3,456', '2,345.50', '1,234', '2,222',
+        '3,456', '2,345.50', '1,234', '2,222',
+        '6,789', '2,345', '3,456.00', '4,444',
+        '6,789', '2,345', '3,456.00', '4,444'
+      ])
     })
 
     test('getAssetPath is available as global in environment', () => {

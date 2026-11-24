@@ -1,12 +1,12 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.2.12",
+  "version": "0.4.1",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
   "scripts": {
     "build": "webpack",
-    "build:watch": "webpack --watch",
+    "build:watch": "webpack --watch --stats errors-warnings",
     "pretest": "npm run test:lint",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
@@ -27,10 +27,11 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@azure/identity": "4.14.1",
     "@azure/monitor-opentelemetry": "1.20.0",
     "@azure/msal-node": "7.1.2",
     "@azure/storage-blob": "12.31.0",
-    "@hapi/boom": "9.1.1",
+    "@hapi/boom": "10.0.0",
     "@hapi/cookie": "11.0.2",
     "@hapi/crumb": "8.0.1",
     "@hapi/hapi": "21.4.8",
@@ -41,23 +42,27 @@
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
     "ffc-database": "2.0.2",
-    "govuk-frontend": "6.2.0",
+    "ffc-pay-schemes": "1.4.0",
+    "govuk-frontend": "6.6.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
     "joi": "18.3.2",
     "log-timestamp": "0.3.0",
+    "moment": "2.31.0",
     "nunjucks": "3.2.4"
   },
   "devDependencies": {
+    "@types/cheerio": "0.22.30",
+    "cheerio": "1.0.0-rc.10",
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.2.6",
-    "eslint": "9.39.4",
+    "eslint": "10.15.0",
     "html-webpack-plugin": "5.3.1",
     "jest": "30.5.2",
     "jest-junit": "17.0.0",
     "mini-css-extract-plugin": "1.6.0",
-    "neostandard": "0.13.0",
-    "nodemon": "3.0.1",
+    "neostandard": "0.14.1",
+    "nodemon": "3.1.14",
     "npm-run-all": "4.1.5",
     "resolve-url-loader": "5.0.0",
     "sass": "1.79.0",
@@ -67,7 +72,6 @@
     "webpack-cli": "4.10.0"
   },
   "overrides": {
-    "shell-quote": "1.12.0",
     "@opentelemetry/instrumentation-http": "0.222.0"
   },
   "nodemonConfig": {

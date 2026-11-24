@@ -27,6 +27,7 @@ const updatePolicy = (request, h, analytics) => {
 
   if (!analytics) {
     h.unstate('_ga')
+    h.unstate('_ga_5CZ5WF6BZS')
     h.unstate('_gid')
   }
 }

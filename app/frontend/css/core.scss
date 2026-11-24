@@ -1,8 +1,4 @@
 // Core stylesheet for fcp-pds-web
-// Import the pre-built GOV.UK Frontend stylesheet
-$govuk-suppressed-warnings: "legacy-organisation-colours";
-$govuk-assets-path: "~govuk-frontend/dist/govuk/assets/";
-@import '~govuk-frontend/dist/govuk/index';
 
 // Custom variables and styles can be added here
 .sequence-confirmation-panel {

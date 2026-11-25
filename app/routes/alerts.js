@@ -164,7 +164,7 @@ module.exports = [
 
         return h.view(views.update, {
           ...data,
-          action: 'edit',
+          action: data.contactId ? 'edit' : 'create',
           error: sanitiseValidationError(request.query?.validationError),
           successMessage
         })
@@ -205,10 +205,6 @@ module.exports = [
           request.payload
         )
 
-        const hasSchemeAlerts = schemes.some(
-          (scheme) => scheme.alertTypes?.length > 0
-        )
-
         return h.view(views.updateConfirm, {
           ...data,
           contactId: request.payload.contactId,
@@ -218,7 +214,6 @@ module.exports = [
           formAction: paths.update,
           schemes,
           globalAlertTypes,
-          hasSchemeAlerts,
           formatAlertType
         })
       } catch (error) {

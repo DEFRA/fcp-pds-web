@@ -1,4 +1,5 @@
 const config = require('../../config')
+const { EMAIL_DOMAIN_NOT_ALLOWED } = require('../../constants/validation-errors')
 
 const approvedDomainSet = new Set(
   config.get('approvedEmailDomains')
@@ -9,7 +10,7 @@ const approvedDomainSet = new Set(
 const isEmailBlocked = (emailAddress) => {
   const normalizedEmail = typeof emailAddress === 'string' && emailAddress.trim().toLowerCase()
   if (!normalizedEmail) {
-    throw new Error('The email address is not allowed. Please contact the Payment & Document Services team if you believe this is a mistake.')
+    throw new Error(EMAIL_DOMAIN_NOT_ALLOWED)
   }
 
   const atIndex = normalizedEmail.lastIndexOf('@')
@@ -18,7 +19,7 @@ const isEmailBlocked = (emailAddress) => {
     : null
 
   if (!domain || !approvedDomainSet.has(domain)) {
-    throw new Error('The email address is not allowed. Please contact the Payment & Document Services team if you believe this is a mistake.')
+    throw new Error(EMAIL_DOMAIN_NOT_ALLOWED)
   }
 }
 

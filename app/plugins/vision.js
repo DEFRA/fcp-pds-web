@@ -1,6 +1,7 @@
 const path = require('node:path')
 const nunjucks = require('nunjucks')
 const config = require('../config')
+const alertCardTitles = require('../constants/alert-card-titles')
 const { version } = require('../../package.json')
 
 module.exports = {
@@ -30,6 +31,7 @@ module.exports = {
 
           const currencyFormat = new Intl.NumberFormat('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
           env.addFilter('localizeCurrency', (value) => currencyFormat.format(value ?? 0))
+          env.addGlobal('alertCardTitles', alertCardTitles)
 
           const SLASH_LENGTH = 1
           env.addGlobal('getAssetPath', function (assetPath) {

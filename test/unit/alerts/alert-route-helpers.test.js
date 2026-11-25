@@ -85,6 +85,10 @@ describe('alert-route-helpers', () => {
     expect(formatAlertType('SINGLE')).toBe('Single')
   })
 
+  test('formatAlertType displays scheme_added as New scheme added', () => {
+    expect(formatAlertType('scheme_added')).toBe('New scheme added')
+  })
+
   test('getValidationError returns concatenated detail messages if present', () => {
     const error = { details: [{ message: 'first' }, { message: 'second' }] }
     expect(getValidationError(error)).toBe('first, second')
@@ -140,7 +144,7 @@ describe('alert-route-helpers', () => {
 
   test('getSchemeSummaries builds summaries using normaliseValues', () => {
     const schemes = [
-      { schemeId: 1, name: 'Scheme One' },
+      { schemeId: 1, schemeName: 'Scheme One' },
       { schemeId: 2, name: 'Scheme Two' }
     ]
     const payload = {

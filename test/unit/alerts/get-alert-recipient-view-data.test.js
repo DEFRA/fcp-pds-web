@@ -106,6 +106,27 @@ describe('get-alert-recipient-view-data', () => {
     })
   })
 
+  test('restores a global checkbox selection alongside scheme selections', async () => {
+    getAlertTypesAndSchemes.mockResolvedValue({
+      schemes: [{ schemeId: 1, name: 'Scheme One' }],
+      alertTypesPayload: ['payment_alert', 'scheme_added']
+    })
+
+    const result = await getAlertRecipientViewData({ query: { 1: 'payment_alert', globalAlerts: 'scheme_added' } })
+
+    expect(result.selectedAlerts).toEqual({ payment_alert: { 1: true }, scheme_added: { 0: true } })
+  })
+
+  test('finds an existing contact using the normalised email lookup endpoint', async () => {
+    getAlertTypesAndSchemes.mockResolvedValue({ schemes: [], alertTypesPayload: [] })
+    getAlertingData.mockResolvedValue({ payload: { contact: { contactId: '123' } } })
+
+    const result = await getAlertRecipientViewData({ query: { emailAddress: ' User@Example.com ' } }, { loadContact: true })
+
+    expect(getAlertingData).toHaveBeenCalledWith('/contact/email/user%40example.com')
+    expect(result.contactId).toBe('123')
+  })
+
   test('uses payload when query values are missing', async () => {
     getAlertTypesAndSchemes.mockResolvedValue({
       schemes: [{ schemeId: 2, name: 'Scheme Two' }],
@@ -215,7 +236,7 @@ describe('get-alert-recipient-view-data', () => {
     })
 
     expect(getAlertingData).toHaveBeenCalledWith(
-      '/contact/missing%40example.com'
+      '/contact/email/missing%40example.com'
     )
 
     expect(result).toEqual({

@@ -171,22 +171,32 @@
 %}
   <a
     class="govuk-link"
-    href="{{ path }}?emailAddress={{ data.emailAddress | urlencode }}&action={{ data.action | urlencode }}{% if data.schemeId %}&schemeId={{ data.schemeId | urlencode }}{% endif %}{% for scheme in schemes %}{% if not currentScheme or scheme.schemeId == currentScheme.schemeId %}{% for alertType in scheme.alertTypes %}&{{ scheme.schemeId }}={{ alertType | urlencode }}{% endfor %}{% endif %}{% endfor %}">
+    href="{{ path }}?{{ confirmationQueryParams(data, schemes, currentScheme) | replace('&', '&amp;') }}">
     Change
     <span class="govuk-visually-hidden">{{ spanText }}</span>
   </a>
 {% endmacro %}
 
-{% macro confirmationQueryParams(data, schemes, currentScheme = null) %}
+{% macro confirmationQueryParams(data, schemes, currentScheme = null) -%}
   emailAddress={{ data.emailAddress | urlencode }}&action={{
     data.action | urlencode
-  }}{% if data.schemeId %}&schemeId={{ data.schemeId | urlencode }}{% endif %}{%
-    for scheme in schemes
-  %}{% if not currentScheme or scheme.schemeId == currentScheme.schemeId %}{%
-        for alertType in scheme.alertTypes
-      %}&{{ scheme.schemeId }}={{ alertType | urlencode }}{% endfor %}{%
-      endif
-    %}{% endfor %}
+  }}
+  {%- if data.contactId %}&contactId={{ data.contactId | string | urlencode }}{%
+    endif
+  -%}
+  {%- if data.schemeId %}&schemeId={{ data.schemeId | string | urlencode }}{%
+    endif
+  -%}
+  {%- for scheme in schemes %}
+    {%- if not currentScheme or scheme.schemeId == currentScheme.schemeId %}
+      {%- for alertType in scheme.alertTypes %}&{{
+          scheme.schemeId | string | urlencode
+        }}={{ alertType | urlencode }}{% endfor -%}
+    {% endif -%}
+  {% endfor -%}
+  {%- for alertType in data.globalAlertTypes %}&globalAlerts={{
+      alertType | urlencode
+    }}{% endfor -%}
 {% endmacro %}
 
 {% macro alertToggleScript() %}
@@ -298,7 +308,9 @@
 %}
   <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">Recipient</h2>
+      <h2 class="govuk-summary-card__title">
+        {{ alertCardTitles.recipientPages.create }}
+      </h2>
       <ul class="govuk-summary-card__actions">
         <li class="govuk-summary-card__action">
           {{
@@ -320,12 +332,20 @@
 {% endmacro %}
 
 {%
-  macro schemeSummaryCard(scheme, formPath, queryData, schemes, changeLinkLabel, changeLinkTarget, formatAlertType, extraAlertTypes = [])
+  macro schemeSummaryCard(scheme, formPath, queryData, schemes, changeLinkLabel, changeLinkTarget, formatAlertType)
 %}
-  {% if scheme.alertTypes and scheme.alertTypes.length %}
+  {{
+    alertTypesSummaryCard(alertCardTitles.confirmation.schemeAlerts(scheme.schemeName), scheme.alertTypes, formPath, queryData, schemes, changeLinkLabel, changeLinkTarget, formatAlertType)
+  }}
+{% endmacro %}
+
+{%
+  macro alertTypesSummaryCard(title, alertTypes, formPath, queryData, schemes, changeLinkLabel, changeLinkTarget, formatAlertType)
+%}
+  {% if alertTypes and alertTypes.length %}
     <div class="govuk-summary-card">
       <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">{{ scheme.schemeName }}</h2>
+        <h2 class="govuk-summary-card__title">{{ title }}</h2>
         <ul class="govuk-summary-card__actions">
           <li class="govuk-summary-card__action">
             {{
@@ -341,11 +361,7 @@
             <dt class="govuk-summary-list__key">Alert types</dt>
             <dd class="govuk-summary-list__value">
               <ul class="govuk-list">
-                {% for alertType in scheme.alertTypes %}
-                  <li>{{ formatAlertType(alertType) }}</li>
-                {% endfor %}
-
-                {% for alertType in extraAlertTypes %}
+                {% for alertType in alertTypes %}
                   <li>{{ formatAlertType(alertType) }}</li>
                 {% endfor %}
               </ul>

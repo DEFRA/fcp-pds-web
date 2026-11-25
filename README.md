@@ -187,7 +187,12 @@ AZURE_CLIENT_SECRET=your-secret
 
 # Session
 COOKIE_PASSWORD=your-secret-key  # Session encryption key (generate with UUID)
+
+# Alert recipients (comma-separated exact domains, no wildcards)
+APPROVED_EMAIL_DOMAINS=example.com,example.org
 ```
+
+Alert recipient email domains are checked separately from sign-in. An empty `APPROVED_EMAIL_DOMAINS` rejects all recipient domains. For Docker Compose, set it in the shell or Compose `.env` and recreate the web container. For Helm, set `container.approvedEmailDomains` to the same comma-separated string in the environment's values.
 
 ## Styling and Assets
 

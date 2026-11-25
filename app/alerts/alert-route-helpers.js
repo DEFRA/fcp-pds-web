@@ -5,6 +5,7 @@ const { normaliseValues, getAlertRecipientViewData } = require('./get-alert-reci
 const userSchema = require('../routes/schemas/user-schema')
 const removeUserSchema = require('../routes/schemas/remove-user-schema')
 const { updateAlertUser } = require('./update-alert-user')
+const { EMAIL_DOMAIN_NOT_ALLOWED } = require('../constants/validation-errors')
 
 const AUTH_SCOPE = { scope: [applicationAdmin, alertAdmin] }
 
@@ -50,7 +51,8 @@ const KNOWN_VALIDATION_MESSAGES = new Set([
   'Select at least one alert type',
   // remove-user-schema.js
   'A user must be specified to remove',
-  'Action must be remove'
+  'Action must be remove',
+  EMAIL_DOMAIN_NOT_ALLOWED
 ])
 
 const GENERIC_VALIDATION_MESSAGE = 'There was a problem with your submission. Please try again.'
@@ -76,14 +78,19 @@ const handleAlertingError = (error) => {
   return Boom.badGateway(`Alerting Service is unavailable: ${error.message}`)
 }
 
-const formatAlertType = (alertType = '') =>
-  alertType
+const formatAlertType = (alertType = '') => {
+  if (alertType === 'scheme_added') {
+    return 'New scheme added'
+  }
+
+  return alertType
     .split('_')
     .map(
       (part) =>
         part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
     )
     .join(' ')
+}
 
 const getValidationError = (error) =>
   error.details?.map((detail) => detail.message).join(', ') || error.message
@@ -96,7 +103,7 @@ const getAccountName = (request) => {
 const getSchemeSummaries = (schemes, payload) =>
   schemes.map((scheme) => ({
     schemeId: scheme.schemeId,
-    schemeName: scheme.name,
+    schemeName: scheme.schemeName ?? scheme.name,
     alertTypes: normaliseValues(payload[scheme.schemeId])
   }))
 

@@ -226,7 +226,7 @@ describe('Alerts route handlers', () => {
     expect(result).toBe(h)
   })
 
-  test('GET /alerts/update renders update view when recipient has no existing alerts', async () => {
+  test('GET /alerts/update renders the create form when the recipient is not found', async () => {
     const route = findRoute('GET', '/alerts/update')
     const viewData = {
       schemesPayload: [],
@@ -255,7 +255,7 @@ describe('Alerts route handlers', () => {
 
     expect(h.view).toHaveBeenCalledWith('alerts/update', {
       ...viewData,
-      action: 'edit',
+      action: 'create',
       error: null,
       successMessage: undefined
     })
@@ -696,6 +696,31 @@ describe('Alerts route handlers', () => {
     )
   })
 
+  test('add recipient by scheme preserves the blocked-domain error when returning to the form', async () => {
+    const path = '/alerts/add-recipient-by-scheme'
+    const payload = { emailAddress: 'user@example.js', schemeId: '1', 1: 'payment_alert', crumb: 'ignored' }
+    const message = 'The email address is not allowed. Please contact the Payment & Document Services team if you believe this is a mistake.'
+    updateAlertUser.mockImplementationOnce((_account, _payload, toolkit, _successPath, errorRedirect) =>
+      toolkit.redirect(errorRedirect(new Error(message))).takeover()
+    )
+    getAlertRecipientViewData.mockResolvedValueOnce({ emailAddress: payload.emailAddress, schemeId: payload.schemeId })
+
+    await findRoute('POST', path).handler({ payload }, h)
+
+    expect(h.takeover).toHaveBeenCalledTimes(1)
+    const redirect = new URL(h.redirect.mock.calls[0][0], 'http://localhost')
+    expect(redirect.pathname).toBe(path)
+    expect(redirect.searchParams.has('crumb')).toBe(false)
+    expect(redirect.searchParams.get('1')).toBe('payment_alert')
+
+    await findRoute('GET', path).handler({ query: Object.fromEntries(redirect.searchParams) }, h)
+
+    expect(h.view).toHaveBeenCalledWith('alerts/add-recipient-by-scheme', expect.objectContaining({
+      emailAddress: payload.emailAddress,
+      error: message
+    }))
+  })
+
   test('GET /alerts/confirm-delete redirects for NOT_FOUND errors', async () => {
     const route = findRoute('GET', '/alerts/confirm-delete')
 
@@ -802,15 +827,15 @@ describe('Alerts route handlers', () => {
     expect(h.view).not.toHaveBeenCalled()
   })
 
-  test('POST /alerts/update-confirm flags selected scheme alerts', async () => {
+  test('POST /alerts/update-confirm passes scheme and global alerts separately', async () => {
     const route = findRoute('POST', '/alerts/update-confirm')
     getAlertRecipientViewData.mockResolvedValue({ schemesPayload: [{ schemeId: 1, name: 'Scheme 1' }] })
 
-    const result = await route.handler({ payload: { 1: ['payment_alert'] } }, h)
+    const result = await route.handler({ payload: { 1: ['payment_alert'], globalAlerts: 'scheme_added' } }, h)
 
     expect(h.view).toHaveBeenCalledWith('alerts/update-confirm', expect.objectContaining({
       schemes: [{ schemeId: 1, schemeName: 'Scheme 1', alertTypes: ['payment_alert'] }],
-      hasSchemeAlerts: true
+      globalAlertTypes: ['scheme_added']
     }))
     expect(result).toBe(h)
   })

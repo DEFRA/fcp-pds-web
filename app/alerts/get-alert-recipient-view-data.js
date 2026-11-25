@@ -21,9 +21,10 @@ const getContactPayload = async (loadContact, contactId, emailAddress) => {
   }
 
   try {
-    const response = await getAlertingData(
-      `/contact/${encodeURIComponent(contactId || emailAddress)}`
-    )
+    const endpoint = contactId
+      ? `/contact/${encodeURIComponent(contactId)}`
+      : `/contact/email/${encodeURIComponent(emailAddress.trim().toLowerCase())}`
+    const response = await getAlertingData(endpoint)
 
     return response?.payload?.contact ?? {}
   } catch (error) {
@@ -56,6 +57,10 @@ const buildSelectedAlerts = (
         true
       ])
     )
+
+    if (alertType === 'scheme_added' && getSelectedValues(query, payload, 'globalAlerts').includes(alertType)) {
+      selectedAlerts[alertType][0] = true
+    }
 
     schemesPayload.forEach((selectedScheme) =>
       getSelectedValues(query, payload, selectedScheme.schemeId).forEach(

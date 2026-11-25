@@ -9,9 +9,9 @@
 {% from "macros/alert-helpers.njk" import alertManagementBreadcrumbs %}
 
 {% if contactId %}
-  {% set pageTitle = "Update " ~ emailAddress ~ " alerts" %}
+  {% set pageTitle = alertCardTitles.recipientPages.update %}
 {% else %}
-  {% set pageTitle = "Add new alert recipient" %}
+  {% set pageTitle = alertCardTitles.recipientPages.create %}
 {% endif %}
 
 {% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}

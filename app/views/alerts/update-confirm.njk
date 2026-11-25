@@ -3,20 +3,21 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 {%
-  from "macros/alert-helpers.njk" import confirmationQueryParams, recipientSummaryCard, schemeSummaryCard, confirmationHiddenFields
+  from "macros/alert-helpers.njk" import confirmationQueryParams, recipientSummaryCard, schemeSummaryCard, alertTypesSummaryCard, confirmationHiddenFields
 %}
 
 {%
   set pageTitle = "Check alerts for " ~ emailAddress ~ " are correct before saving"
 %}
 {%
-  set updatePageTitle = ("Update " ~ emailAddress ~ " alerts") if contactId else "Add new alert recipient"
+  set updatePageTitle = alertCardTitles.recipientPages.update if contactId else alertCardTitles.recipientPages.create
 %}
 {%
   set breadcrumbData = {
     contactId: contactId,
     emailAddress: emailAddress,
-    action: action
+    action: action,
+    globalAlertTypes: globalAlertTypes
   }
 %}
 
@@ -50,80 +51,41 @@
         {{
           recipientSummaryCard(
             formPath,
-            { emailAddress: emailAddress, action: action },
+            breadcrumbData,
             schemes,
-            null,
+            'recipient email address',
             null,
             emailAddress
           )
         }}
       {% endif %}
 
-      {% set globalAlertsDisplayed = false %}
-
       {% for scheme in schemes %}
-        {% if scheme.alertTypes and scheme.alertTypes.length %}
-          {{
-            schemeSummaryCard(
-              scheme,
-              formPath,
-              {
-                contactId: contactId,
-                emailAddress: emailAddress,
-                action: action
-              },
-              schemes,
-              scheme.schemeId,
-              scheme.schemeId,
-              formatAlertType,
-              globalAlertTypes if not globalAlertsDisplayed else []
-            )
-          }}
-
-          {% set globalAlertsDisplayed = true %}
-        {% endif %}
+        {{
+          schemeSummaryCard(
+            scheme,
+            formPath,
+            breadcrumbData,
+            schemes,
+            'alert types for ' ~ scheme.schemeName,
+            null,
+            formatAlertType
+          )
+        }}
       {% endfor %}
 
-      {% if not hasSchemeAlerts and globalAlertTypes.length %}
-        <div class="govuk-summary-card">
-          <div class="govuk-summary-card__title-wrapper">
-            <h2 class="govuk-summary-card__title">
-              Alerts
-            </h2>
-
-            <ul class="govuk-summary-card__actions">
-              <li class="govuk-summary-card__action">
-                <a
-                  class="govuk-link"
-                  href="{{ formPath }}?contactId={{ contactId | urlencode }}&emailAddress={{ emailAddress | urlencode }}&action={{ action | urlencode }}{% for alertType in globalAlertTypes %}&globalAlerts={{ alertType | urlencode }}{% endfor %}">
-                  Change
-                  <span class="govuk-visually-hidden">
-                    alert settings
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="govuk-summary-card__content">
-            <dl class="govuk-summary-list">
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  Alert types
-                </dt>
-
-                <dd class="govuk-summary-list__value">
-                  <ul class="govuk-list">
-                    {% for alertType in globalAlertTypes %}
-                      <li>{{ formatAlertType(alertType) }}</li>
-                    {% endfor %}
-                  </ul>
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      {% endif %}
+      {{
+        alertTypesSummaryCard(
+          alertCardTitles.confirmation.globalAlerts,
+          globalAlertTypes,
+          formPath,
+          breadcrumbData,
+          schemes,
+          'new scheme alerts',
+          null,
+          formatAlertType
+        )
+      }}
 
       <form
         method="POST"

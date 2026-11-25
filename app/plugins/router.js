@@ -11,6 +11,7 @@ const routes = [].concat(
   require('../routes/home'),
   require('../routes/login'),
   require('../routes/logout'),
+  require('../routes/payment-requests'),
   require('../routes/metrics'),
   require('../routes/privacy'),
   require('../routes/sequence'),

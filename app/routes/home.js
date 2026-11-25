@@ -17,12 +17,10 @@ module.exports = {
     cards.shift()
     cards.pop()
     for (const card of cards) {
-      if (Array.isArray(card.links)) {
-        card.links = card.links.filter(link => link.homeAuth)
-        card.hasAccess = card.links.some(link => {
-          return link.homeAuth.some(authFlag => request.auth.credentials.scope.includes(authFlag))
-        })
-      }
+      card.links = card.links.filter(link => link.homeAuth)
+      card.hasAccess = card.links.some(link => {
+        return link.homeAuth.some(authFlag => request.auth.credentials.scope.includes(authFlag))
+      })
     }
 
     const accessibleCards = cards.filter(card => card.hasAccess)

@@ -56,7 +56,7 @@ describe('create BPS batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^SITI0000012^007^T1234567^FRN123^1^123.45^DB1^GBP'
+      'H^SITI0000012^007^CT1234567^FRN123^1^123.45^DB1^GBP'
     )
     expect(result[1]).toBe(
       'L^SITI0000012^123.45^2024^10501^EGF00^DB1^1^G00 - Gross value of claim^2024-12-01'
@@ -64,7 +64,7 @@ describe('create BPS batch contents', () => {
 
     expect(pad).toHaveBeenCalledWith(12, 7)
     expect(pad).toHaveBeenCalledWith(7, 3)
-    expect(pad).toHaveBeenCalledWith('1234567', 7)
+    expect(pad).toHaveBeenCalledWith('1234567', 6)
     expect(dateString).toHaveBeenCalledWith(new Date(2024, 11, 1))
   })
 

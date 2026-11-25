@@ -56,10 +56,10 @@ describe('create SFI Pilot batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^SFIP0000012^07^T1234567^2^FRN123^GBP^123.45^DB1^GBP^SFIP^Q4'
+      'H^SFIP0000012^07^ST1234567^2^FRN123^GBP^123.45^DB1^GBP^SFIP^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFIP0000012^123.45^2024^80001^DRD10^T000001234567^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
+      'L^SFIP0000012^123.45^2024^80001^DRD10^ST000001234567^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
     )
 
     expect(pad).toHaveBeenCalledWith(7, 4)

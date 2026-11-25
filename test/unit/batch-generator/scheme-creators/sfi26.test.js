@@ -57,16 +57,16 @@ describe('create SFI26 batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^SFI260000012^01^T34567890^1^1234567890^GBP^123.45^DB1^GBP^SFI26^Q4'
+      'H^SFI260000012^01^GT4567890^1^1234567890^GBP^123.45^DB1^GBP^SFI26^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFI260000012^123.45^2024^80201^DRD10^T34567890^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
+      'L^SFI260000012^123.45^2024^80201^DRD10^GT4567890^DB1^N^1^G00 - Gross value of claim^2024-12-01^2024-12-01^SOS270'
     )
 
     expect(pad).toHaveBeenCalledWith(7, 4)
     expect(pad).toHaveBeenCalledWith(12, 7)
     expect(pad).toHaveBeenCalledWith(1, 2)
-    expect(lastDigits).toHaveBeenCalledWith('1234567890', 8)
+    expect(lastDigits).toHaveBeenCalledWith('1234567890', 7)
     expect(dateString).toHaveBeenCalledWith(new Date(2024, 11, 1))
   })
 
@@ -89,10 +89,10 @@ describe('create SFI26 batch contents', () => {
     const result = createSFI26(ctx)
 
     expect(result[0]).toBe(
-      'H^SFI260000008^02^T34567890^2^9876543210^GBP^99.99^DB2^GBP^SFI26^Q4'
+      'H^SFI260000008^02^GT4567890^2^9876543210^GBP^99.99^DB2^GBP^SFI26^Q4'
     )
     expect(result[1]).toBe(
-      'L^SFI260000008^99.99^2025^80201^DRD10^T34567890^DB2^N^1^G00 - Gross value of claim^2025-12-01^2025-12-01^SOS270'
+      'L^SFI260000008^99.99^2025^80201^DRD10^GT4567890^DB2^N^1^G00 - Gross value of claim^2025-12-01^2025-12-01^SOS270'
     )
   })
 })

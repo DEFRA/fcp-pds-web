@@ -56,7 +56,7 @@ describe('create CS batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^CS000000012^007^T1234567^2^FRN123^GBP^123.45^NE00^GBP'
+      'H^CS000000012^007^AT1234567^2^FRN123^GBP^123.45^NE00^GBP'
     )
     expect(result[1]).toBe(
       'L^CS000000012^123.45^2024^5704A^ERD14^A00001234567/MT^NE00^N^1^G00 - Gross value of claim^2024-12-01^SOS273'

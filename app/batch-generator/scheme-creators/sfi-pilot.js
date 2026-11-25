@@ -3,7 +3,7 @@ const { buildBatch, pad, dateString } = require('./helpers')
 const sequencePad = 4
 const invoiceNumberPad = 7
 const requestNumberPad = 2
-const contractNumberPad = 7
+const contractNumberPad = 6
 const defaultPPAIndicator = 1
 const ppaAdjustmentIndicator = 2
 const agreementNumberPad = 12
@@ -12,8 +12,8 @@ const firstDayOfMonth = 1
 
 const createSFIP = (ctx) => {
   return buildBatch(ctx, 'SITIELM', pad(ctx.sequence, sequencePad), 'SFIP', (r) => [
-    `H^SFIP${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^T${pad(r.uniqueContractNumber, contractNumberPad)}^${r.requestNumber === defaultPPAIndicator ? defaultPPAIndicator : ppaAdjustmentIndicator}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SFIP^Q4`,
-    `L^SFIP${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^80001^${r.fundCode}^T${pad(r.uniqueContractNumber, agreementNumberPad)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^SOS270`
+    `H^SFIP${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^ST${pad(r.uniqueContractNumber, contractNumberPad)}^${r.requestNumber === defaultPPAIndicator ? defaultPPAIndicator : ppaAdjustmentIndicator}^${r.frn}^GBP^${String(r.invoiceValue)}^${r.deliveryBody}^GBP^SFIP^Q4`,
+    `L^SFIP${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^80001^${r.fundCode}^ST${pad(r.uniqueContractNumber, agreementNumberPad)}^${r.deliveryBody}^N^1^G00 - Gross value of claim^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^${dateString(new Date(r.schemeYear, decemberMonth, firstDayOfMonth))}^SOS270`
   ])
 }
 

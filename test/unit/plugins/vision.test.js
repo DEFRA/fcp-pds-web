@@ -174,6 +174,28 @@ describe('vision plugin', () => {
       }
     })
 
+    test.each(['update-confirm', 'add-recipient-by-scheme-confirm'])('renders the new recipient card title in %s', (template) => {
+      prepareFunc(testOptions, mockNext)
+      const { environment } = testOptions.compileOptions
+      const loader = environment.loaders[0]
+      const getSource = loader.getSource.bind(loader)
+      loader.getSource = name => name === '_layout.njk'
+        ? { src: '{% block beforeContent %}{% endblock %}{% block content %}{% endblock %}', path: name }
+        : getSource(name)
+
+      const html = environment.render(`alerts/${template}.njk`, {
+        action: 'create',
+        emailAddress: 'person@example.com',
+        formPath: '/alerts/update',
+        schemeId: 1,
+        schemeName: 'Scheme One',
+        schemes: [],
+        globalAlertTypes: []
+      })
+
+      expect(html).toMatch(/class="govuk-summary-card__title">\s*New alert recipient\s*<\/h2>/)
+    })
+
     test('prepare configures autoescape', async () => {
       await prepareFunc(testOptions, mockNext)
       const env = testOptions.compileOptions.environment

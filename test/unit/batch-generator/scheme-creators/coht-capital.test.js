@@ -51,16 +51,16 @@ describe('create COHT capital batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^SITICOHTC0000012^01^ZT4567890^1^1234567890^GBP^123.45^DB1^GBP^SITICOHTC^'
+      'H^SITICOHTC0000012^01^ZT567890^1^1234567890^GBP^123.45^DB1^GBP^SITICOHTC^'
     )
     expect(result[1]).toBe(
-      'L^SITICOHTC0000012^123.45^2024^80201^DRD10^ZT4567890^DB1^N^1^G00 - Gross value of claim^SOS270'
+      'L^SITICOHTC0000012^123.45^2024^80201^DRD10^ZT567890^DB1^N^1^G00 - Gross value of claim^SOS270'
     )
 
     expect(pad).toHaveBeenCalledWith(7, 4)
     expect(pad).toHaveBeenCalledWith(12, 7)
     expect(pad).toHaveBeenCalledWith(1, 2)
-    expect(lastDigits).toHaveBeenCalledWith('1234567890', 7)
+    expect(lastDigits).toHaveBeenCalledWith('1234567890', 6)
   })
 
   test('buildBatch callback uses requestNumber 2 when requestNumber is not 1', () => {
@@ -82,10 +82,10 @@ describe('create COHT capital batch contents', () => {
     const result = createCOHTC(ctx)
 
     expect(result[0]).toBe(
-      'H^SITICOHTC0000008^02^ZT4567890^2^9876543210^GBP^99.99^DB2^GBP^SITICOHTC^'
+      'H^SITICOHTC0000008^02^ZT567890^2^9876543210^GBP^99.99^DB2^GBP^SITICOHTC^'
     )
     expect(result[1]).toBe(
-      'L^SITICOHTC0000008^99.99^2025^80201^DRD10^ZT4567890^DB2^N^1^G00 - Gross value of claim^SOS270'
+      'L^SITICOHTC0000008^99.99^2025^80201^DRD10^ZT567890^DB2^N^1^G00 - Gross value of claim^SOS270'
     )
   })
 })

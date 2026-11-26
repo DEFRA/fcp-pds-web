@@ -1,6 +1,7 @@
 jest.mock('../../../../app/batch-generator/scheme-creators/helpers', () => ({
   buildBatch: jest.fn(),
   pad: jest.fn((value, size) => String(value).padStart(size, '0')),
+  lastDigits: jest.fn((value, size) => String(value).slice(-size)),
   dateString: jest.fn((date) => {
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -10,7 +11,7 @@ jest.mock('../../../../app/batch-generator/scheme-creators/helpers', () => ({
 }))
 
 const { createLS } = require('../../../../app/batch-generator/scheme-creators')
-const { buildBatch, pad, dateString } = require('../../../../app/batch-generator/scheme-creators/helpers')
+const { buildBatch, pad, lastDigits, dateString } = require('../../../../app/batch-generator/scheme-creators/helpers')
 
 describe('create Lump Sums batch contents', () => {
   beforeEach(() => {
@@ -56,7 +57,7 @@ describe('create Lump Sums batch contents', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result).toHaveLength(2)
     expect(result[0]).toBe(
-      'H^LSES0000012^007^LT1234567^FRN123^1^123.45^DB1^GBP'
+      'H^LSES0000012^007^LT234567^FRN123^1^123.45^DB1^GBP'
     )
     expect(result[1]).toBe(
       'L^LSES0000012^123.45^2024^10570^DOM10^DB1^1^G00 - Gross value of claim^2024-11-01'

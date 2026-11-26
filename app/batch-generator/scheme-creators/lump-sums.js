@@ -1,4 +1,4 @@
-const { buildBatch, pad, dateString } = require('./helpers')
+const { buildBatch, pad, dateString, lastDigits } = require('./helpers')
 
 const invoiceNumberPad = 7
 const requestNumberPad = 3
@@ -8,7 +8,7 @@ const firstDayOfMonth = 1
 
 const createLS = (ctx) => {
   return buildBatch(ctx, 'SITILSES', ctx.sequence, 'LSES', (r) => [
-    `H^LSES${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^LT${pad(r.uniqueContractNumber, contractNumberPad)}^${r.frn}^1^${String(r.invoiceValue)}^${r.deliveryBody}^GBP`,
+    `H^LSES${pad(r.invoiceNumber, invoiceNumberPad)}^${pad(r.requestNumber, requestNumberPad)}^LT${lastDigits(r.uniqueContractNumber, contractNumberPad)}^${r.frn}^1^${String(r.invoiceValue)}^${r.deliveryBody}^GBP`,
     `L^LSES${pad(r.invoiceNumber, invoiceNumberPad)}^${String(r.invoiceValue)}^${r.schemeYear}^10570^${r.fundCode}^${r.deliveryBody}^1^G00 - Gross value of claim^${dateString(new Date(r.schemeYear, novemberMonth, firstDayOfMonth))}`
   ])
 }

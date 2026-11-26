@@ -3,7 +3,7 @@ const { buildBatch, pad, lastDigits } = require('./helpers')
 const sequencePad = 4
 const invoiceNumberPad = 7
 const requestNumberPad = 2
-const contractNumberPad = 7
+const contractNumberPad = 6
 const defaultPPAIndicator = 1
 const ppaAdjustmentIndicator = 2
 

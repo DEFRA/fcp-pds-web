@@ -11,7 +11,7 @@ jest.mock('../../../../app/batch-generator/scheme-creators/helpers', () => ({
 }))
 
 const { createLS } = require('../../../../app/batch-generator/scheme-creators')
-const { buildBatch, pad, lastDigits, dateString } = require('../../../../app/batch-generator/scheme-creators/helpers')
+const { buildBatch, pad, dateString } = require('../../../../app/batch-generator/scheme-creators/helpers')
 
 describe('create Lump Sums batch contents', () => {
   beforeEach(() => {

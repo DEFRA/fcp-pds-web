@@ -13,7 +13,7 @@ const { applicationAdmin, closureViewer } = require('../auth/permissions')
 const { closure, bulkClosure, removeConfirm } = require('./schemas/closure')
 const { DEFAULT_PER_PAGE } = require('../constants/default-pagination-values')
 const { BAD_REQUEST } = require('../constants/http-status-codes')
-const { MAX_BYTES } = require('../constants/payload-sizes')
+const { CLOSURE_MAX_BYTES } = require('../constants/payload-sizes')
 const { CLOSURE_EXISTS_ERROR, FILE_TOO_LARGE_ERROR } = require('../constants/validation-errors')
 const { GET } = require('../constants/api-methods')
 
@@ -271,7 +271,7 @@ module.exports = [
         output: 'file',
         parse: true,
         allow: 'multipart/form-data',
-        maxBytes: MAX_BYTES,
+        maxBytes: CLOSURE_MAX_BYTES,
         multipart: true,
         failAction: async (request, h, _error) => {
           const crumb = request.payload?.crumb ?? request.state.crumb

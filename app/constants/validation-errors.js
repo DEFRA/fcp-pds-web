@@ -5,6 +5,7 @@ module.exports = {
   BULK_UPLOAD_ERROR: 'An error occurred whilst processing the bulk upload',
   CLOSURE_EXISTS_ERROR: 'A closure already exists for the selected FRN, agreement number and scheme. In order to update this, please remove the existing record',
   EMPTY_FILE_ERROR: 'File is empty or could not be read',
+  EMAIL_DOMAIN_NOT_ALLOWED: 'The email address is not allowed. Please contact the Payment & Document Services team if you believe this is a mistake.',
   FILE_TOO_LARGE_ERROR: `The uploaded file is too large. Please upload a file smaller than ${CLOSURE_MAX_MEGA_BYTES} MB.`,
   INVALID_AGREEMENT_ERROR: 'Enter a valid agreement number',
   INVALID_CSV_ERROR: 'Provide a CSV file',

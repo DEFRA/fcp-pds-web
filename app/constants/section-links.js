@@ -1,5 +1,7 @@
 const permissions = require('../auth/permissions')
 
+const { navigation: alertCardTitles } = require('./alert-card-titles')
+
 const HOME = { href: '/', text: 'Home' }
 
 const REPORTS_LINKS = [
@@ -53,14 +55,14 @@ const AGREEMENT_CLOSURES_LINKS = [
 
 const PAYMENT_ALERTS_LINKS = [
   { href: '/alerts/manage', text: 'Manage email alerts', homeAuth: [permissions.applicationAdmin, permissions.alertViewer] },
-  { href: '/alerts/manage-by-scheme', text: 'Manage by scheme', description: 'View, edit and add alert recipients by individual scheme' },
-  { href: '/alerts/manage-by-recipient', text: 'Manage by recipient', description: 'View, edit and add alert recipients by email address' }
+  { href: '/alerts/manage-by-scheme', text: alertCardTitles.manageByScheme, description: 'View, edit and add alert recipients by individual scheme' },
+  { href: '/alerts/manage-by-recipient', text: alertCardTitles.manageByRecipient, description: 'View, edit and add alert recipients by email address' }
 ]
 
 const PAYMENT_ALERTS_BY_RECIPIENT_LINKS = [
-  { href: '/alerts/update-by-recipient', text: 'Update recipient alerts', description: 'View and/or update a recipient\'s email alerts' },
-  { href: '/alerts/update', text: 'Add new recipient', description: 'Add a new recipient and set email alerts for schemes' },
-  { href: '/alerts/remove-by-recipient', text: 'Remove recipient', description: 'Remove a recipient and their email alerts' }
+  { href: '/alerts/update-by-recipient', text: alertCardTitles.updateRecipient, description: 'View and/or update a recipient\'s email alerts' },
+  { href: '/alerts/update', text: alertCardTitles.addRecipient, description: 'Add a new recipient and set email alerts for schemes' },
+  { href: '/alerts/remove-by-recipient', text: alertCardTitles.removeRecipient, description: 'Remove a recipient and their email alerts' }
 ]
 
 const STATEMENTS_LINKS = [

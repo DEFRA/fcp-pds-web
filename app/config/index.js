@@ -107,8 +107,19 @@ const config = convict({
     format: Boolean,
     default: false,
     env: 'ANALYTICS_ALWAYS_TRACK'
+  },
+  approvedEmailDomains: {
+    doc: 'Approved email domains for user registration.',
+    format: Array,
+    default: [],
+    env: 'APPROVED_EMAIL_DOMAINS'
   }
 })
+
+config.set('approvedEmailDomains', config.get('approvedEmailDomains')
+  .flatMap(domain => domain.split(';'))
+  .map(domain => domain.trim())
+  .filter(Boolean))
 
 config.validate({ allowed: 'strict' })
 

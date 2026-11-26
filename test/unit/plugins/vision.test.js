@@ -136,6 +136,66 @@ describe('vision plugin', () => {
       expect(testOptions.compileOptions.environment instanceof require('nunjucks').Environment).toBe(true)
     })
 
+    test.each([
+      ['mixed', ['payment_alert'], ['scheme_added'], ['Scheme One scheme alerts', 'New scheme alerts']],
+      ['scheme only', ['payment_alert'], [], ['Scheme One scheme alerts']],
+      ['global only', [], ['scheme_added'], ['New scheme alerts']]
+    ])('renders separate confirmation cards for %s selections', (_description, alertTypes, globalAlertTypes, titles) => {
+      prepareFunc(testOptions, mockNext)
+      const { environment } = testOptions.compileOptions
+      const loader = environment.loaders[0]
+      const getSource = loader.getSource.bind(loader)
+      loader.getSource = name => name === '_layout.njk'
+        ? { src: '{% block beforeContent %}{% endblock %}{% block content %}{% endblock %}', path: name }
+        : getSource(name)
+
+      const html = environment.render('alerts/update-confirm.njk', {
+        contactId: 12,
+        emailAddress: 'person@example.com',
+        action: 'edit',
+        formPath: '/alerts/update',
+        schemes: [{ schemeId: 1, schemeName: 'Scheme One', alertTypes }],
+        globalAlertTypes,
+        formatAlertType: value => value
+      })
+      const cards = html.split('<div class="govuk-summary-card">').slice(1)
+
+      expect(cards.map(card => card.match(/class="govuk-summary-card__title">([^<]+)/)[1])).toEqual(titles)
+      if (titles.length === 2) {
+        expect(cards[0]).toContain('<li>payment_alert</li>')
+        expect(cards[0]).not.toContain('<li>scheme_added</li>')
+        expect(cards[1]).toContain('<li>scheme_added</li>')
+        expect(cards[1]).not.toContain('<li>payment_alert</li>')
+        const links = [...html.matchAll(/href="(\/alerts\/update\?[^"]+)"/g)]
+        expect(links).toHaveLength(3)
+        for (const [, link] of links) {
+          expect(link).toContain('&amp;contactId=12&amp;1=payment_alert&amp;globalAlerts=scheme_added')
+        }
+      }
+    })
+
+    test.each(['update-confirm', 'add-recipient-by-scheme-confirm'])('renders the new recipient card title in %s', (template) => {
+      prepareFunc(testOptions, mockNext)
+      const { environment } = testOptions.compileOptions
+      const loader = environment.loaders[0]
+      const getSource = loader.getSource.bind(loader)
+      loader.getSource = name => name === '_layout.njk'
+        ? { src: '{% block beforeContent %}{% endblock %}{% block content %}{% endblock %}', path: name }
+        : getSource(name)
+
+      const html = environment.render(`alerts/${template}.njk`, {
+        action: 'create',
+        emailAddress: 'person@example.com',
+        formPath: '/alerts/update',
+        schemeId: 1,
+        schemeName: 'Scheme One',
+        schemes: [],
+        globalAlertTypes: []
+      })
+
+      expect(html).toMatch(/class="govuk-summary-card__title">\s*New alert recipient\s*<\/h2>/)
+    })
+
     test('prepare configures autoescape', async () => {
       await prepareFunc(testOptions, mockNext)
       const env = testOptions.compileOptions.environment

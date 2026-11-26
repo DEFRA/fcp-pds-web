@@ -116,6 +116,11 @@ const config = convict({
   }
 })
 
+config.set('approvedEmailDomains', config.get('approvedEmailDomains')
+  .flatMap(domain => domain.split(';'))
+  .map(domain => domain.trim())
+  .filter(Boolean))
+
 config.validate({ allowed: 'strict' })
 
 // Attach auth config

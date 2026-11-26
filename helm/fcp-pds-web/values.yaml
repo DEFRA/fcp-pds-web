@@ -35,6 +35,7 @@ container:
   trackingEndpoint: http://ffc-pay-tracking.ffc-pay
   injectionEndpoint: http://ffc-pay-injection.ffc-pay
   alertingEndpoint: http://ffc-pay-alerting.ffc-pay
+  approvedEmailDomains: ""
   statementPublisherEndpoint: http://ffc-doc-statement-publisher.ffc-doc
   retentionEndpoint: http://fcp-pds-data-retention.fcp-pds
   batchProcessorEndpoint: http://ffc-pay-batch-processor.ffc-pay

@@ -1,0 +1,111 @@
+{% extends '_layout.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{%
+  from "macros/alert-helpers.njk" import confirmationQueryParams, recipientSummaryCard, schemeSummaryCard, alertTypesSummaryCard, confirmationHiddenFields
+%}
+
+{%
+  set pageTitle = "Check alerts for " ~ emailAddress ~ " are correct before saving"
+%}
+{%
+  set updatePageTitle = alertCardTitles.recipientPages.update if contactId else alertCardTitles.recipientPages.create
+%}
+{%
+  set breadcrumbData = {
+    contactId: contactId,
+    emailAddress: emailAddress,
+    action: action,
+    globalAlertTypes: globalAlertTypes
+  }
+%}
+
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+
+{% block beforeContent %}
+  {{
+    govukBreadcrumbs({
+      items: [{
+        text: "Home",
+        href: "/"
+      }, {
+        text: "Manage email alerts",
+        href: "/alerts/manage"
+      }, {
+        text: updatePageTitle,
+        href: "/alerts/update?" ~ confirmationQueryParams(breadcrumbData, schemes)
+      }, {
+        text: pageTitle
+      }]
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      {% if not contactId %}
+        {{
+          recipientSummaryCard(
+            formPath,
+            breadcrumbData,
+            schemes,
+            'recipient email address',
+            null,
+            emailAddress
+          )
+        }}
+      {% endif %}
+
+      {% for scheme in schemes %}
+        {{
+          schemeSummaryCard(
+            scheme,
+            formPath,
+            breadcrumbData,
+            schemes,
+            'alert types for ' ~ scheme.schemeName,
+            null,
+            formatAlertType
+          )
+        }}
+      {% endfor %}
+
+      {{
+        alertTypesSummaryCard(
+          alertCardTitles.confirmation.globalAlerts,
+          globalAlertTypes,
+          formPath,
+          breadcrumbData,
+          schemes,
+          'new scheme alerts',
+          null,
+          formatAlertType
+        )
+      }}
+
+      <form
+        method="POST"
+        action="{{ formAction }}"
+        autocomplete="off"
+        novalidate>
+        {{
+          confirmationHiddenFields(crumb, contactId, emailAddress, action, schemeId, schemes, globalAlertTypes)
+        }}
+
+        {{
+          govukButton({
+            text: "Confirm changes",
+            attributes: {
+              id: "submit",
+              type: "submit"
+            }
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

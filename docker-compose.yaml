@@ -29,6 +29,7 @@ services:
       TRACKING_SERVICE_ENDPOINT: http://ffc-pay-tracking:3002
       INJECTION_SERVICE_ENDPOINT: http://ffc-pay-injection:3014
       ALERTING_SERVICE_ENDPOINT: http://ffc-pay-alerting:3025
+      APPROVED_EMAIL_DOMAINS: ${APPROVED_EMAIL_DOMAINS:-}
       STATEMENT_PUBLISHER_ENDPOINT: http://ffc-doc-statement-publisher:3010
       RETENTION_ENDPOINT: http://fcp-pds-data-retention:3076
       BATCH_PROCESSOR_ENDPOINT: http://ffc-pay-batch-processor:3017

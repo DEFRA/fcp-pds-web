@@ -19,6 +19,9 @@ data:
   GOOGLE_ANALYTICS_MEASUREMENT_ID: {{ quote .Values.container.googleAnalyticsMeasurementId }}
   ANALYTICS_ALWAYS_TRACK: {{ quote .Values.container.analyticsAlwaysTrack }}
   ANALYTICS_ENABLED: {{ quote .Values.container.analyticsEnabled }}
+  {{- with .Values.container.approvedEmailDomains }}
+  APPROVED_EMAIL_DOMAINS: {{ quote . }}
+  {{- end }}
   {{- if (.Values.environmentCode) }}
     {{- if ne .Values.environmentCode "snd" }}
   PAYMENTS_SERVICE_ENDPOINT: {{ .Values.container.paymentsEndpoint }}-{{ .Values.environmentCode }}

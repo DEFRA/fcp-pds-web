@@ -2,6 +2,7 @@ const config = require('../config')
 
 const routes = [].concat(
   require('../routes/accessibility'),
+  require('../routes/alerts'),
   require('../routes/authenticate'),
   require('../routes/closures'),
   require('../routes/cookies'),

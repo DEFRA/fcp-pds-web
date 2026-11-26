@@ -52,6 +52,7 @@ extends:
       container.azureAppRegistrationEnabled: $(pr_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(pr_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(pr_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(pr_approvedEmailDomains)
       container.batchGeneratorEnabled: $(pr_batchGeneratorEnabled)
     snd2_params:
       container.azureStorageCreateContainers: $(snd2_azureStorageCreateContainers)
@@ -59,6 +60,7 @@ extends:
       container.azureAppRegistrationEnabled: $(snd2_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(snd2_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(snd2_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(snd2_approvedEmailDomains)
       container.batchGeneratorEnabled: $(snd2_batchGeneratorEnabled)
     dev_params:
       container.azureStorageCreateContainers: $(dev_azureStorageCreateContainers)
@@ -66,6 +68,7 @@ extends:
       container.azureAppRegistrationEnabled: $(dev_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(dev_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(dev_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(dev_approvedEmailDomains)
       container.batchGeneratorEnabled: $(dev_batchGeneratorEnabled)
     test_params:
       container.azureStorageCreateContainers: $(test_azureStorageCreateContainers)
@@ -73,6 +76,7 @@ extends:
       container.azureAppRegistrationEnabled: $(test_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(test_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(test_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(test_approvedEmailDomains)
       container.batchGeneratorEnabled: $(test_batchGeneratorEnabled)
     pre_params:
       container.azureStorageCreateContainers: $(pre_azureStorageCreateContainers)
@@ -80,6 +84,7 @@ extends:
       container.azureAppRegistrationEnabled: $(pre_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(pre_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(pre_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(pre_approvedEmailDomains)
       container.batchGeneratorEnabled: $(pre_batchGeneratorEnabled)
     prd_params:
       container.azureStorageCreateContainers: $(prd_azureStorageCreateContainers)
@@ -87,4 +92,5 @@ extends:
       container.azureAppRegistrationEnabled: $(prd_azureAppRegistrationEnabled)
       container.azureAppRegistrationClientId: $(prd_azureAppRegistrationClientId)
       container.azureAppRegistrationTenantId: $(prd_azureAppRegistrationTenantId)
+      container.approvedEmailDomains: $(prd_approvedEmailDomains)
       container.batchGeneratorEnabled: $(prd_batchGeneratorEnabled)

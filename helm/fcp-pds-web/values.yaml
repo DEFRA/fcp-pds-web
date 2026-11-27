@@ -49,6 +49,7 @@ container:
   azureStorageCreateContainers: false
   cookiePassword: cookiecookiecookiecookiecookiecookie
   azureAppRegistrationEnabled: true
+  batchGeneratorEnabled: true
   azureAppRegistrationClientId:
   azureAppRegistrationTenantId:
   azureAppRegistrationClientSecret:

@@ -1,6 +1,6 @@
 {
   "name": "fcp-pds-web",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Frontend for Payment and Document Services",
   "homepage": "https://github.com/DEFRA/fcp-pds-web",
   "main": "app/index.js",
@@ -23,7 +23,8 @@
   "contributors": [
     "Leigh Godson <leigh.godson@atos.ai>",
     "Alistair Wishart <alistair.wishart@atos.ai>",
-    "Sam Plackett <samuel.plackett@atos.ai>"
+    "Sam Plackett <samuel.plackett@atos.ai>",
+    "Oliver Lewington <oliver.2.lewington@atos.ai>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
@@ -46,7 +47,8 @@
     "govuk-frontend": "6.6.0",
     "hapi-pino": "13.0.0",
     "husky": "9.1.7",
-    "joi": "18.3.2",
+    "joi": "18.3.1",
+    "jszip": "3.10.2",
     "log-timestamp": "0.3.0",
     "moment": "2.31.0",
     "nunjucks": "3.2.4"

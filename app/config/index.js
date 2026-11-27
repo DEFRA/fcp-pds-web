@@ -145,5 +145,6 @@ module.exports = {
     isHttpOnly: true,
     clearInvalid: false,
     strictHeader: true
-  }
+  },
+  batchGeneratorEnabled: process.env.BATCH_GENERATOR_ENABLED || true
 }

@@ -1,3 +1,5 @@
+const config = require('../config')
+
 const routes = [].concat(
   require('../routes/accessibility'),
   require('../routes/alerts'),
@@ -17,6 +19,10 @@ const routes = [].concat(
   require('../routes/sitemap'),
   require('../routes/static')
 )
+
+if (config.batchGeneratorEnabled) {
+  routes.push(...require('../routes/batch-generator'))
+}
 
 module.exports = {
   plugin: {
